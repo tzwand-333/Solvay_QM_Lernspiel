@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brüssel 1927 – Reporter auf der Solvay-Konferenz</title>
+<style>
+:root{--ink:#1d1a16;--paper:#f3ead8;--paper2:#e9dcc2;--gold:#b8893a;--red:#8c2f23;--green:#2f5d4a;--blue:#27405e;--shadow:rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Georgia,"Times New Roman",serif;color:var(--ink);background:#2a2520;font-size:18px;line-height:1.45}
+button{font-family:inherit;font-size:1rem;cursor:pointer}
+.screen{display:none;min-height:100%}
+.screen.on{display:block}
+.btn{background:var(--ink);color:var(--paper);border:2px solid var(--gold);padding:.6em 1.1em;border-radius:4px;letter-spacing:.03em}
+.btn:hover{background:#3a332b}
+.btn.light{background:var(--paper);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+/* Start */
+#start{background:radial-gradient(circle at 50% 20%,#4a4034,#1c1814);color:var(--paper);text-align:center;padding:4vh 5vw}
+#start h1{font-size:clamp(2rem,5vw,3.6rem);margin:.2em 0 0;letter-spacing:.06em;font-variant:small-caps}
+#start h2{font-weight:normal;font-style:italic;color:var(--gold);margin:.2em 0 1em}
+.telegram{max-width:720px;margin:1.2em auto;background:var(--paper);color:var(--ink);padding:1.2em 1.5em;text-align:left;font-family:"Courier New",monospace;font-size:1rem;box-shadow:0 8px 24px var(--shadow);transform:rotate(-.6deg)}
+.telegram b{letter-spacing:.1em}
+#start input{font:inherit;padding:.55em .8em;width:min(340px,80vw);border:2px solid var(--gold);background:var(--paper);border-radius:4px}
+.cast{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin:1em auto;max-width:900px}
+.cast svg{width:78px;height:auto}
+.small{font-size:.85rem;opacity:.8}
+/* Game */
+#game{background:#1c1814;display:none;flex-direction:column;height:100vh}
+#game.on{display:flex}
+#bar{display:flex;align-items:center;gap:.6em;padding:.5em .8em;background:var(--ink);color:var(--paper);border-bottom:3px double var(--gold);flex-wrap:wrap}
+#bar .where{flex:1;min-width:200px}
+#bar .where b{font-variant:small-caps;font-size:1.2rem;letter-spacing:.05em}
+#bar .where span{display:block;font-size:.85rem;color:var(--gold)}
+#bar button{padding:.45em .8em}
+#room{flex:1;position:relative;overflow:hidden;min-height:300px}
+#wall{position:absolute;inset:0 0 34% 0}
+#floor{position:absolute;inset:66% 0 0 0;background:linear-gradient(#5b4028,#2e2014)}
+#floor:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 2px,transparent 2px 90px);transform:perspective(400px) rotateX(55deg);transform-origin:top}
+#deco{position:absolute;left:0;right:0;top:6%;text-align:center;color:rgba(255,255,255,.75);font-style:italic;padding:0 1em;text-shadow:0 1px 3px #000}
+#people{position:absolute;left:0;right:0;bottom:6%;display:flex;justify-content:center;align-items:flex-end;gap:clamp(8px,4vw,60px)}
+.fig{background:none;border:0;padding:0;text-align:center;color:#fff;transition:transform .2s;filter:drop-shadow(0 14px 10px rgba(0,0,0,.55))}
+.fig:hover,.fig:focus{transform:translateY(-8px) scale(1.04);outline:none}
+.fig svg{width:clamp(120px,17vw,190px);height:auto;display:block}
+.fig .tag{display:inline-block;background:var(--paper);color:var(--ink);padding:.1em .7em;border:1px solid var(--gold);font-variant:small-caps;margin-top:-6px;position:relative}
+.fig .new{position:absolute;top:0;right:8%;background:var(--red);color:#fff;border-radius:50%;width:1.5em;height:1.5em;line-height:1.5em;font-size:.9rem;font-family:sans-serif}
+.fig{position:relative}
+#nav{display:flex;gap:.4em;padding:.5em;background:var(--ink);flex-wrap:wrap;justify-content:center}
+#nav button{background:#3a332b;color:var(--paper);border:1px solid #6b5d48;padding:.5em .8em;border-radius:4px;flex:1;min-width:130px}
+#nav button.here{background:var(--gold);color:var(--ink);font-weight:bold}
+#nav button small{display:block;font-size:.72rem;opacity:.85;font-family:sans-serif}
+/* Overlay / dialog */
+.ov{position:fixed;inset:0;background:rgba(15,12,9,.78);display:none;align-items:center;justify-content:center;padding:2vh 2vw;z-index:10}
+.ov.on{display:flex}
+.panel{background:var(--paper);max-width:980px;width:100%;max-height:96vh;overflow:auto;border:3px double var(--ink);box-shadow:0 12px 40px #000;padding:1em 1.2em}
+.panel h3{margin:.1em 0 .5em;font-variant:small-caps;letter-spacing:.04em;border-bottom:1px solid var(--ink);padding-bottom:.2em}
+.talk{display:grid;grid-template-columns:200px 1fr;gap:1em}
+.talk .por{text-align:center}
+.talk .por svg{width:100%;height:auto;filter:drop-shadow(0 8px 6px rgba(0,0,0,.35))}
+.talk .por i{display:block;font-size:.85rem}
+.bubble{background:#fffaf0;border:1px solid #bfae8c;border-radius:6px;padding:.8em 1em;min-height:6em;position:relative}
+.bubble .q{color:var(--blue);font-style:italic;margin:0 0 .5em}
+.opts{display:flex;flex-direction:column;gap:.4em;margin-top:.8em}
+.opts button{text-align:left;background:var(--paper2);border:1px solid #a8956f;padding:.55em .8em;border-radius:4px}
+.opts button:hover{background:#dccba8}
+.opts button.asked{opacity:.6}
+.opts button.show{border-color:var(--red);color:var(--red)}
+.opts button.bye{background:none;border-style:dashed}
+.gain{background:var(--green);color:#fff;padding:.5em .8em;border-radius:4px;margin-top:.6em;font-family:sans-serif;font-size:.92rem}
+.note{background:#fffaf0;border-left:5px solid var(--gold);padding:.5em .8em;margin:.5em 0}
+.note b{font-variant:small-caps}
+.note small{display:block;color:#6b5d48}
+.note.pick{cursor:pointer;width:100%;text-align:left;border-top:0;border-right:0;border-bottom:0;font:inherit}
+.note.pick:hover{background:#f1e3c2}
+.prog{height:10px;background:#cdbd9c;border-radius:5px;overflow:hidden;margin:.4em 0 .8em}
+.prog i{display:block;height:100%;background:var(--green)}
+/* Epilog & Quiz */
+#epi,#quiz{background:var(--paper2);padding:3vh 4vw}
+.wrap{max-width:900px;margin:0 auto}
+.card{background:var(--paper);border:1px solid #a8956f;padding:1em 1.2em;margin:1em 0;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.card h3{margin:.1em 0 .4em;font-variant:small-caps}
+.card .two{display:grid;grid-template-columns:120px 1fr;gap:1em;align-items:start}
+.card .two svg{width:100%;height:auto}
+.qrow{display:grid;grid-template-columns:1fr 210px;gap:.8em;align-items:center;padding:.5em 0;border-bottom:1px dotted #a8956f}
+select,input[type=text],textarea{font:inherit;padding:.4em;border:1px solid #8a7753;background:#fffaf0;border-radius:3px}
+textarea{width:100%;min-height:5em}
+.ok{outline:3px solid var(--green)} .bad{outline:3px solid var(--red)}
+.fb{font-family:sans-serif;font-size:.9rem;margin:.3em 0;padding:.4em .6em;border-radius:4px}
+.fb.good{background:#d7e8dc;color:#173d2c}.fb.wrong{background:#f2d6d0;color:#5e1c14}
+.ord{display:flex;align-items:center;gap:.5em;background:#fffaf0;border:1px solid #bfae8c;padding:.4em .6em;margin:.3em 0}
+.ord span{flex:1}.ord button{width:2.4em;height:2.2em}
+label.mc{display:block;padding:.45em .6em;margin:.3em 0;background:#fffaf0;border:1px solid #bfae8c;border-radius:4px;cursor:pointer}
+.sci input{width:5em;text-align:center}.sci sup input{width:3.5em}
+.steps{font-family:sans-serif;font-size:.85rem;color:#6b5d48}
+/* Article */
+#art{background:#8d8474;padding:3vh 2vw}
+.tools{max-width:900px;margin:0 auto 1em;display:flex;gap:.6em;flex-wrap:wrap;align-items:center}
+.rating{background:var(--ink);color:var(--paper);padding:.6em 1em;border:2px solid var(--gold);flex:1;min-width:260px}
+.paperpage{max-width:900px;margin:0 auto;background:#f7f1e3;padding:2.2em 2.4em;box-shadow:0 8px 30px rgba(0,0,0,.5);font-size:.95rem}
+.mast{text-align:center;border-bottom:4px double #000;margin-bottom:.4em}
+.mast h1{font-family:"Old English Text MT","UnifrakturCook",Georgia,serif;font-size:2.8rem;margin:0;letter-spacing:.03em}
+.mast div{display:flex;justify-content:space-between;font-size:.8rem;border-top:1px solid #000;padding:.2em 0}
+.paperpage h2{font-size:1.9rem;line-height:1.15;margin:.4em 0 .1em;text-align:center}
+.paperpage .sub{text-align:center;font-style:italic;margin:0 0 .3em}
+.paperpage .by{text-align:center;font-variant:small-caps;border-bottom:1px solid #000;padding-bottom:.4em;margin-bottom:.8em}
+.cols{column-count:2;column-gap:2em;column-rule:1px solid #999;text-align:justify;hyphens:auto}
+.cols h4{font-variant:small-caps;font-size:1.05rem;margin:.9em 0 .2em;border-bottom:1px solid #000;break-after:avoid}
+.cols p{margin:.3em 0 .5em}
+.box{border:2px solid #000;padding:.5em .7em;margin:.6em 0;break-inside:avoid;background:#efe6d0}
+.formula{text-align:center;font-style:italic;font-size:1.1rem;margin:.3em 0}
+@media (max-width:700px){.talk{grid-template-columns:1fr}.talk .por svg{width:130px}.cols{column-count:1}.qrow{grid-template-columns:1fr}}
+@media print{
+  body{background:#fff;font-size:11pt}
+  .screen{display:none!important}#art{display:block!important;background:#fff;padding:0}
+  .tools,.ov{display:none!important}
+  .paperpage{box-shadow:none;max-width:none;padding:0;background:#fff}
+  .box{background:#fff}
+}
+/* --- 2D-Fassung --- */
+#game{height:100vh;height:100dvh}
+#bar button{padding:.4em .65em;font-size:.92rem}
+#stage{flex:1;display:flex;align-items:center;justify-content:center;background:#0e0c0a;min-height:0;position:relative}
+#cv{width:min(100vw,calc((100dvh - 118px)*960/560));max-width:100%;height:auto;aspect-ratio:960/560;display:block;touch-action:none;cursor:pointer;image-rendering:auto}
+#pbar{height:52px;display:flex;align-items:center;justify-content:center;background:var(--ink);border-top:3px double var(--gold)}
+#prompt{background:var(--gold);color:var(--ink);border:0;padding:.5em 1.2em;border-radius:4px;font-weight:bold;visibility:hidden;max-width:96vw}
+#pbar span{color:#a8956f;font-size:.8rem;font-family:sans-serif;position:absolute;right:.8em}
+.pill{display:block;margin-top:.4em;font:.72rem sans-serif;background:#cdbd9c;border-radius:10px;padding:.15em .5em}
+.pill.in{background:var(--green);color:#fff}
+.gain.rum{background:var(--blue)}
+.note.rum{border-left-color:var(--blue)}
+.tabs{display:flex;gap:.3em;margin-bottom:.6em;flex-wrap:wrap}
+.tabs button{flex:1;padding:.45em;background:var(--paper2);border:1px solid #a8956f;border-radius:4px 4px 0 0}
+.tabs button.on{background:var(--ink);color:var(--paper)}
+.task{padding:.35em .6em;margin:.25em 0;background:#fffaf0;border-left:5px solid var(--red)}
+.task.done{border-left-color:var(--green);opacity:.7;text-decoration:line-through}
+.rel{font-size:.9rem;padding:.25em .5em;margin:.2em 0;border-left:4px solid var(--green);background:#fffaf0}
+.rel.m{border-left-color:var(--red)}
+.relsvg{width:100%;max-width:520px;display:block;margin:0 auto}
+.photo{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;background:#d8cdb4;padding:.6em;border:6px solid #f7f1e3;outline:1px solid #8a7753;filter:sepia(.55)}
+.photo figure{margin:0;width:82px;text-align:center;font-size:.72rem}
+.photo svg{width:100%;height:auto;display:block}
+.photo .sil svg{filter:brightness(0) opacity(.28)}
+.photo.print{margin:.4em auto;max-width:760px}.photo.print figure{width:62px}
+.cap{text-align:center;font-style:italic;font-size:.8rem;margin:.2em 0 .8em}
+.paperlook{background:#fffaf0;border:1px solid #bfae8c;padding:.6em 1em;box-shadow:inset 0 0 30px rgba(160,130,80,.18)}
+.narr{font-style:italic;font-size:1.05rem}
+.xcv{width:100%;max-width:640px;display:block;margin:.4em auto;border:3px solid #55504a;border-radius:4px}
+.xb{display:flex;gap:.4em;flex-wrap:wrap;align-items:center;justify-content:center}
+.xb .btn{padding:.4em .7em}
+.chooser{max-width:720px;margin:1em auto;display:grid;grid-template-columns:130px 1fr;gap:1em;align-items:center;text-align:left;background:rgba(255,255,255,.06);padding:.8em 1em;border:1px solid #6b5d48;border-radius:6px}
+.chooser canvas{background:#6d5740;border-radius:6px;width:120px;height:130px}
+.chooser .row{display:flex;gap:.4em;align-items:center;flex-wrap:wrap;margin:.3em 0}
+.chooser .row span{width:5.5em;font-size:.9rem;color:var(--gold)}
+.sw{min-width:2.2em;height:2.2em;border-radius:4px;border:2px solid #6b5d48;background:var(--paper2);padding:0 .5em}
+.sw.on{border-color:#fff;box-shadow:0 0 0 2px var(--gold)}
+@media print{.photo{filter:grayscale(1)}}
+</style>
+</head>
+<body>
+<section id="start" class="screen on">
+  <h1>Brüssel 1927</h1>
+  <h2>Reporter auf der Solvay-Konferenz</h2>
+  <div class="cast" id="cast"></div>
+  <div class="telegram">
+    <b>TELEGRAMM · BERLIN – BRÜSSEL · 24. OKTOBER 1927</b><br><br>
+    DIE KLÜGSTEN KÖPFE DER PHYSIK TAGEN IN BRÜSSEL STOP THEMA ELEKTRONEN UND PHOTONEN STOP ANGEBLICH STREIT UM EINE NEUE »QUANTENMECHANIK« STOP ERKLÄREN SIE UNSEREN LESERN BIS REDAKTIONSSCHLUSS WAS DAS IST UND WER RECHT HAT STOP SIE HABEN DREI TAGE STOP<br><br>
+    — DER CHEFREDAKTEUR
+  </div>
+  <div class="chooser">
+    <canvas id="avc" width="120" height="130"></canvas>
+    <div>
+      <div class="row"><span>Ihr Name</span><input id="nameIn" type="text" maxlength="40" placeholder="Vorname Nachname"></div>
+      <div class="row"><span>Haarfarbe</span><div id="chHair" class="row"></div></div>
+      <div class="row"><span>Frisur</span><div id="chStyle" class="row"></div></div>
+      <div class="row"><span>Mantel</span><div id="chCoat" class="row"></div></div>
+      <div class="row"><span>Hut</span><div id="chHat" class="row"></div></div>
+    </div>
+  </div>
+  <p><button class="btn" id="goBtn">Zur Konferenz ▸</button> <button class="btn light" id="contBtn" style="display:none">Spielstand fortsetzen</button></p>
+  <p class="small">Lernspiel zur Quantenphysik (BPE 11.2). Alle Gespräche, Briefe und Notizen im Spiel sind frei formuliert – historisch fundiert, aber keine Originalzitate. Der Reporter Federle und seine Zeitung sind erfunden. Die Figuren sind stilisierte Zeichnungen.</p>
+</section>
+
+<section id="game" class="screen">
+  <div id="bar">
+    <div class="where"><b id="locName"></b><span id="dayName"></span></div>
+    <button class="btn light" id="tkBtn">✉ Aufträge</button>
+    <button class="btn light" id="nbBtn">📓 Notizbuch</button>
+    <button class="btn light" id="phBtn" title="Gruppenfoto">📷</button>
+    <button class="btn light" id="sndBtn" title="Geräusche an/aus">🔇</button>
+    <button class="btn" id="dayBtn">Tag beenden ▸</button>
+  </div>
+  <div id="stage"><canvas id="cv" width="960" height="560"></canvas></div>
+  <div id="pbar"><button id="prompt"></button></div>
+</section>
+
+<section id="epi" class="screen"><div class="wrap" id="epiWrap"></div></section>
+<section id="quiz" class="screen"><div class="wrap" id="quizWrap"></div></section>
+<section id="art" class="screen"><div class="tools" id="artTools"></div><div class="paperpage" id="paper"></div></section>
+<div class="ov" id="ov"><div class="panel" id="panel"></div></div>
+
+<script>
+"use strict";
+/* Figuren */
+const LOOK={
+ einstein:{rx:44,ry:52,hair:'#bdbcb6',style:'wild',hl:30,mo:'big',moc:'#6d6862',brow:4,tie:'tie',suit:'#3b3a3f'},
+ bohr:{rx:47,ry:58,hair:'#5a4a3c',style:'cap',hl:22,brow:6,pipe:1,tie:'tie',suit:'#2e3440',jowl:1},
+ heisenberg:{rx:40,ry:50,hair:'#cfa85c',style:'cap',hl:40,part:-28,brow:2,tie:'tie',suit:'#4a4f45',young:1},
+ schroedinger:{rx:40,ry:53,hair:'#6a5a4a',style:'cap',hl:20,glasses:1,brow:2,tie:'bow',suit:'#5a4636'},
+ born:{rx:42,ry:52,hair:'#807a73',style:'cap',hl:24,brow:3,tie:'tie',suit:'#33373d'},
+ debroglie:{rx:38,ry:55,hair:'#2e2622',style:'cap',hl:36,part:20,mo:'small',moc:'#2e2622',brow:3,tie:'bow',suit:'#22252b'},
+ pauli:{rx:51,ry:50,hair:'#1f1a17',style:'cap',hl:34,brow:4,tie:'tie',suit:'#3d3531',jowl:1},
+ dirac:{rx:36,ry:55,hair:'#2b241f',style:'cap',hl:38,part:-18,mo:'thin',moc:'#2b241f',brow:2,tie:'tie',suit:'#4b4a52',young:1},
+ lorentz:{rx:42,ry:52,hair:'#f0efea',style:'cap',hl:18,mo:'big',moc:'#f0efea',beard:1,brow:3,tie:'bow',suit:'#26262a',old:1},
+ ehrenfest:{rx:43,ry:50,hair:'#2a2420',style:'crew',hl:34,mo:'big',moc:'#2a2420',brow:4,tie:'tie',suit:'#4f4539'},
+ curie:{rx:39,ry:50,hair:'#a39e97',style:'bun',hl:34,brow:2,tie:'none',suit:'#17161a',old:1}
+};
+let uid=0;
+function portrait(id){
+  const L=LOOK[id],u='p'+(uid++),cx=100,cy=104,rx=L.rx,ry=L.ry,top=cy-ry,skin=L.old?'#e6cdb4':'#ebcba8';
+  const hy=top+L.hl,px=cx+(L.part||0);
+  let s=`<svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <radialGradient id="${u}s" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff3e2"/><stop offset=".45" stop-color="${skin}"/><stop offset="1" stop-color="#a97f5e"/></radialGradient>
+  <linearGradient id="${u}c" x1="0" x2="1"><stop offset="0" stop-color="${L.suit}"/><stop offset=".45" stop-color="${L.suit}" stop-opacity=".82"/><stop offset="1" stop-color="#0c0c0e"/></linearGradient>
+  <radialGradient id="${u}h" cx=".35" cy=".25" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+  <clipPath id="${u}k"><path d="M0 0H200V${hy+6}Q${px+30} ${hy-6} ${px} ${hy}Q${px-30} ${hy-10} 0 ${hy+8}Z"/></clipPath>
+  <clipPath id="${u}b"><rect x="0" y="${cy+10}" width="200" height="120"/></clipPath></defs>`;
+  // Körper
+  s+=`<path d="M8 250C10 205 40 188 78 180L100 200L122 180C160 188 190 205 192 250Z" fill="url(#${u}c)"/>`;
+  if(L.tie!=='none'){ s+=`<path d="M78 180L100 214L122 180L112 172H88Z" fill="#f4f1ea"/>`;
+    if(L.tie==='tie') s+=`<path d="M95 186h10l4 10-6 40h-6l-6-40z" fill="#5c1f1b"/>`;
+    else s+=`<path d="M100 190l-18-9v18zM100 190l18-9v18z" fill="#1a1a1c"/><circle cx="100" cy="190" r="4" fill="#333"/>`;
+    s+=`<path d="M78 180L100 214L84 232L60 190Z M122 180L100 214L116 232L140 190Z" fill="${L.suit}" opacity=".9"/>`;
+  } else s+=`<path d="M80 176h40v14q-20 10-40 0z" fill="#2a282e"/><circle cx="100" cy="196" r="4" fill="#c9b27a"/>`;
+  // Hals, Haare hinten
+  s+=`<rect x="84" y="${cy+ry-22}" width="32" height="34" fill="#c69c78"/>`;
+  if(L.style==='wild'){ for(const [a,b,r] of [[-48,-30,22],[-30,-52,24],[0,-60,26],[30,-52,24],[48,-30,22],[-54,-6,18],[54,-6,18],[-50,14,14],[50,14,14]]) s+=`<circle cx="${cx+a}" cy="${cy+b}" r="${r}" fill="${L.hair}"/>`; }
+  if(L.style==='bun') s+=`<circle cx="${cx+6}" cy="${top-6}" r="20" fill="${L.hair}"/>`;
+  s+=`<ellipse cx="${cx}" cy="${cy-2}" rx="${rx+4}" ry="${ry+3}" fill="${L.hair}"/>`;
+  // Ohren, Kopf
+  s+=`<ellipse cx="${cx-rx}" cy="${cy+4}" rx="7" ry="12" fill="#d3a984"/><ellipse cx="${cx+rx}" cy="${cy+4}" rx="7" ry="12" fill="#c2946f"/>`;
+  s+=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${u}s)"/>`;
+  if(L.jowl) s+=`<path d="M${cx-18} ${cy+ry-9}q18 9 36 0" stroke="#a97f5e" stroke-width="1.6" fill="none" opacity=".55" stroke-linecap="round"/>`;
+  if(L.beard) s+=`<path d="M${cx-rx+2} ${cy+4}Q${cx-rx+2} ${cy+ry+4} ${cx} ${cy+ry+16}Q${cx+rx-2} ${cy+ry+4} ${cx+rx-2} ${cy+4}Q${cx+rx*.5} ${cy+ry*.3} ${cx} ${cy+ry*.36}Q${cx-rx*.5} ${cy+ry*.3} ${cx-rx+2} ${cy+4}Z" fill="${L.hair}"/>`;
+  // Haare vorn
+  const hf=L.style==='crew'?`<rect x="${cx-rx}" y="${top-6}" width="${rx*2}" height="${L.hl+8}" rx="14" fill="${L.hair}"/>`
+    :`<ellipse cx="${cx}" cy="${cy-1}" rx="${rx+2}" ry="${ry+3}" fill="${L.hair}" clip-path="url(#${u}k)"/>`;
+  s+=hf;
+  if(L.style==='wild') for(const [a,b,r] of [[-22,-50,14],[4,-56,15],[26,-48,13]]) s+=`<circle cx="${cx+a}" cy="${cy+b}" r="${r}" fill="${L.hair}"/>`;
+  s+=`<ellipse cx="${cx}" cy="${cy-4}" rx="${rx+4}" ry="${ry+5}" fill="url(#${u}h)" opacity=".5"/>`;
+  // Gesicht
+  const ex=rx*.44,ey=cy-4;
+  for(const d of [-1,1]){ s+=`<ellipse cx="${cx+d*ex}" cy="${ey}" rx="7" ry="4.6" fill="#fff"/><circle cx="${cx+d*ex+1}" cy="${ey}" r="3.3" fill="#2b2118"/><circle cx="${cx+d*ex+2}" cy="${ey-1.2}" r="1" fill="#fff"/>`;
+    s+=`<path d="M${cx+d*(ex-10)} ${ey-11-(L.young?0:1)}Q${cx+d*ex} ${ey-16} ${cx+d*(ex+10)} ${ey-10}" stroke="${L.style==='wild'||L.old?'#77706a':(L.hair==='#cfa85c'?'#9a7a3a':'#2b2118')}" stroke-width="${L.brow}" fill="none" stroke-linecap="round"/>`;
+    if(L.old||L.jowl) s+=`<path d="M${cx+d*(ex-8)} ${ey+9}q${d*8} 4 ${d*16} 0" stroke="#9b7557" stroke-width="1.2" fill="none"/>`; }
+  s+=`<path d="M${cx-2} ${ey+4}q-7 18 -3 22q5 3 11 0" stroke="#9b7557" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  const my=cy+ry*.52;
+  s+=`<path d="M${cx-12} ${my}q12 ${L.young?7:4} 24 0" stroke="#7a3f33" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+  if(L.mo==='big') s+=`<path d="M${cx-22} ${my-2}q8-12 22-7q14-5 22 7q-10 5-22 0q-12 5-22 0z" fill="${L.moc}"/>`;
+  if(L.mo==='small') s+=`<path d="M${cx-12} ${my-3}q12-7 24 0q-12 4-24 0z" fill="${L.moc}"/>`;
+  if(L.mo==='thin') s+=`<path d="M${cx-11} ${my-4}q11-4 22 0" stroke="${L.moc}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  if(L.glasses) s+=`<g fill="rgba(255,255,255,.18)" stroke="#2a2420" stroke-width="2.6"><circle cx="${cx-ex}" cy="${ey}" r="13"/><circle cx="${cx+ex}" cy="${ey}" r="13"/><path d="M${cx-ex+13} ${ey}h${2*ex-26}" fill="none"/></g>`;
+  if(L.pipe) s+=`<path d="M${cx+8} ${my+2}L${cx+52} ${my+16}" stroke="#3b2414" stroke-width="5" stroke-linecap="round"/><path d="M${cx+46} ${my+2}h18v22q-9 6-18 0z" fill="#5b3418"/><path d="M${cx+50} ${my-4}q4-10 0-18" stroke="#ddd" stroke-width="2" fill="none" opacity=".6"/>`;
+  if(L.hat) s+=`<ellipse cx="${cx}" cy="${top+14}" rx="${rx+16}" ry="9" fill="${L.hat}"/><path d="M${cx-rx+4} ${top+14}q0-34 ${rx-4}-34t${rx-4} 34z" fill="${L.hat}"/>`;
+  return s+'</svg>';
+}
+
+/* Daten */
+const C={
+ lorentz:{n:'Hendrik A. Lorentz',r:'Vorsitzender der Konferenz, 74 Jahre'},
+ debroglie:{n:'Louis de Broglie',r:'Paris, 35 Jahre'},
+ schroedinger:{n:'Erwin Schrödinger',r:'Berlin, 40 Jahre'},
+ born:{n:'Max Born',r:'Göttingen, 44 Jahre'},
+ heisenberg:{n:'Werner Heisenberg',r:'Leipzig, 25 Jahre'},
+ pauli:{n:'Wolfgang Pauli',r:'Hamburg, 27 Jahre'},
+ dirac:{n:'Paul Dirac',r:'Cambridge, 25 Jahre'},
+ einstein:{n:'Albert Einstein',r:'Berlin, 48 Jahre'},
+ bohr:{n:'Niels Bohr',r:'Kopenhagen, 42 Jahre'},
+ ehrenfest:{n:'Paul Ehrenfest',r:'Leiden, 47 Jahre – Freund von Einstein und Bohr'},
+ curie:{n:'Marie Curie',r:'Paris, 59 Jahre'}
+};
+const NOTES={
+ N1:{t:'Energie in Portionen',src:'Lorentz über Planck (1900) und Einstein (1905)',x:'Licht der Frequenz f gibt Energie nur in Quanten E = h·f ab. Der Photoeffekt zeigt: Licht verhält sich hier wie ein Strom von Teilchen (Photonen).'},
+ N2:{t:'Materiewellen',src:'de Broglie',x:'Nicht nur Licht, auch Materie hat Wellencharakter. Zu jedem Teilchen mit Impuls p gehört die Wellenlänge λ = h/p. Elektronen zeigen deshalb Beugung und Interferenz.'},
+ N3:{t:'Die Wellenfunktion ψ',src:'Schrödinger',x:'Die Schrödinger-Gleichung beschreibt, wie sich die Wellenfunktion ψ eines Quantenobjekts ausbreitet. Schrödinger selbst hält ψ für eine wirkliche, im Raum verschmierte Welle.'},
+ N4:{t:'Wahrscheinlichkeitsdeutung',src:'Born',x:'ψ ist keine Materiewolke. Das Amplitudenquadrat |ψ|² gibt die Antreffwahrscheinlichkeitsdichte an: Wo |ψ|² groß ist, wird das Teilchen häufig nachgewiesen.'},
+ N5:{t:'Unbestimmtheitsrelation',src:'Heisenberg',x:'Ort und Impuls eines Quantenobjekts sind nie gleichzeitig beliebig genau bestimmt: Δx · Δp ≥ h/(4π). Das ist kein Mangel der Messgeräte, sondern eine Eigenschaft der Natur.'},
+ N6:{t:'Keine Bahnen',src:'Heisenberg',x:'Die Matrizenmechanik verzichtet auf anschauliche Elektronenbahnen. Sie rechnet nur mit beobachtbaren Größen, etwa Frequenzen und Intensitäten von Spektrallinien.'},
+ N7:{t:'Komplementarität',src:'Bohr',x:'Wellen- und Teilchenbild schließen einander aus und ergänzen sich doch. Welches Bild passt, hängt vom Versuchsaufbau ab – beide zugleich lassen sich nie beobachten.'},
+ N8:{t:'Einsteins Einspruch',src:'Einstein',x:'Einstein erkennt die Erfolge der Theorie an, hält sie aber für unvollständig: Der Zufall könne nicht das letzte Wort sein („Gott würfelt nicht“).'},
+ N9:{t:'Einsteins Gedankenexperiment',src:'Einstein',x:'Doppelspalt mit beweglich aufgehängter Blende: Aus dem Rückstoß der Blende will Einstein ablesen, durch welchen Spalt das Teilchen ging – und trotzdem das Interferenzmuster behalten.'},
+ N10:{t:'Bohrs Antwort',src:'Bohr',x:'Auch die Blende gehorcht der Unbestimmtheitsrelation. Misst man ihren Rückstoß genau genug, wird ihr Ort so unscharf, dass das Interferenzmuster verschwindet. Weg-Information und Interferenz schließen sich aus.'},
+ N11:{t:'Zwei Sprachen, eine Theorie',src:'Pauli',x:'Heisenbergs Matrizenmechanik und Schrödingers Wellenmechanik liefern dieselben Ergebnisse. Sie sind mathematisch gleichwertig – gestritten wird nur über die Deutung.'},
+ N12:{t:'Diracs Brücke',src:'Dirac',x:'Diracs Transformationstheorie fasst beide Formulierungen in einem gemeinsamen mathematischen Rahmen zusammen.'},
+ N13:{t:'Nur Wahrscheinlichkeiten',src:'Born',x:'Nichtdeterminiertheit: Für das einzelne Ereignis – etwa den Auftreffort eines Elektrons – ist keine Vorhersage möglich. Berechenbar ist nur die Verteilung vieler Ereignisse.'},
+ N14:{t:'Zerfall ohne Ursache',src:'Curie',x:'Nichtkausalität: Zwei völlig gleiche Atomkerne zerfallen zu verschiedenen Zeiten. Für den einzelnen Zerfallszeitpunkt lässt sich keine Ursache angeben – nur die Halbwertszeit liegt fest.'},
+ N15:{t:'Der Lichtkasten (1930)',src:'Epilog',x:'Auch Energie und Zeit sind verknüpft: ΔE · Δt ≥ h/(4π). Einsteins Versuch, das mit einem gewogenen Kasten voller Licht zu widerlegen, scheitert an Bohrs Antwort.'},
+ N16:{t:'EPR und Verschränkung (1935)',src:'Epilog',x:'Nichtlokalität: Zwei verschränkte Quantenobjekte bilden ein Ganzes. Eine Messung am einen legt das Ergebnis am anderen sofort fest – über jede Entfernung, ohne dass ein Signal übertragen wird.'},
+ N17:{t:'Schrödingers Katze (1935)',src:'Epilog',x:'Nichtobjektivierbarkeit, zugespitzt: Vor der Messung ist eine Eigenschaft nicht „eigentlich schon da“. Übertragen auf eine Katze, deren Leben an einem Atomzerfall hängt, wirkt das absurd – genau das wollte Schrödinger zeigen.'}
+};
+/* ---------- Neue Notizen, Nebenfiguren, Welt ---------- */
+Object.assign(NOTES,{
+ P1:{t:'Ausschließungsprinzip',src:'Pauli',x:'Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Deshalb füllen die Elektronen Schale um Schale – das begründet Bohrs Schalenbau der Atome und das Periodensystem.'},
+ P2:{t:'Wasserstoff aus Matrizen',src:'Pauli',x:'Pauli berechnete Anfang 1926 das Wasserstoffspektrum allein mit Heisenbergs Matrizenmechanik. Damit war gezeigt, dass die neue Mechanik ein wirkliches Atom richtig beschreibt.'},
+ P3:{t:'Der Spin',src:'Pauli und Ehrenfests Schüler',x:'Uhlenbeck und Goudsmit schlugen 1925 vor: Das Elektron hat einen Eigendrehimpuls mit genau zwei Einstellungen. Pauli baute diesen Spin 1927 in die Quantenmechanik ein. Er ist die vierte Quantenzahl seines Ausschließungsprinzips.'},
+ D1:{t:'Reihenfolge zählt',src:'Dirac',x:'In der Quantenmechanik ist x·p nicht dasselbe wie p·x; der Unterschied ist durch h festgelegt. Größen, die sich so verhalten, haben nie gleichzeitig scharfe Werte – daraus folgt Heisenbergs Unbestimmtheitsrelation mathematisch.'},
+ D2:{t:'Quantisiertes Licht',src:'Dirac',x:'Dirac wandte 1927 die Quantenmechanik auf das Lichtfeld selbst an. Photonen können entstehen und verschwinden. So wird Einsteins Lichtquant Teil der Theorie, und die Aussendung von Licht durch Atome wird berechenbar.'},
+ E1:{t:'Experiment: Doppelspalt',src:'eigener Versuch im Labor',x:'Jedes Elektron trifft als Punkt an einer nicht vorhersagbaren Stelle auf. Erst viele Treffer bilden das Streifenmuster. Misst man an den Spalten den Weg, verschwinden die Streifen.'},
+ E2:{t:'Experiment: Einzelspalt',src:'eigener Versuch im Labor',x:'Je enger der Spalt (kleines Δx), desto breiter fächert der Strahl auf (großes Δp quer zur Flugrichtung). Das Produkt Δx·Δp wird nie kleiner als h/(4π).'},
+ N18:{t:'Antimaterie (1928/1932)',src:'Epilog',x:'Diracs Gleichung verbindet Quantenmechanik und Relativitätstheorie. Sie liefert den Spin von selbst und sagt Antiteilchen voraus. 1932 wird das Positron entdeckt: Teilchen und Antiteilchen können paarweise entstehen und sich vernichten.'}
+});
+Object.assign(C,{
+ federle:{n:'Kurt Federle',r:'Reporter des „Abend-Telegraph“ – Ihr Konkurrent',x:1},
+ fotograf:{n:'Der Fotograf',r:'soll das Gruppenbild der Konferenz aufnehmen',x:1},
+ kellner:{n:'Der Kellner',r:'Hotel Métropole',x:1},
+ page:{n:'Der Hotelpage',r:'Hotel Métropole',x:1},
+ laborant:{n:'Der Laborant',r:'Institut für Physiologie',x:1}
+});
+Object.assign(LOOK,{
+ federle:{rx:41,ry:50,hair:'#7a4a2a',style:'cap',hl:36,mo:'thin',moc:'#7a4a2a',brow:3,tie:'bow',suit:'#4d6b3c',hat:'#3c5230'},
+ fotograf:{rx:42,ry:51,hair:'#3a3028',style:'cap',hl:34,mo:'big',moc:'#3a3028',brow:3,tie:'none',suit:'#6b5236',hat:'#4a3a28'},
+ kellner:{rx:40,ry:51,hair:'#1c1814',style:'cap',hl:36,part:18,brow:2,tie:'bow',suit:'#e9e6df'},
+ page:{rx:38,ry:47,hair:'#b8793a',style:'cap',hl:38,brow:2,tie:'none',suit:'#8c2f23',hat:'#8c2f23',young:1},
+ laborant:{rx:40,ry:52,hair:'#55504a',style:'cap',hl:26,glasses:1,brow:2,tie:'tie',suit:'#dfe3e6'}
+});
+const PHYS=['lorentz','einstein','bohr','curie','born','heisenberg','schroedinger','debroglie','pauli','dirac','ehrenfest'];
+const W=960,H=560,CS=20,GC=48,GR=28;
+const MAPS={
+ wandel:{n:'Wandelgang',sub:'Institut für Physiologie',floor:'tile',wall:'#5a6f7c',
+  doors:[{to:'saal',side:'top',p:480,label:'Konferenzsaal'},{to:'labor',side:'right',p:300,label:'Labor'},{to:'park',side:'bottom',p:480,label:'Leopoldpark'}],
+  furn:[{k:'bench',x:110,y:470,w:170,h:28},{k:'bench',x:680,y:470,w:170,h:28},{k:'plant',x:40,y:108,w:34,h:34},{k:'plant',x:886,y:108,w:34,h:34},{k:'rug',x:380,y:200,w:200,h:260,c:'#7a2f2a'},{k:'coats',x:120,y:20,w:100,h:58,nb:1},{k:'win',x:600,y:14,w:66,h:62,nb:1},{k:'win',x:770,y:14,w:66,h:62,nb:1},{k:'sconce',x:410,y:34,nb:1},{k:'sconce',x:550,y:34,nb:1},{k:'clock',x:715,y:40,nb:1},{k:'pic',x:30,y:22,w:60,h:46,c:'#5d7a8a',nb:1}],
+  objs:[{id:'brett',k:'board',x:250,y:16,w:130,h:60,label:'Anschlagbrett',stand:[315,130]},{id:'gruss',k:'paper',x:740,y:474,w:28,h:18,label:'Postkarte auf der Bank',stand:[760,440],if:()=>S.day===3}],
+  spots:[[280,300],[355,300],[640,230],[720,390],[180,380],[600,440]]},
+ saal:{n:'Konferenzsaal',sub:'Institut für Physiologie',floor:'parquet',wall:'#6d5740',
+  doors:[{to:'wandel',side:'bottom',p:480,label:'Wandelgang'}],
+  furn:[{k:'table',x:140,y:250,w:280,h:26},{k:'table',x:540,y:250,w:280,h:26},{k:'table',x:140,y:340,w:280,h:26},{k:'table',x:540,y:340,w:280,h:26},{k:'table',x:140,y:430,w:280,h:26},{k:'table',x:540,y:430,w:280,h:26},{k:'pult',x:660,y:118,w:50,h:34},{k:'chair',x:170,y:280,w:18,h:18,nb:1},{k:'chair',x:232,y:280,w:18,h:18,nb:1},{k:'chair',x:294,y:280,w:18,h:18,nb:1},{k:'chair',x:356,y:280,w:18,h:18,nb:1},{k:'chair',x:570,y:280,w:18,h:18,nb:1},{k:'chair',x:632,y:280,w:18,h:18,nb:1},{k:'chair',x:694,y:280,w:18,h:18,nb:1},{k:'chair',x:756,y:280,w:18,h:18,nb:1},{k:'chair',x:170,y:370,w:18,h:18,nb:1},{k:'chair',x:232,y:370,w:18,h:18,nb:1},{k:'chair',x:294,y:370,w:18,h:18,nb:1},{k:'chair',x:356,y:370,w:18,h:18,nb:1},{k:'chair',x:570,y:370,w:18,h:18,nb:1},{k:'chair',x:632,y:370,w:18,h:18,nb:1},{k:'chair',x:694,y:370,w:18,h:18,nb:1},{k:'chair',x:756,y:370,w:18,h:18,nb:1},{k:'chair',x:170,y:460,w:18,h:18,nb:1},{k:'chair',x:232,y:460,w:18,h:18,nb:1},{k:'chair',x:294,y:460,w:18,h:18,nb:1},{k:'chair',x:356,y:460,w:18,h:18,nb:1},{k:'chair',x:570,y:460,w:18,h:18,nb:1},{k:'chair',x:632,y:460,w:18,h:18,nb:1},{k:'chair',x:694,y:460,w:18,h:18,nb:1},{k:'chair',x:756,y:460,w:18,h:18,nb:1},{k:'win',x:60,y:14,w:66,h:62,nb:1,c:'#3d5a48'},{k:'win',x:170,y:14,w:66,h:62,nb:1,c:'#3d5a48'},{k:'win',x:724,y:14,w:66,h:62,nb:1,c:'#3d5a48'},{k:'win',x:834,y:14,w:66,h:62,nb:1,c:'#3d5a48'},{k:'sconce',x:286,y:34,nb:1},{k:'sconce',x:674,y:34,nb:1},{k:'plant',x:40,y:108,w:34,h:34},{k:'plant',x:886,y:108,w:34,h:34}],
+  objs:[{id:'tafel',k:'tafel',x:320,y:12,w:320,h:66,label:'Tafel',stand:[480,130]},{id:'programm',k:'paper',x:672,y:124,w:26,h:18,label:'Programm auf dem Rednerpult',stand:[685,190]}],
+  spots:[[270,170],[345,170],[560,170],[800,190],[90,300],[480,300]]},
+ labor:{n:'Labor',sub:'Institut für Physiologie',floor:'lab',wall:'#7d8a8c',
+  doors:[{to:'wandel',side:'left',p:300,label:'Wandelgang'}],
+  furn:[{k:'table',x:150,y:180,w:250,h:64},{k:'table',x:560,y:180,w:250,h:64},{k:'shelf',x:300,y:100,w:360,h:22},{k:'table',x:790,y:430,w:90,h:60},{k:'table',x:130,y:440,w:210,h:50},{k:'flask',x:150,y:446,nb:1},{k:'flask',x:250,y:446,nb:1},{k:'win',x:60,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:170,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:724,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:834,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'clock',x:480,y:40,nb:1},{k:'pic',x:300,y:20,w:110,h:50,c:'#e9e6df',nb:1,chart:1}],
+  objs:[{id:'exp1',k:'app1',x:190,y:186,w:170,h:50,label:'Doppelspalt-Apparatur',stand:[275,290]},{id:'exp2',k:'app2',x:600,y:186,w:170,h:50,label:'Einzelspalt-Apparatur',stand:[685,290]},{id:'pumpe',k:'pump',x:806,y:438,w:58,h:44,label:'Vakuumpumpe',stand:[740,470],if:()=>S.day>=2}],
+  spots:[[470,420],[400,340]]},
+ park:{n:'Leopoldpark',sub:'hinter dem Institut',floor:'grass',wall:'#8a5a44',
+  doors:[{to:'wandel',side:'top',p:480,label:'Institut'},{to:'hotel',side:'right',p:300,label:'Hotel Métropole'}],
+  furn:[{k:'path',x:450,y:100,w:60,h:150},{k:'path',x:450,y:220,w:500,h:50},{k:'tree',x:120,y:180,w:60,h:60},{k:'tree',x:800,y:120,w:60,h:60},{k:'tree',x:180,y:440,w:60,h:60},{k:'tree',x:780,y:450,w:60,h:60},{k:'tree',x:610,y:110,w:54,h:54},{k:'pond',x:390,y:320,w:180,h:90},{k:'bench',x:260,y:250,w:96,h:26},{k:'bench',x:620,y:400,w:96,h:26},{k:'tripod',x:770,y:330,w:26,h:26},{k:'flower',x:290,y:480,w:130,h:40,nb:1},{k:'flower',x:540,y:476,w:110,h:36,nb:1},{k:'flower',x:40,y:250,w:70,h:40,nb:1},{k:'flower',x:860,y:250,w:60,h:30,nb:1},{k:'lamp',x:526,y:196,w:14,h:14},{k:'lamp',x:380,y:196,w:14,h:14},{k:'duck',x:480,y:365,nb:1}],
+  objs:[{id:'heft',k:'book',x:296,y:254,w:22,h:16,label:'Vergessenes Notizheft',stand:[310,310],if:()=>S.day>=2},{id:'zeitung',k:'paper',x:650,y:404,w:30,h:18,label:'Zeitung auf der Bank',stand:[665,460],if:()=>S.day>=2}],
+  spots:[[610,290],[685,290],[300,400],[150,320],[860,380],[330,160]]},
+ hotel:{n:'Frühstückssaal',sub:'Hotel Métropole',floor:'carpet',wall:'#7a3a32',cc:'#8e4038',
+  doors:[{to:'park',side:'left',p:300,label:'Leopoldpark'},{to:'salon',side:'right',p:300,label:'Salon'}],
+  furn:[{k:'round',x:180,y:180,w:84,h:84},{k:'round',x:440,y:180,w:84,h:84},{k:'round',x:700,y:180,w:84,h:84},{k:'round',x:310,y:390,w:84,h:84},{k:'round',x:570,y:390,w:84,h:84},{k:'counter',x:60,y:100,w:220,h:30},{k:'chair',x:158,y:213,w:18,h:18,nb:1},{k:'chair',x:268,y:213,w:18,h:18,nb:1},{k:'chair',x:418,y:213,w:18,h:18,nb:1},{k:'chair',x:528,y:213,w:18,h:18,nb:1},{k:'chair',x:678,y:213,w:18,h:18,nb:1},{k:'chair',x:788,y:213,w:18,h:18,nb:1},{k:'chair',x:288,y:423,w:18,h:18,nb:1},{k:'chair',x:398,y:423,w:18,h:18,nb:1},{k:'chair',x:548,y:423,w:18,h:18,nb:1},{k:'chair',x:658,y:423,w:18,h:18,nb:1},{k:'win',x:330,y:12,w:70,h:64,nb:1,c:'#c9a04a'},{k:'win',x:560,y:12,w:70,h:64,nb:1,c:'#c9a04a'},{k:'win',x:790,y:12,w:70,h:64,nb:1,c:'#c9a04a'},{k:'pic',x:446,y:20,w:68,h:50,c:'#4f6b5a',nb:1},{k:'pic',x:676,y:20,w:68,h:50,c:'#6b5a7a',nb:1},{k:'sconce',x:300,y:34,nb:1},{k:'sconce',x:890,y:34,nb:1},{k:'plant',x:886,y:490,w:34,h:34},{k:'plant',x:40,y:490,w:34,h:34}],
+  objs:[{id:'serviette',k:'paper',x:468,y:212,w:28,h:20,label:'Bekritzelte Serviette',stand:[482,300],if:()=>S.day===3},{id:'manuskript',k:'paper',x:728,y:210,w:28,h:22,label:'Manuskript auf dem Tisch',stand:[742,300],if:()=>S.day===3}],
+  spots:[[375,320],[450,320],[640,320],[150,340],[830,420],[480,490]]},
+ salon:{n:'Salon',sub:'Rauchzimmer des Hotels',floor:'carpet',wall:'#3c4f42',cc:'#3f5a48',
+  doors:[{to:'hotel',side:'left',p:300,label:'Frühstückssaal'}],
+  furn:[{k:'sofa',x:200,y:190,w:56,h:56},{k:'sofa',x:300,y:190,w:56,h:56},{k:'sofa',x:640,y:190,w:56,h:56},{k:'sofa',x:740,y:190,w:56,h:56},{k:'table',x:240,y:270,w:76,h:40},{k:'table',x:680,y:270,w:76,h:40},{k:'fire',x:420,y:14,w:120,h:66,nb:1},{k:'plant',x:886,y:108,w:34,h:34},{k:'rug',x:380,y:290,w:200,h:120,c:'#6b3a2a'},{k:'books',x:50,y:8,w:250,h:74,nb:1},{k:'books',x:660,y:8,w:200,h:74,nb:1},{k:'clock',x:590,y:36,nb:1},{k:'pic',x:324,y:22,w:70,h:48,c:'#7a5a3a',nb:1},{k:'piano',x:790,y:440,w:120,h:66},{k:'chess',x:730,y:276,nb:1},{k:'sconce',x:404,y:30,nb:1},{k:'sconce',x:556,y:30,nb:1}],
+  objs:[{id:'brief',k:'paper',x:262,y:280,w:30,h:20,label:'Liegengebliebener Brief',stand:[278,350],if:()=>S.day>=2},{id:'block',k:'book',x:706,y:280,w:24,h:18,label:'Notizblock',stand:[718,350],if:()=>S.day>=2}],
+  spots:[[440,340],[515,340],[470,190],[590,460],[340,460],[840,380]]}
+};
+const ROOMS=MAPS;
+const XSPOT={fotograf:['park',[720,340]],kellner:['hotel',[150,170]],page:['salon',[110,440]],laborant:['labor',[470,420]]};
+/* Aufenthaltsorte: [Tag][Phase] – die ersten beiden einer Liste stehen im Gespräch beisammen */
+const PLACE={
+ 1:[{saal:['lorentz','debroglie','born'],park:['schroedinger','curie'],wandel:['ehrenfest','pauli','federle'],salon:['heisenberg','dirac'],hotel:['einstein','bohr']},
+    {saal:['lorentz','schroedinger'],park:['debroglie','einstein'],wandel:['born','curie','federle'],salon:['heisenberg','dirac','pauli'],hotel:['bohr','ehrenfest']}],
+ 2:[{saal:['born','heisenberg','lorentz'],park:['einstein','ehrenfest','federle'],wandel:['pauli','dirac','schroedinger'],salon:['debroglie','curie'],hotel:['bohr']},
+    {saal:['lorentz','dirac'],park:['schroedinger','debroglie'],wandel:['heisenberg','pauli'],salon:['born','curie'],hotel:['einstein','bohr','ehrenfest','federle']}],
+ 3:[{hotel:['einstein','bohr','ehrenfest'],saal:['lorentz','schroedinger'],park:['heisenberg','pauli'],wandel:['curie','born'],salon:['dirac','debroglie','federle']},
+    {hotel:['bohr','heisenberg'],park:['einstein','ehrenfest'],saal:['lorentz','pauli','dirac'],wandel:['curie','schroedinger','federle'],salon:['born','debroglie']}]
+};
+const DAYS={1:'Erster Tag · Wellen überall',2:'Zweiter Tag · Der Zufall zieht ein',3:'Dritter Tag · Einstein gegen Bohr'};
+const TASKS={
+ 1:[{n:'N2',t:'Was hat es mit de Broglies Materiewellen auf sich?'},{n:'N3',t:'Was ist Schrödingers Wellenmechanik?'},{n:'N4',t:'Botengang: Bringen Sie Born Schrödingers Sicht auf die Wellenfunktion.'}],
+ 2:[{n:'N6',t:'Was hat Heisenberg auf Helgoland gefunden?'},{n:'N5',t:'Was besagt die Unbestimmtheitsrelation?'},{n:'D1',t:'Botengang: Zeigen Sie Dirac Heisenbergs Relation.'},{n:'P1',t:'Was ist Paulis eigener Beitrag?'},{n:'N8',t:'Botengang: Was sagt Einstein zu Borns Deutung?'}],
+ 3:[{n:'N7',t:'Was meint Bohr mit Komplementarität?'},{n:'N9',t:'Wie will Einstein Heisenbergs Relation widerlegen?'},{n:'N10',t:'Botengang: Bringen Sie Bohr Einsteins Gedankenexperiment.'},{f:'eFinal',t:'Botengang: Tragen Sie Bohrs Antwort zu Einstein zurück.'},{n:'N14',t:'Kennt Madame Curie den Zufall aus ihrem Labor?'},{r:3,t:'Lassen Sie Pauli drei Gerüchte Ihres Konkurrenten prüfen.'}]
+};
+const HOW={
+ N2:['debroglie','Fragen Sie ihn nach seinen Materiewellen.'],N3:['schroedinger','Fragen Sie ihn nach seiner Wellenmechanik.'],N4:['born','Legen Sie ihm Ihre Notiz „Die Wellenfunktion ψ“ vor.'],
+ N6:['heisenberg','Fragen Sie ihn nach seiner Matrizenmechanik.'],N5:['heisenberg','Fragen Sie ihn nach der Unbestimmtheitsrelation.'],D1:['dirac','Legen Sie ihm die Notiz „Unbestimmtheitsrelation“ vor.'],P1:['pauli','Fragen Sie ihn nach seinem eigenen Beitrag.'],N8:['einstein','Legen Sie ihm Borns „Wahrscheinlichkeitsdeutung“ vor.'],
+ N7:['bohr','Fragen Sie ihn nach der Komplementarität.'],N9:['einstein','Fragen Sie ihn, wie er Heisenbergs Relation widerlegen will.'],N10:['bohr','Legen Sie ihm „Einsteins Gedankenexperiment“ vor.'],eFinal:['einstein','Legen Sie ihm „Bohrs Antwort“ vor.'],N14:['curie','Legen Sie ihr Borns „Wahrscheinlichkeitsdeutung“ vor.']
+};
+/* Gerüchte des Konkurrenten – Pauli prüft sie */
+const RUM={
+ G2:{day:1,need:'N4',t:'„Schrödinger enthüllt: Am Doppelspalt teilt sich jedes Elektron in zwei Hälften!“',o:['Falsch ist nur die Zahl: Es teilt sich in viele kleine Teile.','Ein Elektron wird immer als Ganzes an einem Punkt nachgewiesen. Die Welle ψ beschreibt nur, wo das wahrscheinlich geschieht.','Elektronen fliegen in Wahrheit immer nur durch den linken Spalt.'],c:1,ok:'Na also. Halbe Elektronen hat noch keiner gesehen. Die Welle geht durch beide Spalte, nachgewiesen wird ein ganzes Teilchen.',fix:'Elektronen teilen sich nicht. Sie werden stets als Ganzes nachgewiesen; die Wellenfunktion gibt nur die Antreffwahrscheinlichkeit an.'},
+ G3:{day:1,need:'N4',t:'„Born gesteht: Die neue Physik kann überhaupt nichts mehr vorhersagen!“',o:['Sie sagt die Verteilung vieler Ereignisse exakt voraus – nur das einzelne Ereignis nicht.','Stimmt, seit 1926 sind Vorhersagen in der Physik unmöglich.','Sie sagt jedes einzelne Ereignis exakt voraus, man muss nur genau genug rechnen.'],c:0,ok:'Richtig. Die Statistik stimmt auf viele Stellen genau. Wer das „nichts“ nennt, hat nie ein Spektrum gesehen.',fix:'Die Quantenmechanik sagt Wahrscheinlichkeiten und damit die Verteilung vieler Messungen exakt voraus. Unvorhersagbar ist nur das Einzelereignis.'},
+ G1:{day:2,need:'N5',t:'„Heisenberg räumt ein: Unsere Messgeräte sind einfach noch zu ungenau. Bessere Instrumente werden die Unschärfe beseitigen.“',o:['Stimmt, in zwanzig Jahren ist das Problem gelöst.','Die Unbestimmtheit gilt nur für Elektronen in Göttingen.','Die Unbestimmtheit ist eine Eigenschaft der Natur. Ein Quantenobjekt besitzt Ort und Impuls nicht gleichzeitig als scharfe Werte.'],c:2,ok:'So ist es. Das hat mit der Werkstatt nichts zu tun. Kein noch so gutes Gerät misst, was es nicht gibt.',fix:'Die Unbestimmtheitsrelation ist keine Frage der Messtechnik, sondern eine grundsätzliche Eigenschaft von Quantenobjekten.'},
+ G5:{day:2,need:'N8',t:'„Einstein erklärt die Quantenmechanik für falsch!“',o:['Einstein hält die Theorie für erfolgreich, aber für unvollständig – nicht für falsch.','Einstein hat die Theorie gar nicht verstanden.','Stimmt, Einstein hat einen Rechenfehler gefunden.'],c:0,ok:'Genau. Der Alte bestreitet keine einzige Vorhersage. Er vermisst etwas dahinter. Das ist ein Unterschied, den ein Reporter kennen sollte.',fix:'Einstein erkennt die Erfolge der Quantenmechanik an. Er hält sie für unvollständig, nicht für falsch.'},
+ G4:{day:3,need:'N7',t:'„Bohr bestätigt: Mit etwas Geschick sieht man Welle und Teilchen im selben Versuch zugleich.“',o:['Stimmt, man braucht dafür nur zwei Schirme.','Beide Bilder zeigen sich nie im selben Versuch. Der Aufbau entscheidet: Weg-Information oder Interferenz.','Das Elektron ist immer Welle, das Teilchen ist eine Täuschung.'],c:1,ok:'Richtig – komplementär heißt: entweder, oder. Wer den Weg kennt, hat keine Streifen.',fix:'Wellen- und Teilchenbild sind komplementär: Ein Versuch zeigt entweder den Weg oder die Interferenz, nie beides.'}
+};
+/* Mitgehörte Gespräche */
+const EAVES=[
+ {id:'m1',d:1,ph:0,room:'wandel',who:['ehrenfest','pauli'],lines:[['pauli','De Broglie lässt seine Teilchen auf Wellen reiten wie Kinder auf dem Karussell. Bei einem Stoß zweier Teilchen geht das nicht auf.'],['ehrenfest','Sie sind zu streng, Pauli. Die Idee der Materiewelle selbst ist doch glänzend bestätigt.'],['pauli','Die Formel, ja. Das Bild dazu, nein. Ich sage ihm das gleich im Saal.'],['ehrenfest','Sagen Sie es freundlich. Er ist ein Prinz.'],['pauli','Die Physik kennt keine Prinzen.']]},
+ {id:'m2',d:1,ph:1,room:'salon',who:['heisenberg','dirac'],lines:[['heisenberg','Einstein spricht so oft vom lieben Gott. Was halten Sie davon, Dirac?'],['dirac','Nichts. Religion ist ein Durcheinander falscher Behauptungen. Ein Physiker sollte ehrlich sein.'],['heisenberg','Das ist hart geurteilt.'],['pauli','Lassen Sie ihn, Heisenberg. Unser Freund Dirac hat durchaus eine Religion. Ihr Leitsatz lautet: Es gibt keinen Gott, und Dirac ist sein Prophet.'],['dirac','… (lacht tatsächlich)']]},
+ {id:'m3',d:2,ph:0,room:'saal',who:['born','heisenberg'],lines:[['born','Wollen wir es wirklich so sagen? „Eine abgeschlossene Theorie“?'],['heisenberg','Ja. Ihre Grundannahmen lassen sich nicht mehr abändern, ohne dass alles zusammenfällt.'],['born','Einstein wird toben.'],['heisenberg','Einstein wird nachdenken. Das ist gefährlicher.']]},
+ {id:'m4',d:2,ph:0,room:'park',who:['einstein','ehrenfest'],lines:[['einstein','Sie rechnen wunderbar, die jungen Leute. Aber sie haben das Fragen verlernt: Was geschieht wirklich?'],['ehrenfest','Vielleicht ist die Frage falsch gestellt.'],['einstein','Der Mond ist doch auch da, wenn keiner hinsieht!'],['ehrenfest','Einstein, ich muss dir etwas sagen. Du redest gegen die Quanten, wie deine Gegner einst gegen die Relativität geredet haben.'],['einstein','… Das war nicht nett, Paul. Aber vielleicht nicht ganz falsch.']]},
+ {id:'m5',d:2,ph:1,room:'hotel',who:['einstein','bohr'],lines:[['einstein','Ich kann nicht glauben, dass der Herrgott würfelt.'],['bohr','Aber es kann doch nicht unsere Aufgabe sein, ihm vorzuschreiben, wie er die Welt regieren soll.'],['einstein','Dann zeige ich Ihnen morgen, dass Ihre Theorie nicht alles beschreibt, was es gibt.'],['bohr','Ich … ich freue mich darauf. Wirklich.'],['ehrenfest','Und ich hole mir einen Stuhl in die erste Reihe.']]},
+ {id:'m6',d:3,ph:0,room:'hotel',who:['einstein','bohr'],lines:[['einstein','Guten Morgen, Bohr. Ich habe heute Nacht etwas gezeichnet. Eine Blende, die an Federn hängt.'],['bohr','An Federn …'],['einstein','Sie werden sehen. Ich gebe die Skizze dem Reporter mit, sobald er danach fragt.'],['bohr','Dann frühstücke ich lieber gründlich.']]},
+ {id:'m7',d:3,ph:0,room:'park',who:['heisenberg','pauli'],lines:[['heisenberg','Einstein hat schon wieder ein Gedankenexperiment. Bohr ist ganz blass geworden.'],['pauli','Bohr wird blass, dann murmelt er einen Tag lang, und abends hat er recht. Ich kenne das.'],['heisenberg','Und wenn Einstein doch ein Loch findet?'],['pauli','Dann lernen wir etwas. Aber ich wette meinen Hut dagegen.']]},
+ {id:'m8',d:3,ph:1,room:'park',who:['einstein','ehrenfest'],lines:[['ehrenfest','Nun? Hat Bohr dich überzeugt?'],['einstein','Er hat mich widerlegt. Das ist nicht dasselbe.'],['ehrenfest','Und jetzt?'],['einstein','Jetzt denke ich weiter. Die Theorie ist ohne Widerspruch. Aber sie ist nicht die ganze Wahrheit, Paul. Das spüre ich im kleinen Finger.']]}
+];
+/* Abendszenen */
+const EVE={
+ 1:[['narr','Abend im Hotel Métropole. An der langen Tafel sitzen die Teilnehmer beim Essen – Sie haben einen Platz am Ende ergattert.'],['schroedinger','Meine Welle ist wirklich, Born. Sie können sie nicht einfach zur Wettquote erklären.'],['born','Und doch schlägt jedes Elektron als Punkt ein, lieber Schrödinger. Was soll die Welle anderes sein als ein Maß für die Wahrscheinlichkeit?'],['debroglie','Vielleicht führt die Welle ein Teilchen …'],['pauli','Vielleicht auch nicht.'],['einstein','Ich habe heute nur zugehört. Morgen habe ich Fragen.'],['narr','Sie telegrafieren nach Berlin: Materie hat Wellennatur, Schrödinger hat die Gleichung dazu – und Born behauptet, die Welle sei nur eine Wahrscheinlichkeit.']],
+ 2:[['narr','Zweiter Abend. Die Stimmung ist angespannter als gestern.'],['heisenberg','Es bleibt dabei: Eine Bahn des Elektrons gibt es nicht. Ort und Impuls sind nie zugleich scharf.'],['dirac','Es folgt aus der Reihenfolge. x mal p ist nicht p mal x.'],['pauli','Zwei Sätze von Dirac an einem Abend. Notieren Sie das, Herr Reporter.'],['einstein','Eine Theorie, die nur würfelt, ist nicht fertig. Ich zeige es Ihnen morgen, Bohr.'],['bohr','Dann … dann bis morgen früh, Einstein.'],['narr','Ihr zweites Telegramm: Bahnen gibt es im Atom nicht mehr, der Zufall gehört zum Fundament – und Einstein will morgen das Gegenteil beweisen.']],
+ 3:[['narr','Der letzte Abend. Lorentz erhebt sich und klopft an sein Glas.'],['lorentz','Meine Damen und Herren, wir haben in diesen Tagen erlebt, wie ein neues Bild der Natur entsteht. Ich danke Ihnen allen – auch für den Streit.'],['einstein','Bohr, Sie haben gewonnen. Für heute.'],['bohr','Wir haben beide gewonnen, Einstein. Ohne Ihre Einwände hätten wir unsere eigene Theorie nicht verstanden.'],['curie','Und nun, meine Herren, zurück ins Labor. Die Natur hat das letzte Wort.'],['pauli','Ausnahmsweise habe ich dem nichts hinzuzufügen.'],['narr','Die Koffer werden gepackt. Doch der Streit zwischen Einstein und Bohr ist nicht vorbei – er fängt gerade erst an.']]
+};
+/* Beziehungstafel: [von, nach, Art (+ stützt / − widerspricht), Text, Bedingung] */
+const REL=[
+ ['debroglie','schroedinger','+','Schrödinger baut auf de Broglies Materiewellen auf',()=>has('N2')&&has('N3')],
+ ['born','schroedinger','-','Streit um die Deutung von ψ: Wahrscheinlichkeit oder wirkliche Welle?',()=>has('N4')],
+ ['heisenberg','schroedinger','-','Beobachtbare Größen gegen anschauliche Wellen',()=>has('N3')&&has('N6')],
+ ['pauli','debroglie','-','Pauli zerpflückt de Broglies Führungswelle',()=>S.asked.includes('pauli.p1')||S.heard.includes('m1')],
+ ['pauli','heisenberg','+','Pauli zeigt: Matrizen- und Wellenmechanik sind gleichwertig; er berechnet den Wasserstoff mit Matrizen',()=>has('N11')||has('P2')],
+ ['pauli','bohr','+','Paulis Ausschließungsprinzip begründet Bohrs Schalenbau der Atome',()=>has('P1')],
+ ['ehrenfest','pauli','+','Ehrenfests Schüler finden den Spin, Pauli baut ihn in die Theorie ein',()=>has('P3')],
+ ['dirac','heisenberg','+','Diracs „Reihenfolge zählt“ begründet die Unbestimmtheitsrelation',()=>has('D1')],
+ ['dirac','schroedinger','+','Diracs Transformationstheorie vereint Wellen und Matrizen',()=>has('N12')],
+ ['dirac','einstein','+','Dirac macht Einsteins Lichtquanten zum Teil der Theorie',()=>has('D2')],
+ ['born','heisenberg','+','Gemeinsamer Bericht: „eine abgeschlossene Theorie“',()=>has('N13')||S.heard.includes('m3')],
+ ['bohr','heisenberg','+','Komplementarität und Unbestimmtheit gehören zusammen',()=>has('N7')&&has('N5')],
+ ['curie','born','+','Der radioaktive Zerfall zeigt den Zufall im Experiment',()=>has('N14')],
+ ['einstein','born','-','„Der Alte würfelt nicht“ – Einstein lehnt den grundsätzlichen Zufall ab',()=>has('N8')],
+ ['einstein','bohr','-','Der große Streit: Ist die Quantenmechanik vollständig?',()=>has('N9')||has('N10')],
+ ['ehrenfest','einstein','+','Ehrenfest vermittelt zwischen den Freunden Einstein und Bohr',()=>S.heard.includes('m4')||S.heard.includes('m8')||(S.cnt.ehrenfest||0)>=2],
+ ['lorentz','einstein','+','Lorentz und Einstein hängen am Bild einer anschaulichen Wirklichkeit',()=>(S.cnt.lorentz||0)>=3]
+];
+/* Dialoge */const later='Darüber sprechen wir besser, wenn die Vorträge dazu gehalten sind. Kommen Sie morgen wieder.';
+const T={
+ lorentz:{
+  greet:()=>S.day===1?(met('lorentz')?'Ah, die Presse. Haben Sie sich schon zurechtgefunden?':'Willkommen in Brüssel. Ich leite diese Konferenz – und ich gestehe, ich habe selten so viele junge Leute so alte Gewissheiten umstoßen sehen.'):S.day===2?'Heute tragen Born und Heisenberg vor. Halten Sie sich gut fest.':'Der letzte Tag. Die eigentliche Konferenz, sagt man mir, findet beim Frühstück im Hotel statt.',
+  topics:[
+   {id:'l1',q:'Worum geht es auf dieser Konferenz?',give:'N1',a:()=>'Um Elektronen und Photonen. Sie erinnern sich: Planck fand 1900, dass Strahlung Energie nur in Portionen E = h·f abgibt. Einstein nahm das 1905 ernst und erklärte damit den Photoeffekt – Licht als Strom von Quanten. Seither wissen wir nicht mehr recht, was eine Welle und was ein Teilchen ist. Genau darüber streiten wir hier.'},
+   {id:'l2',q:'Wie komme ich an meine Geschichte?',a:()=>'Fragen Sie die Herrschaften – und Madame Curie. Vor allem aber: Tragen Sie weiter, was Sie hören. Legen Sie einem Physiker die Notiz eines anderen vor, und Sie werden staunen, was er darauf antwortet. Wenn Sie nicht weiterwissen, fragen Sie Ehrenfest. Er kennt jeden und vermittelt zwischen allen.'},
+   {id:'l3',if:()=>S.day===3,q:'Ihr Fazit als Vorsitzender?',a:()=>has('N10')?'Sie haben Bohrs Antwort an Einstein gehört? Dann wissen Sie mehr als mancher Teilnehmer. Die neue Theorie hält stand. Ob sie mir gefällt, ist eine andere Frage.':'Die neue Theorie rechnet richtig, daran zweifelt niemand mehr. Aber was sie über die Wirklichkeit sagt – hören Sie dazu Einstein und Bohr im Hotel.'}
+  ],
+  react:{N5:{a:()=>'Ich bin ein alter Mann. In meiner Physik hatte ein Elektron zu jedem Zeitpunkt einen Ort und eine Geschwindigkeit. Dieses Ideal gebe ich ungern auf – aber ich sehe, dass die Jungen ohne es auskommen.'},
+   N4:{a:()=>'Wahrscheinlichkeiten als Grundlage der Physik … Mir wäre lieber, sie wären nur Ausdruck unseres Nichtwissens. Fragen Sie Einstein, er denkt ähnlich.'}},
+  def:'Bemerkenswert. Zeigen Sie das jemandem, der daran Anstoß nimmt – dann erfahren Sie mehr als von mir.'
+ },
+ debroglie:{
+  greet:()=>met('pauli')&&S.day>1?'Sie haben mit Pauli gesprochen? Dann kennen Sie die Einwände gegen meinen Vortrag bereits.':'Bonjour. Sie interessieren sich für Wellen? Dann sind Sie bei mir richtig.',
+  topics:[
+   {id:'d1',q:'Was hat es mit Ihren Materiewellen auf sich?',give:'N2',a:()=>(has('N1')?'Lorentz hat Ihnen von den Lichtquanten erzählt? Dann drehen Sie den Gedanken um: ':'Einstein zeigte, dass die Lichtwelle Teilcheneigenschaften hat. Ich drehte den Gedanken um: ')+'Wenn Wellen Teilchen sein können, dann gehört auch zu jedem Teilchen eine Welle. Ihre Wellenlänge ist λ = h/p. Je größer der Impuls, desto kürzer die Welle. Dieses Jahr haben Davisson und Germer Elektronen an Kristallen gebeugt – die Welle ist also wirklich da.'},
+   {id:'d2',if:()=>has('N2'),q:'Ist das Elektron nun Welle oder Teilchen?',a:()=>'Ich glaube: beides zugleich. Ein wirkliches Teilchen, das von seiner Welle geführt wird wie ein Korken von der Dünung. '+(met('pauli')?'Pauli hat mir im Saal vorgerechnet, wo das hakt. Ich konnte nicht auf alles antworten.':'Die Göttinger und Kopenhagener sehen das anders – für sie gibt es keine Bahn mehr, nur Wahrscheinlichkeiten.')}
+  ],
+  react:{N3:{a:()=>'Schrödinger hat aus meiner Idee eine Gleichung gemacht – eine sehr schöne. Nur das Teilchen hat er dabei ganz abgeschafft. So weit wollte ich nie gehen.'},
+   N4:{a:()=>'Borns Deutung funktioniert, das gebe ich zu. Aber eine Welle, die nur noch Wahrscheinlichkeit ist? Ich hoffe weiter auf eine wirkliche Welle, die ein wirkliches Teilchen führt.'},
+   N8:{a:()=>'Monsieur Einstein hat mich nach meinem Vortrag ermutigt. Wir sind hier wenige, die noch an eine anschauliche Wirklichkeit glauben.'}},
+  def:'Sehr interessant – aber dazu fragen Sie besser die deutschen Kollegen.'
+ },
+ schroedinger:{
+  greet:()=>has('N6')?'Sie kommen von Heisenberg? Dann brauchen Sie jetzt etwas Anschauliches zur Erholung.':'Ein Journalist! Endlich jemand, dem ich Physik ohne Matrizen erklären darf.',
+  topics:[
+   {id:'s1',q:'Was ist Ihre Wellenmechanik?',give:'N3',a:()=>(has('N2')?'Sie kennen de Broglies Materiewellen – gut. Ich habe mich gefragt: Wenn es eine Welle gibt, wo ist dann die Wellengleichung? ':'De Broglie hat jedem Teilchen eine Welle zugeordnet. Ich habe mich gefragt: Wo ist dann die Wellengleichung? ')+'Ich habe sie gefunden. Sie beschreibt eine Wellenfunktion ψ, und aus ihr folgen die Energiestufen des Wasserstoffatoms ganz von selbst – wie die Töne einer schwingenden Saite. Für mich ist das Elektron diese Welle: verschmiert, stetig, anschaulich.'},
+   {id:'s2',q:'Was halten Sie von Quantensprüngen?',a:()=>has('N6')?'Heisenberg hat Ihnen erklärt, dass man sich nichts mehr vorstellen darf? Mich schreckt diese Lehre ab. Wenn es bei dieser verdammten Quantenspringerei bleiben soll, bedaure ich, mich je damit befasst zu haben.':'Nichts. Ein Elektron, das ohne Zwischenzeit von einem Zustand in den anderen hüpft? Die Natur macht keine Sprünge. Meine Wellen gehen stetig ineinander über.'},
+   {id:'s3',if:()=>S.day===3&&has('N4'),q:'Können Sie mit Borns Deutung leben?',a:()=>'Ich rechne damit, weil es stimmt. Aber denken Sie es zu Ende: Wenn alles nur Möglichkeit ist, bis jemand nachsieht – gilt das dann auch für große Dinge? Für ein Messgerät? Für ein Lebewesen? Da muss irgendwo ein Fehler stecken. Ich werde darauf zurückkommen.'}
+  ],
+  react:{N2:{a:()=>'De Broglies Arbeit hat mich überhaupt erst auf die Spur gebracht. Einstein hatte mich auf sie hingewiesen.'},
+   N4:{a:()=>'Meine Gleichung, aber nicht meine Deutung. Born macht aus meiner schönen Welle eine Wettquote. Dass es rechnerisch aufgeht, bestreite ich nicht.'},
+   N6:{a:()=>'Bahnen abschaffen, Anschauung verbieten – und das nennt man dann Fortschritt. Ich fand diese Algebra abschreckend, ja abstoßend.'},
+   N11:{a:()=>'Die Gleichwertigkeit habe ich 1926 selbst bewiesen. Umso ärgerlicher: Wir rechnen dasselbe und meinen etwas völlig Verschiedenes.'},
+   N5:{a:()=>'Mit Wellen ist das übrigens leicht zu verstehen: Ein kurzer Wellenzug hat keinen scharfen Ort und keine scharfe Wellenlänge zugleich. Nur dass Heisenberg daraus eine Weltanschauung macht.'}},
+  def:'Hm. Das mögen die Kopenhagener kommentieren. Ich bleibe bei meinen Wellen.'
+ },
+ born:{
+  greet:()=>S.day>=2&&has('N4')?'Sie haben meine Deutung notiert – dann wissen Sie, warum man mich hier den Mann mit den Würfeln nennt.':'Guten Tag. Heisenberg und ich berichten gemeinsam über die Quantenmechanik. Was möchten Sie wissen?',
+  topics:[
+   {id:'b1',q:'Woran arbeiten Sie in Göttingen?',a:()=>'Heisenberg brachte 1925 eine merkwürdige Rechenvorschrift mit. Ich erkannte darin Matrizen – Zahlentabellen, die man multipliziert. Mit Jordan haben wir daraus eine vollständige Mechanik gebaut. Sie rechnet richtig. Nur was sie bedeutet, mussten wir erst lernen.'},
+   {id:'b2',if:()=>!has('N4'),q:'Was bedeutet die Wellenfunktion?',a:()=>has('N3')?'Sie haben Schrödinger gehört? Dann legen Sie mir Ihre Notiz doch einmal vor – ich sage Ihnen, wo er irrt.':'Dazu müssten Sie erst hören, was Schrödinger selbst über seine Wellen denkt. Er spaziert meist im Park. Bringen Sie mir seine Sicht mit.'},
+   {id:'b3',if:()=>has('N4'),q:'Lässt sich der Zufall nicht doch wegrechnen?',a:()=>S.day<2?later:'Nein. Schießen Sie Elektronen einzeln auf den Doppelspalt: Wo das nächste landet, kann niemand sagen – auch nicht bei vollkommener Kenntnis der Anfangsbedingungen. Erst viele Treffer ergeben das Streifenmuster, und das berechnen wir exakt. Heisenberg und ich halten die Quantenmechanik für eine abgeschlossene Theorie. Der Zufall gehört zu ihrem Fundament.',give:'N13',need:2}
+  ],
+  react:{N3:{give:'N4',a:()=>'Schrödinger glaubt, das Elektron sei über den Raum verschmiert. Aber haben Sie je ein halbes Elektron auf dem Schirm gesehen? Es schlägt immer als Ganzes ein, an einem Punkt. Meine Deutung: ψ ist keine Materiewolke. Ihr Amplitudenquadrat |ψ|² ist die Dichte der Antreffwahrscheinlichkeit. Wo |ψ|² groß ist, finden wir das Teilchen oft, wo es null ist, nie. Die Welle breitet sich streng gesetzmäßig aus – aber sie sagt nur Wahrscheinlichkeiten voraus.'},
+   N8:{a:()=>'Das hat mir Einstein schon letztes Jahr geschrieben: Die Theorie liefere viel, bringe uns dem Geheimnis des Alten aber kaum näher. Es schmerzt mich, denn ich verehre ihn. Aber die Experimente sind auf unserer Seite.'},
+   N2:{a:()=>'De Broglies Beziehung ist richtig und wichtig. Nur führt seine Welle kein Teilchen an der Leine – sie gibt an, wo es wahrscheinlich auftaucht.'},
+   N5:{a:()=>'Heisenbergs Relation ist die logische Folge: Wenn nur Wahrscheinlichkeiten festliegen, kann es keine scharfe Bahn geben.'}},
+  def:'Interessant. Aber Sie sollten das demjenigen zeigen, der dem widerspricht – dort liegt Ihre Geschichte.'
+ },
+ heisenberg:{
+  greet:()=>has('N3')&&!has('N6')?'Sie waren bei Schrödinger? Dann haben Sie die bequeme Fassung gehört. Ich biete Ihnen die ehrliche.':S.day===3?'Guten Morgen. Bohr hat die halbe Nacht an einer Antwort für Einstein gefeilt – das sollten Sie sich nicht entgehen lassen.':'Guten Tag. Sie wollen wissen, was im Atom vorgeht? Die erste Lektion lautet: Vergessen Sie, was Sie sich vorstellen.',
+  topics:[
+   {id:'h0',if:()=>S.day===1,q:'Was halten Sie von Schrödingers Wellen?',a:()=>has('N3')?'Rechnerisch bequem, zugegeben. Aber seine Deutung – ein Elektron als verschmierte Wolke – halte ich für falsch. Wolken hinterlassen keine punktförmigen Treffer. Morgen erkläre ich Ihnen, wie wir es in Göttingen sehen.':'Hören Sie ihn erst selbst an, er ist im Park. Morgen sage ich Ihnen dann, warum ich seine Anschaulichkeit für trügerisch halte.'},
+   {id:'h1',q:'Was ist Ihre Matrizenmechanik?',need:2,give:'N6',a:()=>'Im Sommer 1925 saß ich mit Heuschnupfen auf Helgoland und beschloss, radikal zu sein: Niemand hat je die Bahn eines Elektrons im Atom gesehen. Wir sehen nur Spektrallinien – Frequenzen und Helligkeiten. Also baute ich eine Mechanik, die ausschließlich solche beobachtbaren Größen enthält. Die Bahn kommt darin nicht mehr vor. '+(has('N3')?'Schrödinger nennt das unanschaulich. Ich nenne es ehrlich.':'')},
+   {id:'h2',if:()=>has('N6'),q:'Was besagt Ihre Unbestimmtheitsrelation?',need:2,give:'N5',a:()=>'Stellen Sie sich vor, Sie wollen den Ort eines Elektrons unter einem Mikroskop bestimmen. Für ein scharfes Bild brauchen Sie kurzwelliges Licht – dessen Photonen aber tragen viel Impuls und stoßen das Elektron unkontrollierbar an. Je genauer der Ort, desto unbestimmter der Impuls. In Formeln: Δx · Δp ≥ h/(4π). Das Produkt der beiden Unbestimmtheiten kann eine feste Grenze nie unterschreiten.'},
+   {id:'h3',if:()=>has('N5'),q:'Ist das nicht bloß ein Problem ungeschickter Messung?',a:()=>(met('bohr')?'Bohr hat mich da selbst korrigiert, und er hat recht: ':'Nein, und Bohr hat mich da selbst korrigiert: ')+'Es liegt nicht an der Störung allein. Ein Quantenobjekt besitzt Ort und Impuls gar nicht gleichzeitig als scharfe Eigenschaften. Die Wellennatur erzwingt das – ein enger Spalt legt den Ort fest und fächert dafür die Richtungen auf. Deshalb hat der Begriff „Bahn“ im Atom keinen Sinn.'}
+  ],
+  react:{N3:{a:()=>'Die Mathematik ist brauchbar. Die Deutung ist es nicht. Fragen Sie Born, was ψ wirklich bedeutet.'},
+   N4:{a:()=>'Born hat recht, und meine Relation ist die Konsequenz daraus.'},
+   N8:{a:()=>'Einstein hat mir einmal gesagt, erst die Theorie entscheide, was man beobachten kann. Ich habe ihn beim Wort genommen – und nun gefällt ihm das Ergebnis nicht.'},
+   N9:{a:()=>'Raffiniert. Aber fragen Sie sich: Ist die Blende etwa kein Quantenobjekt? Tragen Sie das zu Bohr.'},
+   N11:{a:()=>'Mathematisch gleichwertig, ja. Aber Gleichungen sind noch keine Physik. Entscheidend ist, was wir über die Natur aussagen.'}},
+  def:'Schön und gut. Aber halten Sie sich an das, was sich beobachten lässt.'
+ },
+ pauli:{
+  greet:()=>S.day===1?'Presse? Fassen Sie sich kurz, ich habe heute schon genug Unausgegorenes gehört.':met('pauli')?'Sie schon wieder. Immerhin stellen Sie bessere Fragen als mancher Redner.':'Ach, ein Journalist. Schreiben Sie wenigstens richtig ab.',
+  topics:[
+   {id:'p1',q:'Wie beurteilen Sie die Vorträge?',a:()=>S.day===1?'De Broglie will Teilchen auf Wellen reiten lassen. Ich habe ihm gezeigt, dass das bei Stoßprozessen nicht aufgeht. Hübsche Idee, aber so nicht haltbar.':S.day===2?'Born und Heisenberg haben erklärt, die Theorie sei fertig. Das ist forsch – aber ich finde keinen Fehler, und ich suche gründlich.':'Die Vorträge sind vorbei. Jetzt geht es nur noch darum, ob Einstein ein Loch findet. Ich wette dagegen.'},
+   {id:'p2',q:'Was ist Ihr eigener Beitrag?',a:()=>'Das Ausschließungsprinzip, 1925: Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Deshalb stapeln sich die Elektronen in Schalen, statt alle im tiefsten Zustand zu sitzen – und deshalb gibt es ein Periodensystem und Chemie.'},
+   {id:'p3',if:()=>!has('N11'),q:'Wer hat recht – Heisenberg oder Schrödinger?',a:()=>has('N3')&&has('N6')?'Sie haben beide Seiten notiert? Dann legen Sie mir eine der Notizen vor, und ich sage Ihnen etwas dazu.':'Um darüber zu reden, müssten Sie erst beide gehört haben. Kommen Sie wieder, wenn Sie Notizen von beiden besitzen.'}
+  ],
+  react:{N3:{if:()=>has('N6'),give:'N11',a:()=>'Sie haben Schrödingers Wellen und Heisenbergs Matrizen im Notizbuch. Gut. Dann schreiben Sie auf: Es ist dieselbe Theorie in zwei Sprachen. Jede Rechnung der einen lässt sich in die andere übersetzen, die Ergebnisse stimmen exakt überein. Der ganze Lärm betrifft nicht die Mathematik, sondern ihre Deutung.',else:'Wellen, schön. Und was sagt die Gegenseite? Bringen Sie mir auch Heisenbergs Sicht.'},
+   N6:{if:()=>has('N3'),give:'N11',a:()=>'Sie haben Heisenbergs Matrizen und Schrödingers Wellen im Notizbuch. Gut. Dann schreiben Sie auf: Es ist dieselbe Theorie in zwei Sprachen. Jede Rechnung der einen lässt sich in die andere übersetzen, die Ergebnisse stimmen exakt überein. Der ganze Lärm betrifft nicht die Mathematik, sondern ihre Deutung.',else:'Matrizen, schön. Und was sagt die Gegenseite? Bringen Sie mir auch Schrödingers Sicht.'},
+   N2:{a:()=>'Die Beziehung λ = h/p ist in Ordnung. Was de Broglie daraus an Bildern macht, ist es nicht.'},
+   N8:{a:()=>'Der Alte will die gute alte Wirklichkeit zurück, in der alles feststeht, auch wenn keiner hinsieht. Ob etwas existiert, wovon man nichts wissen kann – darüber sollte man so wenig grübeln wie über Engel auf Nadelspitzen.'},
+   N12:{a:()=>'Dirac rechnet sauber, das muss man ihm lassen. Bei unserem Gespräch über Religion neulich war er weniger überzeugend.'}},
+  def:'Das ist nicht einmal falsch notiert. Weiter.'
+ },
+ dirac:{
+  greet:()=>met('dirac')?'Ja?':'Guten Tag.',
+  topics:[
+   {id:'di1',q:'Woran arbeiten Sie?',a:()=>'An der Mathematik der Quantenmechanik. … Eine physikalische Theorie sollte mathematisch schön sein.'},
+   {id:'di2',if:()=>!has('N12'),q:'Wie passen Wellen- und Matrizenmechanik zusammen?',a:()=>has('N11')?'Pauli hat es Ihnen gesagt. Legen Sie mir die Notiz vor.':'Fragen Sie zuerst Pauli. Er erklärt gern.'},
+   {id:'di3',if:()=>S.day===3,q:'Wer entscheidet bei einer Messung über das Ergebnis?',a:()=>'Die Natur trifft eine Wahl. Unwiderruflich. … Heisenberg meint, erst der Beobachter treffe sie. Wir sind uns nicht einig.'}
+  ],
+  react:{N11:{give:'N12',a:()=>'Richtig. Ich habe es allgemein gezeigt. Man kann einen Quantenzustand in verschiedenen Darstellungen schreiben – nach Orten, nach Impulsen, nach Energien. Schrödinger benutzt die eine, Heisenberg eine andere. Meine Transformationstheorie rechnet zwischen allen um. Es ist eine einzige Theorie.'},
+   N5:{a:()=>'Folgt aus der Mathematik. Ort und Impuls sind nicht vertauschbar: Es kommt auf die Reihenfolge an.'}},
+  def:'… Dazu habe ich nichts zu sagen.'
+ },
+ einstein:{
+  greet:()=>fl('eFinal')?'Ah, mein Bote. Sagen Sie Bohr nichts – aber ich habe schon eine neue Idee.':S.day===1?'Ein Zeitungsmann! Setzen Sie sich. Ich bin hier ohnehin eher Zuhörer als Redner.':has('N10')?'Sie kommen von Bohr, ich sehe es Ihnen an. Nun?':'Guten Morgen. Haben Sie gut geschlafen? Ich nicht – die Quanten lassen mich nicht.',
+  topics:[
+   {id:'e1',q:'Sie haben die Lichtquanten eingeführt. Sind Sie zufrieden mit dem, was daraus wurde?',a:()=>(has('N1')?'Lorentz hat Ihnen die Vorgeschichte erzählt, gut. ':'')+'Ich habe 1905 gesagt, Licht bestehe aus Quanten, und man hat mich jahrelang dafür belächelt. Heute sind die Quanten überall – und ich bin es, der Bedenken hat. Die neue Mechanik ist imposant. Aber eine innere Stimme sagt mir, dass sie noch nicht der wahre Jakob ist.'},
+   {id:'e2',if:()=>has('N5')&&has('N8'),q:'Wie wollen Sie Heisenbergs Relation widerlegen?',need:3,give:'N9',a:()=>'Mit einem Experiment im Kopf. Nehmen Sie den Doppelspalt. Davor ein Schirm mit einem einzelnen Spalt – aber nicht fest montiert, sondern beweglich an Federn aufgehängt. Fliegt ein Teilchen zum oberen Spalt, wird es dort nach oben abgelenkt und versetzt dem Schirm einen Rückstoß nach unten; zum unteren Spalt umgekehrt. Ich messe den Rückstoß und kenne den Weg. Und hinten sehe ich trotzdem die Interferenzstreifen. Weg und Welle zugleich – damit wäre gezeigt, dass die Theorie nicht alles beschreibt, was wirklich ist. Bringen Sie das Bohr!'},
+   {id:'e3',if:()=>has('N5')&&!has('N8'),q:'Was sagen Sie zu Heisenbergs Relation?',a:()=>'Eine Grenze für das, was man wissen kann? Darüber sage ich etwas, sobald Sie mir zeigen, was Born aus den Wellen gemacht hat. Damit fängt das Übel an.'}
+  ],
+  react:{N4:{need:2,give:'N8',a:()=>'Borns Wahrscheinlichkeiten. Sehen Sie, für viele Teilchen ist das wunderbar – Statistik eben, wie bei Gasmolekülen. Aber für das einzelne Elektron soll es keinen Grund geben, warum es hier landet und nicht dort? Das glaube ich nicht. Die Theorie leistet viel, aber sie ist unvollständig. Es muss darunter etwas geben, das festlegt, was wirklich geschieht. Der Alte würfelt nicht.'},
+   N5:{a:()=>S.day<3?'Interessant. Lassen Sie mich darüber schlafen – ich wette, es findet sich ein Schlupfloch.':'Fragen Sie mich, wie ich das widerlegen will.'},
+   N7:{a:()=>'Bohrs Komplementarität ist ein weiches Kissen für den Gläubigen. Man liegt bequem darauf – aber aufwachen wird man eines Tages doch.'},
+   N10:{flag:'eFinal',a:()=>'… Hm. Die Blende als Quantenobjekt. Das ist geschickt, und ich finde im Augenblick keinen Fehler. Gut: Die Theorie ist in sich widerspruchsfrei, das gebe ich zu. Aber widerspruchsfrei heißt nicht vollständig. Ich glaube weiter an eine Wirklichkeit, die auch dann feststeht, wenn niemand misst. Sagen Sie Bohr, ich denke weiter nach.'},
+   N13:{a:()=>'„Abgeschlossen“ nennen sie das. Die Jugend ist rasch fertig mit der Welt.'},
+   N2:{a:()=>'De Broglie hat einen Zipfel des großen Schleiers gelüftet. Ich habe seine Arbeit gleich weiterempfohlen – auch an Schrödinger.'}},
+  def:'Das ist hübsch. Aber es beantwortet meine Frage nicht: Was geschieht wirklich?'
+ },
+ bohr:{
+  greet:()=>fl('eFinal')?'Einstein denkt weiter nach, sagen Sie? Das fürchte und das hoffe ich. Wir sind ihm viel schuldig – er zwingt uns, genau zu sein.':has('N9')&&!has('N10')?'Sie haben etwas von Einstein für mich? Ich sehe es an Ihrem Gesicht. Zeigen Sie her.':met('einstein')?'Sie haben mit Einstein gesprochen … Er ist unser strengster Prüfer. Was möchten Sie wissen?':'Guten Tag. Verzeihen Sie, wenn ich langsam spreche – ich versuche, nie klarer zu reden, als ich denke.',
+  topics:[
+   {id:'bo0',if:()=>S.day===1,q:'Wie sehen Sie die Lage der Physik?',a:()=>'Wir haben zwei Bilder – Welle und Teilchen –, und keines reicht allein. Viele halten das für einen Mangel. Ich glaube, es ist eine Lehre. Aber hören Sie zuerst die Vorträge; morgen sage ich Ihnen mehr.'},
+   {id:'bo1',q:'Was meinen Sie mit Komplementarität?',need:2,give:'N7',a:()=>'Fragen Sie am Doppelspalt nach der Welle, erhalten Sie Interferenzstreifen. Fragen Sie nach dem Teilchen – durch welchen Spalt? –, erhalten Sie eine Antwort, aber die Streifen sind fort. Beide Bilder schließen einander aus, und doch brauchen wir beide für die ganze Wahrheit. Das nenne ich komplementär. Welche Seite sich zeigt, hängt vom Versuchsaufbau ab. '+(has('N5')?'Heisenbergs Relation ist der zahlenmäßige Ausdruck davon.':'')+' Wir können einem Quantenobjekt keine Eigenschaften zuschreiben, ohne zu sagen, wie wir es beobachten.'},
+   {id:'bo2',if:()=>has('N10'),q:'Hat Einstein sich geschlagen gegeben?',a:()=>fl('eFinal')?'Nein, und er wird es nie. Er nennt die Theorie nun widerspruchsfrei, aber unvollständig. Ich erwarte beim nächsten Treffen ein neues Gedankenexperiment.':'Fragen Sie ihn selbst. Legen Sie ihm meine Antwort vor – ich bin gespannt, was er sagt.'}
+  ],
+  react:{N9:{need:3,give:'N10',a:()=>'Ah … ja. Sehr schön, sehr scharfsinnig. Aber sehen Sie: Einstein behandelt seine Blende wie ein Ding der alten Physik. Um den winzigen Rückstoß zu erkennen, muss ich den Impuls der Blende vorher äußerst genau kennen. Dann aber – Heisenberg! – ist ihr Ort entsprechend unbestimmt. Der Spalt zittert gewissermaßen, und zwar gerade so weit, dass sich helle und dunkle Streifen überdecken. Das Muster ist fort. Kenne ich den Weg, verliere ich die Interferenz; will ich die Interferenz, muss ich die Blende festschrauben und erfahre den Weg nicht. Tragen Sie ihm das zurück.'},
+   N8:{a:()=>'Ich habe ihm geantwortet: Es kann nicht unsere Aufgabe sein, dem Herrgott vorzuschreiben, wie er die Welt zu regieren hat. Die Physik sagt nicht, wie die Natur ist – sie sagt, was wir über die Natur aussagen können.'},
+   N3:{a:()=>'Schrödinger war letztes Jahr bei mir in Kopenhagen. Wir stritten, bis er krank im Bett lag – und ich habe an seinem Bett weitergeredet. Seine Gleichung ist unentbehrlich. Seine Hoffnung auf anschauliche Wellen teile ich nicht.'},
+   N5:{a:()=>'Heisenberg und ich haben im Frühjahr hart darum gerungen. Die Relation folgt nicht nur aus der Störung beim Messen. Sie liegt tiefer – in der Doppelnatur von Welle und Teilchen.'},
+   N4:{a:()=>'Borns Deutung ist der Schlüssel. Die Welle beschreibt Möglichkeiten; erst die Beobachtung liefert eine Tatsache.'}},
+  def:'Das ist … sehr interessant. Lassen Sie mich darüber nachdenken – vielleicht bei einer Pfeife.'
+ },
+ ehrenfest:{
+  greet:()=>S.day===3?'Sie müssen das miterleben! Einstein springt jeden Morgen wie ein Schachtelmännchen mit einem neuen Einwand hoch – und abends hat Bohr ihn zerlegt.':'Ah, die Presse! Ich kenne hier alle. Wenn Sie nicht weiterwissen: Fragen Sie mich.',
+  topics:[
+   {id:'tip',q:'Können Sie mir einen Tipp geben?',a:()=>hintText(),again:1},
+   {id:'eh1',q:'Wie erleben Sie den Streit?',a:()=>S.day<3?'Ich habe gestern einen Vers vom Turmbau zu Babel an die Tafel geschrieben – von der Sprachverwirrung. Jeder redet hier seine eigene Sprache: Wellen, Matrizen, Wahrscheinlichkeiten. Und doch meinen sie dasselbe Atom.':'Ich liebe beide, Einstein und Bohr. Aber ich habe Einstein gesagt: Du argumentierst gegen die Quantentheorie so, wie deine Gegner gegen die Relativitätstheorie. Er hat es sich angehört. Überzeugt habe ich ihn nicht.'}
+  ],
+  react:{},
+  def:'Schön notiert! Aber zeigen Sie das nicht mir – zeigen Sie es dem, den es ärgert. Dann bekommen Sie eine Antwort.'
+ },
+ curie:{
+  greet:()=>met('curie')?'Sie haben noch Fragen? Bitte.':'Guten Tag. Sie wundern sich über die einzige Frau im Saal? Ich mich längst nicht mehr.',
+  topics:[
+   {id:'c1',q:'Wie sehen Sie als Experimentatorin die neue Theorie?',a:()=>'Ich misstraue jedem Gedanken, der sich nicht messen lässt. Aber diese Theorie sagt Messwerte richtig voraus, und zwar erstaunlich genau. Das genügt mir zunächst. Über Philosophie mögen die Herren beim Frühstück streiten.'},
+   {id:'c2',if:()=>!has('N14'),q:'Kennen Sie den Zufall aus Ihrem Labor?',a:()=>has('N4')?(S.day<2?later:'O ja. Zeigen Sie mir, was Born dazu sagt – legen Sie mir die Notiz vor.'):'Besser als die meisten hier. Aber bringen Sie mir erst, was Born über die Wahrscheinlichkeit sagt. Dann erzähle ich Ihnen von meinem Radium.'}
+  ],
+  react:{N4:{need:2,give:'N14',a:()=>'Wahrscheinlichkeit als Naturgesetz – das kenne ich seit dreißig Jahren. Nehmen Sie zwei Radiumatome, in allem vollkommen gleich. Das eine zerfällt in dieser Sekunde, das andere in tausend Jahren. Ich kann die Halbwertszeit auf Promille genau angeben. Aber warum dieses Atom gerade jetzt zerfällt, dafür gibt es keine Ursache, die man finden könnte. Gleiche Ausgangslage, verschiedene Wirkung. Die Kausalität im alten Sinn gilt im Atom nicht.'},
+   N5:{a:()=>'Solange Herr Heisenberg mir sagt, wie groß die Unbestimmtheit ist, kann ich damit arbeiten. Eine Grenze, die man berechnen kann, ist für eine Experimentatorin kein Unglück.'}},
+  def:'Das müssen die Theoretiker unter sich ausmachen. Ich halte mich an Messungen.'
+ }
+};
+
+/* Epilog */
+const EPI=[
+ {c:'einstein',n:'N15',h:'1930 · Sechste Solvay-Konferenz',t:'Einstein kommt mit einem neuen Einfall: ein Kasten voller Licht mit einer Uhr, die für einen Augenblick eine Klappe öffnet. Ein Photon entweicht. Die Uhr liefert den Zeitpunkt, die Waage die fehlende Energie (E = mc²) – beides beliebig genau? Bohr verbringt eine schlaflose Nacht. Am Morgen schlägt er Einstein mit dessen eigener Relativitätstheorie: Beim Wiegen bewegt sich der Kasten im Schwerefeld, und dort geht die Uhr anders. Es bleibt bei ΔE · Δt ≥ h/(4π).'},
+ {c:'einstein',n:'N16',h:'1935 · Post aus Princeton',t:'Einstein, inzwischen in den USA, veröffentlicht mit Podolsky und Rosen (kurz: EPR) seinen stärksten Einwand. Zwei Teilchen, die einmal in Wechselwirkung standen, fliegen weit auseinander. Messe ich am einen, steht laut Quantenmechanik sofort fest, was am anderen herauskommt. Entweder trug das ferne Teilchen die Eigenschaft längst in sich – dann ist die Theorie unvollständig. Oder es gibt eine „spukhafte Fernwirkung“. Die zweite Möglichkeit hält Einstein für absurd.'},
+ {c:'schroedinger',n:'N17',h:'1935 · Eine Katze im Kasten',t:'Schrödinger gibt dem Phänomen den Namen Verschränkung – und spitzt die Sache zu: Eine Katze sitzt im Kasten mit einem einzelnen radioaktiven Atom. Zerfällt es, wird Gift freigesetzt. Solange niemand nachsieht, beschreibt die Theorie das Atom als „zerfallen und nicht zerfallen“ zugleich – und damit die Katze als tot und lebendig. Schrödinger meint das nicht ernst, sondern als Warnung: Wo endet die Quantenwelt, wo beginnt die Alltagswelt?'},
+ {c:'bohr',n:null,h:'Und wer hatte recht?',t:'Bohr antwortet auf EPR: Die beiden Teilchen sind kein getrenntes Paar, sondern ein einziges Quantensystem. 1964 zeigt John Bell, dass sich der Streit im Labor entscheiden lässt. Die Experimente – unter anderem von Aspect, Clauser und Zeilinger, 2022 mit dem Nobelpreis geehrt – geben der Quantenmechanik recht: Die Natur ist nichtlokal. Einstein irrte in der Antwort. Aber seine Fragen haben die Verschränkung erst sichtbar gemacht – heute die Grundlage von Quantencomputern und Quantenkryptografie.'}
+];
+function epilog(){
+  show('epi'); let step=0; const W=$('epiWrap');
+  W.innerHTML='<h1 style="font-variant:small-caps">Epilog: Der Streit geht weiter</h1><p>Ihre Reportage aus Brüssel ist gedruckt. Doch als Wissenschaftsjournalist bleiben Sie an der Geschichte dran.</p><div id="ec"></div><p><button class="btn" id="en">Weiterlesen ▸</button></p>';
+  const next=()=>{ if(step<EPI.length){const e=EPI[step++]; if(e.n)give(e.n); save();
+      const d=document.createElement('div');d.className='card';d.innerHTML=`<div class="two">${portrait(e.c)}<div><h3>${e.h}</h3>${e.t}${e.n?`<div class="gain">📓 Neue Notiz: <b>${NOTES[e.n].t}</b></div>`:''}</div></div>`;
+      $('ec').appendChild(d); d.scrollIntoView({behavior:'smooth',block:'center'});
+      if(step===EPI.length)$('en').textContent='Zum Redaktionsschluss ▸';
+    } else {S.phase_='quiz';save();quiz()} };
+  $('en').onclick=next; next();
+}
+
+/* Quiz */
+const QA=[
+ ['„Zu jedem Teilchen gehört eine Welle mit der Wellenlänge λ = h/p.“','debroglie'],
+ ['„|ψ|² gibt an, mit welcher Wahrscheinlichkeit man das Teilchen an einem Ort antrifft.“','born'],
+ ['„Ort und Impuls sind nie gleichzeitig beliebig genau bestimmt.“','heisenberg'],
+ ['„Wellen- und Teilchenbild schließen sich aus und ergänzen sich – je nach Versuchsaufbau.“','bohr'],
+ ['„Die Theorie ist unvollständig. Der Zufall kann nicht das letzte Wort sein.“','einstein'],
+ ['„Das Elektron ist eine wirkliche, stetige Welle. Quantensprünge lehne ich ab.“','schroedinger']
+];
+const QB=[['1900','Planck: Energie wird in Quanten E = h·f abgegeben'],['1905','Einstein: Lichtquanten erklären den Photoeffekt'],['1924','de Broglie: Materiewellen, λ = h/p'],['1925','Heisenberg: Matrizenmechanik ohne Bahnen'],['1926','Schrödinger: Wellengleichung für ψ – kurz darauf Borns Wahrscheinlichkeitsdeutung'],['1927','Heisenberg: Unbestimmtheitsrelation']];
+const QC=[
+ {k:'Nichtdeterminiertheit',q:'Was bedeutet Nichtdeterminiertheit?',o:['Das einzelne Ereignis (z. B. der Auftreffort eines Elektrons) ist nicht vorhersagbar; berechenbar ist nur die Wahrscheinlichkeitsverteilung.','Die Messgeräte sind noch zu ungenau, um den Auftreffort vorherzusagen.','Quantenobjekte halten sich an keinerlei Gesetze.'],
+  f:'Borns Punkt: Die Verteilung vieler Treffer folgt exakt aus |ψ|² – der einzelne Treffer nicht. Mit Messgenauigkeit hat das nichts zu tun.'},
+ {k:'Nichtkausalität',q:'Was bedeutet Nichtkausalität?',o:['Jede Wirkung hat mehrere Ursachen gleichzeitig.','Gleiche Ausgangsbedingungen führen nicht zum gleichen Ergebnis; für das Einzelereignis lässt sich keine Ursache angeben.','Die Wirkung tritt zeitlich vor der Ursache ein.'],c:1,
+  f:'Curies Radium: zwei völlig gleiche Kerne, verschiedene Zerfallszeitpunkte – ohne auffindbaren Grund.'},
+ {k:'Nichtobjektivierbarkeit',q:'Was bedeutet Nichtobjektivierbarkeit?',o:['Physiker können sich über Messergebnisse nie einigen.','Quantenobjekte existieren nur in der Vorstellung des Beobachters.','Eigenschaften wie Ort oder Weg kommen einem Quantenobjekt nicht unabhängig von der Messung zu; der Versuchsaufbau bestimmt, was sich zeigt.'],c:2,
+  f:'Bohrs Komplementarität: Erst der Versuchsaufbau legt fest, ob sich Weg oder Interferenz zeigt. Das Elektron „hat“ vorher keinen bestimmten Weg.'},
+ {k:'Nichtlokalität',q:'Was bedeutet Nichtlokalität?',o:['Verschränkte Quantenobjekte bilden ein Ganzes: Eine Messung am einen legt das Ergebnis am anderen sofort fest – ohne Signalübertragung.','Quantenobjekte bewegen sich schneller als das Licht.','Man kann Nachrichten ohne Zeitverzug übertragen.'],c:0,
+  f:'EPR und Bell: Die Korrelation ist da, aber sie lässt sich nicht zum Senden von Nachrichten nutzen – die Relativitätstheorie bleibt unverletzt.'}
+];
+QC[0].c=0;
+const QE={q:'Am Doppelspalt wird zusätzlich gemessen, durch welchen Spalt jedes Elektron fliegt. Was zeigt der Schirm?',o:['Das Interferenzmuster wird schärfer.','Das Interferenzmuster verschwindet; es bleibt die Überlagerung zweier Einzelspalt-Verteilungen.','Es kommen keine Elektronen mehr an.'],c:1,f:'Weg-Information und Interferenz schließen sich aus – genau das zeigte Bohr an Einsteins beweglicher Blende.'};
+const HEAD=['Der Zufall zieht in die Physik ein','Einstein gegen Bohr: Würfelt Gott?','Abschied von der Elektronenbahn'];
+let Q;
+function quiz(){
+  show('quiz'); Q=S.quiz||{step:0,pts:0,max:0,head:0,fazit:''}; S.quiz=Q; qstep();
+}
+function qframe(title,intro,body){
+  $('quizWrap').innerHTML=`<p class="steps">Redaktionsschluss · Schritt ${Q.step+1} von 6</p><h1 style="font-variant:small-caps;margin:.1em 0">${title}</h1><p>${intro}</p><div class="card">${body}</div><div id="qfb"></div><p><button class="btn" id="qchk">Prüfen</button> <button class="btn" id="qnx" style="display:none">Weiter ▸</button></p>`;
+  window.scrollTo(0,0);
+}
+function qdone(firstOK,total,got){ // Punkte nur beim ersten Versuch
+  return {firstOK,total,got};
+}
+function qstep(){
+  let tries=0; const fin=(pts,max)=>{ if(!Q['m'+Q.step]){Q.max+=max;Q.pts+=pts;Q['m'+Q.step]=1;save()} };
+  const nextBtn=()=>{ $('qchk').style.display='none'; $('qnx').style.display=''; $('qnx').onclick=()=>{Q.step++;save();qstep()} };
+  const fb=(ok,t)=>{$('qfb').innerHTML=`<div class="fb ${ok?'good':'wrong'}">${t}</div>`};
+  if(Q.step===0){
+    const order=['schroedinger','pauli','einstein','bohr','debroglie','dirac','heisenberg','born'];
+    qframe('Wer hat was gesagt?','Der Chefredakteur blättert in Ihrem Notizbuch: „Ordnen Sie die Positionen den richtigen Köpfen zu.“',
+      QA.map((q,i)=>`<div class="qrow"><div>${q[0]}</div><select id="a${i}"><option value="">– wählen –</option>${order.map(c=>`<option value="${c}">${C[c].n}</option>`).join('')}</select></div>`).join(''));
+    $('qchk').onclick=()=>{tries++;let ok=0;QA.forEach((q,i)=>{const e=$('a'+i),r=e.value===q[1];e.className=r?'ok':'bad';if(r)ok++});
+      fin(ok,QA.length); if(ok===QA.length){fb(1,'Alle Zuordnungen stimmen.');nextBtn()} else fb(0,`${ok} von ${QA.length} richtig. Korrigieren Sie die rot markierten Felder.${tries>=2?' Tipp: Ihr Notizbuch nennt bei jeder Notiz die Quelle.':''}`)};
+  } else if(Q.step===1){
+    let cur=[3,0,5,2,4,1];
+    qframe('Was geschah wann?','„Unsere Leser brauchen die Vorgeschichte. Bringen Sie die Etappen in die richtige Reihenfolge – das Älteste nach oben.“','<div id="ol"></div>');
+    const draw=()=>{const L=$('ol');L.innerHTML='';cur.forEach((k,i)=>{const d=document.createElement('div');d.className='ord';d.innerHTML=`<span>${QB[k][1]}</span>`;
+      const u=document.createElement('button');u.textContent='▲';u.disabled=i===0;u.onclick=()=>{[cur[i-1],cur[i]]=[cur[i],cur[i-1]];draw()};
+      const w=document.createElement('button');w.textContent='▼';w.disabled=i===cur.length-1;w.onclick=()=>{[cur[i+1],cur[i]]=[cur[i],cur[i+1]];draw()};
+      d.appendChild(u);d.appendChild(w);L.appendChild(d)})};draw();
+    $('qchk').onclick=()=>{tries++;let ok=0;[...$('ol').children].forEach((d,i)=>{const r=cur[i]===i;d.className='ord '+(r?'ok':'bad');if(r)ok++});
+      fin(ok===6?3:ok>=4?1:0,3); if(ok===6){fb(1,'Die Chronologie stimmt: '+QB.map(x=>x[0]).join(' → '));nextBtn()} else fb(0,`${ok} von 6 Etappen stehen an der richtigen Stelle.${tries>=2?' Tipp: Erst kamen die Quanten des Lichts, dann die Wellen der Materie, dann die beiden Mechaniken, zuletzt die Unbestimmtheit.':''}`)};
+  } else if(Q.step===2){
+    qframe('Vier Abschiede von der klassischen Physik','„Jetzt der Kern Ihres Artikels. Was folgt aus der Quantenmechanik für unser Weltbild? Wählen Sie jeweils die treffende Erklärung.“',
+      QC.map((q,i)=>`<p><b>${q.q}</b></p>${q.o.map((o,j)=>`<label class="mc" id="c${i}_${j}"><input type="radio" name="c${i}" value="${j}"> ${o}</label>`).join('')}<div id="cf${i}"></div>`).join('<hr>'));
+    $('qchk').onclick=()=>{tries++;let ok=0;QC.forEach((q,i)=>{const s=document.querySelector(`input[name=c${i}]:checked`);const v=s?+s.value:-1;const r=v===q.c;
+      q.o.forEach((_,j)=>$(`c${i}_${j}`).className='mc'+(j===v?(r?' ok':' bad'):''));
+      $('cf'+i).innerHTML=r?`<div class="fb good">${q.f}</div>`:(v>=0?'<div class="fb wrong">Das trifft es nicht. Denken Sie an Ihre Notizen.</div>':'');if(r)ok++});
+      fin(ok,4); if(ok===4){fb(1,'Alle vier Folgerungen sind richtig erklärt.');nextBtn()} else fb(0,`${ok} von 4 richtig.`)};
+  } else if(Q.step===3){
+    const sci=(id,u)=>`<span class="sci"><input type="text" id="${id}m" inputmode="decimal" placeholder="z. B. 3,2"> · 10<sup><input type="text" id="${id}e" inputmode="numeric" placeholder="−20"></sup> ${u}</span>`;
+    qframe('Der Chefredakteur will Zahlen','„Unbestimmtheit – schön und gut. Aber wie groß ist sie? Rechnen Sie es unseren Lesern vor.“',
+      `<p>Ein Elektron ist in einem Atom eingesperrt. Sein Ort ist damit auf etwa <b>Δx = 1,0 · 10⁻¹⁰ m</b> festgelegt.</p>
+       <p class="small">h = 6,626 · 10⁻³⁴ Js · m<sub>e</sub> = 9,109 · 10⁻³¹ kg · Δx · Δp ≥ h/(4π) · p = m · v</p>
+       <p><b>a)</b> Wie groß ist die Impulsunbestimmtheit mindestens?<br>Δp ≥ ${sci('p','kg·m/s')}</p>
+       <p><b>b)</b> Welcher Geschwindigkeitsunbestimmtheit entspricht das?<br>Δv ≥ ${sci('v','m/s')}</p>
+       <p><b>c)</b> Für ein Staubkorn (m = 10⁻⁹ kg, Δx = 10⁻⁶ m) ergibt dieselbe Rechnung Δv ≈ 5 · 10⁻²⁰ m/s. Was folgt daraus?</p>
+       ${['Auch Staubkörner haben keine Bahn.','Bei makroskopischen Körpern ist die Unbestimmtheit unmessbar klein – deshalb gilt dort praktisch die klassische Physik.','Die Unbestimmtheitsrelation gilt nur für Elektronen.'].map((o,j)=>`<label class="mc" id="d_${j}"><input type="radio" name="d" value="${j}"> ${o}</label>`).join('')}`);
+    const val=id=>{const m=parseFloat($(id+'m').value.replace(',','.')),e=parseInt($(id+'e').value.replace('−','-').replace('–','-'),10);return m*Math.pow(10,e)};
+    const near=(x,t)=>isFinite(x)&&Math.abs(x-t)/t<=.06;
+    $('qchk').onclick=()=>{tries++;const a=near(val('p'),5.273e-25),b=near(val('v'),5.789e5);const s=document.querySelector('input[name=d]:checked'),c=s&&s.value==='1';
+      ['pm','pe'].forEach(i=>$(i).className=a?'ok':'bad');['vm','ve'].forEach(i=>$(i).className=b?'ok':'bad');
+      [0,1,2].forEach(j=>$('d_'+j).className='mc'+(s&&+s.value===j?(c?' ok':' bad'):''));
+      const ok=(a?1:0)+(b?1:0)+(c?1:0); fin(ok,3);
+      if(ok===3){fb(1,'Richtig: Δp ≈ 5,3 · 10⁻²⁵ kg·m/s und Δv ≈ 5,8 · 10⁵ m/s – fast 600 km pro Sekunde! Ein Elektron im Atom kann also gar nicht ruhen oder einer scharfen Bahn folgen.');nextBtn()}
+      else fb(0,`${ok} von 3 richtig.`+(tries>=2?' Tipp: Δp = h / (4π · Δx), danach Δv = Δp / m<sub>e</sub>.':'')+(tries>=4?' Lösung: Δp ≈ 5,3 · 10⁻²⁵ kg·m/s, Δv ≈ 5,8 · 10⁵ m/s.':''))};
+  } else if(Q.step===4){
+    qframe('Die Probe aufs Exempel','„Letzte Sachfrage, dann dürfen Sie schreiben.“',
+      `<p><b>${QE.q}</b></p>${QE.o.map((o,j)=>`<label class="mc" id="e_${j}"><input type="radio" name="e" value="${j}"> ${o}</label>`).join('')}`);
+    $('qchk').onclick=()=>{tries++;const s=document.querySelector('input[name=e]:checked'),c=s&&+s.value===QE.c;
+      [0,1,2].forEach(j=>$('e_'+j).className='mc'+(s&&+s.value===j?(c?' ok':' bad'):''));fin(c?1:0,1);
+      if(c){fb(1,QE.f);nextBtn()}else fb(0,'Nicht ganz. Denken Sie an Bohrs Antwort auf Einsteins bewegliche Blende.')};
+  } else {
+    qframe('Ihr Artikel','„Gute Arbeit. Wählen Sie die Schlagzeile – und schreiben Sie den Schlussabsatz selbst.“',
+      `<p><b>Schlagzeile</b></p>${HEAD.map((o,j)=>`<label class="mc"><input type="radio" name="hd" value="${j}" ${j===Q.head?'checked':''}> ${o}</label>`).join('')}
+       <p><b>Ihr persönliches Fazit</b> (2–4 Sätze): Was hat Sie an der Quantenmechanik am meisten überrascht – und wessen Haltung überzeugt Sie mehr, Einsteins oder Bohrs?</p>
+       <textarea id="fz" maxlength="700">${esc(Q.fazit)}</textarea>`);
+    $('qchk').textContent='Artikel drucken lassen ▸';
+    $('qchk').onclick=()=>{Q.head=+document.querySelector('input[name=hd]:checked').value;Q.fazit=$('fz').value.trim();
+      if(Q.fazit.length<30){fb(0,'Der Chefredakteur schüttelt den Kopf: „Ein bisschen mehr eigene Meinung, bitte.“');return}
+      S.phase_='art';save();article()};
+  }
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+/* Artikel */
+function article(){
+  show('art'); const Q=S.quiz, pct=Q.max?Q.pts/Q.max:0, nn=S.notes.length;
+  const rank=pct>=.85?['Titelseite!','Der Chefredakteur ist begeistert: kaum eine Korrektur nötig.']:pct>=.65?['Seite 3','Solide Arbeit – ein paar Stellen musste die Redaktion nachbessern.']:pct>=.4?['Wissenschaftsbeilage','Der Artikel erscheint, aber der Rotstift hatte einiges zu tun.']:['Lokalteil','Der Artikel erscheint – nach gründlicher Überarbeitung. Lesen Sie ihn noch einmal genau.'];
+  $('artTools').innerHTML=`<div class="rating"><b>Ihr Artikel erscheint: ${rank[0]}</b><br><span class="small">${rank[1]} Im ersten Anlauf richtig: ${Q.pts} von ${Q.max} Punkten · ${nn} von ${Object.keys(NOTES).length} Notizen gesammelt · ${PHYS.filter(inPhoto).length} von 11 auf dem Gruppenfoto · ${refuted()} Gerüchte widerlegt.</span></div>
+   <button class="btn" onclick="window.print()">Drucken / als PDF speichern</button><button class="btn light" id="rs">Neu beginnen</button>`;
+  $('rs').onclick=()=>{if(confirm('Spielstand wirklich löschen und neu beginnen?')){try{localStorage.removeItem('solvay1927v2')}catch(e){}location.reload()}};
+  const opt=(n,t)=>has(n)?t:'';
+  $('paper').innerHTML=`
+  <div class="mast"><h1>Berliner Morgen-Kurier</h1><div><span>Sonderbericht aus Brüssel</span><span>Sonnabend, 29. Oktober 1927</span><span>Wissenschaft</span></div></div>
+  <h2>${HEAD[Q.head]}</h2>
+  <p class="sub">Auf der fünften Solvay-Konferenz ringen die führenden Physiker um die Deutung der neuen Quantenmechanik</p>
+  <p class="by">Von unserem Sonderberichterstatter ${esc(S.name)}</p>
+  ${photoHTML(true)}<p class="cap">Die Teilnehmer der Konferenz, soweit unser Berichterstatter sie vor die Kamera bekam (${PHYS.filter(inPhoto).length} von 11).</p>
+  <div class="cols">
+   <p><b>Brüssel.</b> Drei Tage lang haben die bedeutendsten Physiker der Welt über „Elektronen und Photonen“ beraten. Am Ende steht eine Theorie, die richtig rechnet – und unser Bild von der Natur auf den Kopf stellt.</p>
+   <h4>Wie es dazu kam</h4>
+   <p>${QB.map(x=>`<b>${x[0]}</b> ${x[1]}.`).join(' ')}</p>
+   <h4>Welle und Wahrscheinlichkeit</h4>
+   <p>Louis de Broglie ordnet jedem Teilchen eine Welle zu:</p><p class="formula">λ = h / p</p>
+   <p>Erwin Schrödinger fand die Gleichung für die zugehörige Wellenfunktion ψ. Doch was schwingt da? Max Born gab die Antwort, die sich durchgesetzt hat: Das Amplitudenquadrat |ψ|² ist die <b>Antreffwahrscheinlichkeitsdichte</b>. Die Welle sagt, wo ein Elektron wahrscheinlich nachgewiesen wird – nicht, wo es „ist“. Am Doppelspalt landet jedes Elektron als Ganzes an einem Punkt; erst viele Treffer bilden das Interferenzmuster.</p>
+   ${opt('N11','<p>Heisenbergs Matrizenmechanik und Schrödingers Wellenmechanik sind dabei, wie Wolfgang Pauli betont, mathematisch gleichwertig'+opt('N12',' – Paul Dirac hat beide in einem gemeinsamen Rahmen vereint')+'. Gestritten wird um die Deutung.</p>')}
+   <h4>Zwei stille Baumeister</h4>
+   <p><b>Wolfgang Pauli</b>, das „Gewissen der Physik“, fand 1925 das Ausschließungsprinzip: Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Es begründet Bohrs Schalenbau der Atome und das Periodensystem. Pauli berechnete als Erster das Wasserstoffatom mit Heisenbergs Matrizen und baute den Spin des Elektrons in die Theorie ein.</p>
+   <p><b>Paul Dirac</b> zeigte, worauf alles beruht: In der Quantenmechanik zählt die Reihenfolge, x·p ist nicht p·x. Daraus folgt die Unbestimmtheitsrelation. Er vereinte Wellen- und Matrizenmechanik und wandte die Quantenregeln auf das Licht selbst an – so wurden Einsteins Photonen Teil der Theorie.</p>
+   <h4>Die Unbestimmtheitsrelation</h4>
+   <p>Werner Heisenberg zeigt: Ort und Impuls eines Quantenobjekts sind nie zugleich scharf bestimmt.</p><p class="formula">Δx · Δp ≥ h / (4π)</p>
+   <div class="box"><b>Rechenbeispiel.</b> Elektron im Atom, Δx = 1,0 · 10⁻¹⁰ m:<br>Δp ≥ h/(4π·Δx) ≈ 5,3 · 10⁻²⁵ kg·m/s<br>Δv = Δp/m<sub>e</sub> ≈ 5,8 · 10⁵ m/s.<br>Für ein Staubkorn (10⁻⁹ kg, Δx = 10⁻⁶ m) dagegen Δv ≈ 5 · 10⁻²⁰ m/s – unmessbar klein. Darum merken wir im Alltag nichts davon.</div>
+   <p>Das ist kein Mangel der Messgeräte, sondern eine Eigenschaft der Natur. Der Begriff „Bahn“ verliert im Atom seinen Sinn. Entsprechend gilt für Energie und Zeit: ΔE · Δt ≥ h/(4π).</p>
+   <h4>Vier Abschiede von der klassischen Physik</h4>
+   ${QC.map(q=>`<p><b>${q.k}.</b> ${q.o[q.c]} <i>${q.f}</i></p>`).join('')}
+   <h4>Einstein gegen Bohr</h4>
+   <p>Albert Einstein hält die Theorie für unvollständig; der Zufall könne nicht das letzte Wort sein. Sein Gedankenexperiment: Am Doppelspalt soll der Rückstoß einer beweglichen Blende verraten, welchen Weg das Teilchen nahm – ohne das Interferenzmuster zu zerstören. Niels Bohr kontert: Auch die Blende unterliegt der Unbestimmtheitsrelation. Wer ihren Rückstoß genau misst, kennt ihren Ort nicht mehr genau genug – das Muster verwischt. <b>Weg-Information und Interferenz schließen sich aus.</b> Bohr nennt Wellen- und Teilchenbild <b>komplementär</b>: Welches sich zeigt, bestimmt der Versuchsaufbau.</p>
+   <div class="box"><b>Nachtrag der Redaktion (1935 und später).</b> Einstein gab nicht auf. Mit Podolsky und Rosen (EPR) wies er auf verschränkte Teilchen hin, deren Messergebnisse über beliebige Entfernung zusammenhängen. Schrödinger spitzte die Deutungsfrage mit seiner berühmten Katze zu, die „tot und lebendig zugleich“ wäre. Experimente nach einer Idee von John Bell (1964) haben seither entschieden: Die Quantenmechanik behält recht, die Natur ist nichtlokal (Nobelpreis 2022 für Aspect, Clauser, Zeilinger). Dirac fand 1928 eine Gleichung, die Antiteilchen vorhersagt; 1932 wurde das Positron entdeckt.</div>
+   ${rumBox()}<h4>Fazit des Berichterstatters</h4>
+   <p>${esc(Q.fazit)}</p>
+  </div>
+  <p class="small" style="border-top:1px solid #000;margin-top:1em;padding-top:.4em">Lernspiel „Brüssel 1927“ · Physik, Technisches Gymnasium, BPE 11.2 · Die Zeitung ist erfunden, die Gespräche im Spiel sind frei formuliert.</p>`;
+}
+
+
+function rumBox(){const d=Object.keys(S.rumors).filter(k=>S.rumors[k]==='done');return d.length?'<div class="box"><b>Richtigstellungen.</b> Anders als ein Brüsseler Abendblatt meldete, gilt: '+d.map(k=>RUM[k].fix).join(' ')+'</div>':''}
+/* ---------- Zustand ---------- */
+const fresh=()=>({v:2,name:'',look:{hair:'#5a3d28',style:'cap',coat:'#b59a6a',hat:''},day:1,phase:0,loc:'saal',px:480,py:475,notes:[],met:[],asked:[],flags:[],rumors:{},cnt:{},acts:0,heard:[],read:[],phase_:'start',quiz:null,snd:false});
+let S=fresh();
+const has=n=>S.notes.includes(n), met=c=>S.met.includes(c), fl=f=>S.flags.includes(f);
+const addFlag=f=>{if(f&&!fl(f))S.flags.push(f)};
+function save(){try{localStorage.setItem('solvay1927v2',JSON.stringify(S))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('solvay1927v2'));if(d&&d.v===2&&d.phase_!=='start')return d}catch(e){}return null}
+const $=id=>document.getElementById(id);
+const sn=c=>c==='debroglie'?'de Broglie':C[c].x?C[c].n.replace(/^De[rn] /,''):C[c].n.split(' ').pop();
+function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('on',e.id===id));window.scrollTo(0,0);running=(id==='game')}
+function placeNow(){return PLACE[S.day][S.phase]}
+function whereIs(c){if(XSPOT[c])return XSPOT[c][0];const P=placeNow();for(const r in P)if(P[r].includes(c))return r}
+const refuted=()=>Object.values(S.rumors).filter(v=>v==='done').length;
+function bump(c){S.cnt[c]=(S.cnt[c]||0)+1;S.acts++}
+const inPhoto=c=>(S.cnt[c]||0)>=3;
+
+/* ---------- Dialog-Ergänzungen: Pauli, Dirac, Bezüge, Nebenfiguren ---------- */
+(function(){
+ const P=T.pauli,D=T.dirac;
+ Object.assign(P.topics.find(t=>t.id==='p2'),{give:'P1',a:()=>'Das Ausschließungsprinzip, 1925. Bohr hatte erraten, dass sich die Elektronen im Atom in Schalen ordnen – aber nicht, warum sie nicht alle in die innerste Schale fallen. Meine Antwort: Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Ist ein Zustand besetzt, muss das nächste Elektron höher. Daraus folgt das ganze Periodensystem – und die Chemie gleich mit. '+(met('bohr')?'Fragen Sie Bohr, er war erleichtert.':'')});
+ P.topics.push(
+  {id:'p4',if:()=>has('N6')&&!has('P2'),q:'Taugt Heisenbergs Mechanik denn für ein wirkliches Atom?',give:'P2',a:()=>'Das habe ich selbst nachgeprüft. Heisenbergs Schema sah zunächst aus wie eine Rechenvorschrift für Spezialfälle. Ich habe damit Anfang 1926 das Wasserstoffatom durchgerechnet – eine elende Algebra, aber am Ende standen die richtigen Spektrallinien da. Seitdem nimmt man die Matrizen ernst. Heisenberg hat mir einen begeisterten Brief geschrieben.'},
+  {id:'p5',if:()=>fl('spinTip')&&!has('P3'),q:'Stimmt es, dass Sie den Spin zuerst bekämpft haben?',give:'P3',a:()=>'Ehrenfest plaudert also. Ja – ein Elektron, das sich wie ein Kreisel dreht, hielt ich für Unfug, und als Bild halte ich es noch dafür. Aber die Sache selbst stimmt: Das Elektron hat eine innere Größe mit genau zwei Einstellungen. Ich hatte sie 1925 als „Zweideutigkeit“ gebraucht, damit mein Ausschließungsprinzip aufgeht. Dieses Jahr habe ich sie sauber in die Quantenmechanik eingebaut. Anschaulich ist daran nichts, und das ist gut so.'});
+ Object.assign(P.react,{
+  P1:{a:()=>'Das ist von mir. Abschreiben können Sie also.'},
+  D1:{a:()=>'Dirac hat recht, und er hat es eleganter gesagt als wir Deutschen. Aus der Nichtvertauschbarkeit folgt alles Weitere.'},
+  E1:{a:()=>'Sie haben selbst gemessen? Bemerkenswert für einen Journalisten. Dann wissen Sie jetzt, dass man der Natur nicht mit Meinungen beikommt.'}});
+ P.def='Das ist nicht einmal falsch notiert. Weiter.';
+ D.topics.find(t=>t.id==='di1').a=()=>'An der Mathematik der Quantenmechanik. Heisenbergs erste Arbeit bekam ich 1925 als Korrekturfahne zu lesen. Wichtig war darin ein einziger Punkt: Seine Größen sind nicht vertauschbar. … Eine physikalische Theorie sollte mathematisch schön sein.';
+ D.topics.push(
+  {id:'di0',q:'Schönes Wetter heute, nicht wahr?',a:()=>'Ja.',again:1},
+  {id:'di4',if:()=>S.read.includes('block')&&!has('D1'),q:'Ich habe Ihren Notizblock im Salon gesehen. Was bedeutet x·p − p·x?',a:()=>S.day<2?later:'Dass die Reihenfolge zählt. Mehr sage ich, wenn Sie mir zeigen, was Heisenberg daraus gemacht hat. Legen Sie mir seine Relation vor.'});
+ Object.assign(D.react,{
+  N5:{need:2,give:'D1',a:()=>'Heisenbergs Relation. Ja. Sie ist keine Zutat – sie folgt aus der Mathematik. Bei gewöhnlichen Zahlen ist 3 · 5 dasselbe wie 5 · 3. Für Ort x und Impuls p eines Quantenobjekts gilt das nicht: x·p und p·x unterscheiden sich, und zwar um einen festen Betrag, den h bestimmt. Erst den Ort messen und dann den Impuls ist etwas anderes als umgekehrt. Zwei Größen, die sich so verhalten, können nie gleichzeitig scharfe Werte haben. Heisenberg hat es am Mikroskop anschaulich gemacht. Bewiesen wird es so.'},
+  N1:{need:2,give:'D2',a:()=>'Einsteins Lichtquanten. Bisher behandelte die Quantenmechanik nur die Materie; das Licht lief als gewöhnliche Welle nebenher. Das ist unbefriedigend. Ich habe dieses Jahr das Strahlungsfeld selbst den Quantenregeln unterworfen. Dann besteht es aus Photonen, die erzeugt und vernichtet werden. Ein angeregtes Atom sendet von selbst ein Photon aus – das hatte Einstein 1916 fordern müssen. Jetzt kommt es heraus.'},
+  N6:{a:()=>'Heisenberg wusste zuerst nicht, dass er Matrizen benutzt. Mir fiel auf, dass sein Produkt von der Reihenfolge abhängt. Das war der Schlüssel.'},
+  P1:{a:()=>'Paulis Prinzip stimmt. Es lässt sich als Symmetrieforderung an die Wellenfunktion schreiben. Fermi und ich haben daraus die Statistik der Elektronen abgeleitet.'},
+  N8:{a:()=>'Einstein sorgt sich um die Deutung. Ich meine: Wenn die Gleichungen stimmen, ist das Wichtigste getan.'}});
+ // Reaktionen der anderen auf Pauli und Dirac
+ T.bohr.react.P1={a:()=>'Paulis Prinzip! Ich hatte den Schalenbau der Atome aus den Spektren und der Chemie erschlossen, mehr erraten als begründet. Warum eine Schale „voll“ ist, konnte ich nicht sagen. Pauli hat es gesagt. Er ist unser schärfster Kritiker – und fast immer zu Recht.'};
+ T.heisenberg.react.P2={a:()=>'Als Paulis Wasserstoff-Rechnung kam, war ich überglücklich. Ich selbst hatte mir daran die Zähne ausgebissen. Erst damit war klar, dass meine Helgoländer Idee mehr ist als ein Rechentrick.'};
+ T.heisenberg.react.D1={a:()=>'Genau das ist der Kern. Born hat es aus meiner Arbeit herausgelesen, Dirac unabhängig in Cambridge: Ort mal Impuls ist nicht Impuls mal Ort. Meine Relation sagt in Worten und Zahlen, was diese Formel bedeutet.'};
+ T.born.react.D1={a:()=>'Ja – diese Vertauschungsregel ist das Herz der Matrizenmechanik. Ich habe sie 1925 aus Heisenbergs Manuskript gewonnen, Dirac fand sie auf seinem eigenen Weg. Alles andere folgt daraus.'};
+ T.born.react.E1={a:()=>fl('pred1ok')?'Sie haben das Ergebnis sogar richtig vorhergesagt? Dann haben Sie verstanden, was |ψ|² bedeutet: zufällige Einzeltreffer, gesetzmäßige Verteilung.':'Sie hatten etwas anderes erwartet, höre ich. Trösten Sie sich, das ging uns allen so. Nun haben Sie |ψ|² bei der Arbeit gesehen: zufällige Einzeltreffer, gesetzmäßige Verteilung.'};
+ T.bohr.react.E1={a:()=>'Sie haben es selbst ausprobiert – das ist das Beste. Mit Wegmessung keine Streifen, ohne Wegmessung Streifen. Das ist Komplementarität zum Anfassen.'};
+ T.einstein.react.E1={a:()=>'Hübsch, nicht? Jedes Elektron weiß anscheinend, wo es nicht hindarf. Aber woher weiß es das? Die Statistik stimmt, gewiss. Mich interessiert der einzelne Fall.'};
+ T.einstein.react.D2={a:()=>'Der junge Dirac. Ich habe Mühe mit ihm – dieses Balancieren auf schmalem Grat zwischen Genie und Wahnsinn ist mir unheimlich. Aber dass meine Lichtquanten nun aus einer Theorie folgen, statt nur gefordert zu werden: Das nehme ich gern.'};
+ T.heisenberg.react.E2={a:()=>'Enger Spalt, breiter Fächer – da sehen Sie meine Relation ohne jedes Mikroskop. Wer den Ort festlegt, verliert die Richtung.'};
+ T.schroedinger.react.E2={a:()=>'Das ist reine Wellenbeugung, wie beim Licht. Dafür braucht man keine Göttinger Philosophie.'};
+ T.ehrenfest.react.P1={flag:'spinTip',a:()=>'Paulis Prinzip, sehr schön. Wissen Sie, was dazugehört? Zwei meiner Studenten in Leiden, Uhlenbeck und Goudsmit, haben 1925 vorgeschlagen, dass sich das Elektron wie ein winziger Kreisel verhält – der Spin. Pauli hat die Idee zuerst verspottet. Fragen Sie ihn heute danach!'};
+ T.lorentz.react.P3={a:()=>'Als Uhlenbeck mir den Spin vortrug, rechnete ich ihm vor, dass sich die Oberfläche eines solchen Elektrons schneller als das Licht drehen müsste. Er wollte die Arbeit zurückziehen. Ehrenfest hatte sie längst abgeschickt – zum Glück.'};
+ // Nebenfiguren
+ T.federle={
+  greet:()=>met('federle')?'Na, Kollege? Immer noch am Recherchieren? Ich habe meine Schlagzeile längst.':'Federle, „Abend-Telegraph“. Sie sind die Konkurrenz aus Berlin? Viel Glück – ich habe die besten Zitate schon im Block.',
+  topics:[
+   {id:'fg',q:'Was haben Sie denn herausgefunden?',again:1,a:()=>{const g=Object.keys(RUM).find(k=>RUM[k].day<=S.day&&!S.rumors[k]);
+     if(!g)return Object.keys(S.rumors).length<5?'Heute nichts Neues. Morgen wieder – ich habe ein Näschen für Sensationen.':'Mehr verrate ich nicht. Lesen Sie den „Abend-Telegraph“!';
+     S.rumors[g]='open';Snd.page();return 'Hören Sie zu, das wird meine Schlagzeile:<br><br><i>'+RUM[g].t+'</i><br><br>Gut, was?<div class="gain rum">🗞 Neues Gerücht im Notizbuch. Ob das stimmt? Pauli gilt als das „Gewissen der Physik“ – lassen Sie es von ihm prüfen.</div>'}},
+   {id:'f2',q:'Verstehen Sie eigentlich, worum es hier geht?',a:()=>'Muss ich nicht. Der Leser will Sensationen: „Physiker schaffen die Wirklichkeit ab!“ – so etwas verkauft sich. Die Einzelheiten kann ja später jemand berichtigen.'}],
+  react:{},def:'Viel zu kompliziert für meine Leser. Haben Sie nichts Knackigeres?'};
+ T.fotograf={
+  greet:()=>'Ich soll alle Teilnehmer auf eine Platte bannen. Aber die Herrschaften laufen mir ständig davon!',
+  topics:[
+   {id:'fo1',q:'Wie steht es um das Gruppenfoto?',again:1,a:()=>{setTimeout(photo,50);return ''}},
+   {id:'fo2',q:'Wie kann ich Ihnen helfen?',a:()=>'Sie reden doch mit allen. Wer sich ausführlich mit Ihnen unterhalten hat, den kennen Sie – und den bekommen wir aufs Bild. Sprechen Sie mit jedem mindestens dreimal: Fragen stellen, Notizen vorlegen oder Gesprächen zuhören. Den Rest erledige ich.'}],
+  react:{},def:'Davon verstehe ich nichts. Ich verstehe etwas von Licht – das reicht mir.'};
+ T.kellner={
+  greet:()=>S.day===3?'Guten Morgen. Die Herren Einstein und Bohr sitzen seit sechs Uhr beim Frühstück. Die Brötchen sind kalt, die Köpfe heiß.':'Guten Tag. Kaffee? Tee? Oder suchen Sie jemanden?',
+  topics:[
+   {id:'k1',q:'Wo finde ich die Herrschaften gerade?',again:1,a:()=>PHYS.map(c=>sn(c)+': '+MAPS[whereIs(c)].n).join(' · ')},
+   {id:'k2',q:'Was bekommt man beim Servieren so mit?',a:()=>'Professor Einstein isst kaum, er zeichnet auf die Servietten. Professor Bohr redet so leise, dass sich alle zu ihm beugen. Und der junge Herr Dirac hat in drei Tagen vier Wörter zu mir gesagt.'}],
+  react:{},def:'Sehr wohl. Das lege ich zu den anderen bekritzelten Servietten.'};
+ T.page={
+  greet:()=>'Guten Tag! Post, Telegramme, Auskünfte – alles bei mir.',
+  topics:[
+   {id:'pg1',q:'Gibt es eine Nachricht für mich?',again:1,a:()=>'Ein Telegramm aus Berlin, von Ihrem Chefredakteur: <i>'+hintText()+'</i>'},
+   {id:'pg2',q:'Fällt dir an den Gästen etwas auf?',a:()=>'Der dicke Herr Pauli wippt beim Nachdenken mit dem ganzen Oberkörper. Und man sagt, wenn er ein Labor betritt, geht etwas kaputt. Fragen Sie mal den Laboranten im Institut!'}],
+  react:{},def:'Soll ich das jemandem aufs Zimmer bringen?'};
+ T.laborant={
+  greet:()=>'Vorsicht mit den Apparaten! Aber sehen Sie sich ruhig um – so etwas bekommt die Presse selten zu Gesicht.',
+  topics:[
+   {id:'la1',q:'Was kann ich hier ausprobieren?',a:()=>'Zwei Versuche mit Elektronenstrahlen: links der Doppelspalt, rechts ein einzelner Spalt mit verstellbarer Breite. Treten Sie an den Tisch heran. Ich frage Sie vorher, was Sie erwarten – das machen wir mit den Studenten auch so.'},
+   {id:'la2',if:()=>S.day>=2,q:'Was ist mit der Pumpe dort hinten?',a:()=>'Kaputt. Sie lief einwandfrei – bis Professor Pauli draußen den Gang entlangging. Die Kollegen nennen das den Pauli-Effekt: Wo dieser Theoretiker auftaucht, versagen die Apparate. Er findet das übrigens selbst sehr komisch.'}],
+  react:{},def:'Das ist Theorie. Ich bin für das zuständig, was man anfassen kann.'};
+})();
+EPI.splice(0,0,{c:'dirac',n:'N18',h:'1928 · Diracs Gleichung',t:'Ein Jahr nach Brüssel findet Paul Dirac eine Gleichung für das Elektron, die Quantenmechanik und Einsteins Relativitätstheorie verbindet. Der Spin, den Pauli noch von Hand einbauen musste, kommt von selbst heraus. Und die Gleichung hat Lösungen, die niemand bestellt hat: Teilchen wie das Elektron, aber mit positiver Ladung. 1932 wird dieses Positron in der Höhenstrahlung entdeckt. Seither weiß man: Aus Strahlungsenergie können Teilchen und Antiteilchen paarweise entstehen – und sich wieder zu Strahlung vernichten.'});
+QA.push(['„Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein.“','pauli'],['„Bei Ort und Impuls kommt es auf die Reihenfolge an: x·p ist nicht p·x.“','dirac']);
+
+/* ---------- Aufträge und Tipps ---------- */
+function tdone(t){return t.n?has(t.n):t.f?fl(t.f):refuted()>=t.r}
+function missing(){return TASKS[S.day].filter(t=>!tdone(t))}
+function thow(t){
+  if(t.r){const open=Object.keys(S.rumors).find(k=>S.rumors[k]==='open'&&has(RUM[k].need));
+    if(open)return ['pauli','Lassen Sie ihn ein Gerücht prüfen.'];
+    const stuck=Object.keys(S.rumors).find(k=>S.rumors[k]==='open');
+    if(stuck&&!Object.keys(RUM).some(k=>RUM[k].day<=S.day&&!S.rumors[k]))return ['pauli','Lassen Sie ihn ein Gerücht prüfen – vorher brauchen Sie aber die passende Notiz dazu.'];
+    return ['federle','Fragen Sie ihn, was er herausgefunden hat.'];}
+  return HOW[t.n||t.f];
+}
+function hintText(){
+  const m=missing();
+  if(!m.length)return S.day<3?'Für heute haben Sie alles Wichtige beisammen. Sehen Sie sich ruhig noch um – oder beenden Sie den Tag.':'Sie haben alles beisammen. Sehen Sie sich gern noch um, dann beenden Sie die Konferenz.';
+  const [who,how]=thow(m[0]);
+  return `Offen ist noch: „${m[0].t}“ Gehen Sie zu ${C[who].n} (${MAPS[whereIs(who)].n}). ${how}`;
+}
+function marked(c){return missing().some(t=>thow(t)[0]===c)}
+
+/* ---------- Geräusche (erzeugt, keine Dateien) ---------- */
+const Snd={ctx:null,mur:null,
+ on(){return S.snd&&this.ctx},
+ init(){if(this.ctx)return;try{const A=window.AudioContext||window.webkitAudioContext;this.ctx=new A();
+   const n=this.ctx.sampleRate*2,b=this.ctx.createBuffer(1,n,this.ctx.sampleRate),d=b.getChannelData(0);let l=0;
+   for(let i=0;i<n;i++){l=(l+0.02*(Math.random()*2-1))/1.02;d[i]=l*3.5}this.buf=b;
+   const src=this.ctx.createBufferSource();src.buffer=b;src.loop=true;const f=this.ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=420;f.Q.value=.6;
+   this.mur=this.ctx.createGain();this.mur.gain.value=0;src.connect(f);f.connect(this.mur);this.mur.connect(this.ctx.destination);src.start()}catch(e){this.ctx=null}},
+ noise(d,fr,type,g){if(!this.on())return;const c=this.ctx,s=c.createBufferSource();s.buffer=this.buf;const f=c.createBiquadFilter();f.type=type;f.frequency.value=fr;const a=c.createGain();
+   a.gain.setValueAtTime(g,c.currentTime);a.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);s.connect(f);f.connect(a);a.connect(c.destination);s.start(c.currentTime,Math.random());s.stop(c.currentTime+d)},
+ tone(fr,d,g,dl){if(!this.on())return;const c=this.ctx,o=c.createOscillator(),a=c.createGain(),t=c.currentTime+(dl||0);o.frequency.value=fr;o.type='sine';
+   a.gain.setValueAtTime(g,t);a.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(a);a.connect(c.destination);o.start(t);o.stop(t+d)},
+ step(){this.noise(.05,700,'lowpass',.5)},door(){this.noise(.25,220,'lowpass',1.2)},page(){this.noise(.12,3000,'highpass',.5)},
+ chalk(){for(let i=0;i<4;i++)setTimeout(()=>this.noise(.07,2500,'bandpass',.6),i*110)},
+ chime(){this.tone(880,.25,.12);this.tone(1320,.4,.1,.12)},gong(){this.tone(196,1.6,.25);this.tone(294,1.4,.1)},click(){this.tone(520,.05,.05)},
+ blip(){this.tone(1500+Math.random()*600,.04,.04)},
+ murmur(n){if(this.mur)this.mur.gain.value=S.snd?Math.min(.5,n*.09):0}
+};
+
+/* ---------- Welt: Raster, Wege ---------- */
+let grid=null,npcs=[],PL={x:480,y:420,path:[],mv:false,act:null},keys={},running=false,tNow=0,lastStep=0,nearest=null,banner=null;
+function doorGeo(d){const p=d.p;return d.side==='top'?{trig:[p,108],spawn:[p,150]}:d.side==='bottom'?{trig:[p,532],spawn:[p,495]}:d.side==='left'?{trig:[28,p],spawn:[80,p]}:{trig:[932,p],spawn:[880,p]}}
+function buildGrid(room){const M=MAPS[room],g=[];
+  for(let r=0;r<GR;r++){g.push([]);for(let c=0;c<GC;c++){const x=c*CS+10,y=r*CS+10;let b=y<100||y>545||x<20||x>940;
+    if(!b)for(const f of M.furn){if(f.k==='rug'||f.k==='path'||f.nb)continue;if(x>f.x-12&&x<f.x+f.w+12&&y>f.y-6&&y<f.y+f.h+16){b=true;break}}
+    g[r].push(b)}}return g}
+const cellOf=(x,y)=>[Math.max(0,Math.min(GC-1,Math.floor(x/CS))),Math.max(0,Math.min(GR-1,Math.floor(y/CS)))];
+const free=(c,r)=>c>=0&&r>=0&&c<GC&&r<GR&&!grid[r][c];
+function nearFree(x,y){let [c,r]=cellOf(x,y);if(free(c,r))return [c,r];for(let d=1;d<12;d++)for(let i=-d;i<=d;i++)for(let j=-d;j<=d;j++)if(Math.max(Math.abs(i),Math.abs(j))===d&&free(c+i,r+j))return [c+i,r+j];return null}
+function findPath(x0,y0,x1,y1){const s=nearFree(x0,y0),e=nearFree(x1,y1);if(!s||!e)return [];
+  const key=(c,r)=>r*GC+c,prev=new Map([[key(...s),-1]]),q=[s];let ok=false;
+  while(q.length){const [c,r]=q.shift();if(c===e[0]&&r===e[1]){ok=true;break}
+    for(const [dc,dr] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]){const nc=c+dc,nr=r+dr;
+      if(!free(nc,nr)||prev.has(key(nc,nr)))continue;if(dc&&dr&&(!free(c+dc,r)||!free(c,r+dr)))continue;prev.set(key(nc,nr),key(c,r));q.push([nc,nr])}}
+  if(!ok)return [];const out=[];let k=key(...e);while(k!==-1&&k!==key(...s)){out.unshift([(k%GC)*CS+10,Math.floor(k/GC)*CS+10]);k=prev.get(k)}
+  if(free(...cellOf(x1,y1))&&out.length)out[out.length-1]=[x1,y1];return out}
+
+function enterRoom(room,from){
+  if(S.phase===0&&S.acts>=8&&from){S.phase=1;banner={t:'Die Glocke läutet zur Pause – die Teilnehmer wechseln ihre Plätze.',until:tNow+5};Snd.gong()}
+  S.loc=room;grid=buildGrid(room);const M=MAPS[room];
+  if(from){const d=M.doors.find(d=>d.to===from);const g=doorGeo(d||M.doors[0]);PL.x=g.spawn[0];PL.y=g.spawn[1];Snd.door()}
+  PL.path=[];PL.act=null;PL.mv=false;
+  npcs=[];const here=(placeNow()[room]||[]).slice();let ev=EAVES.find(e=>e.d===S.day&&e.ph===S.phase&&e.room===room);
+  here.forEach((c,i)=>{const sp=M.spots[i%M.spots.length];npcs.push({id:c,x:sp[0],y:sp[1],hx:sp[0],hy:sp[1],wt:2+Math.random()*5,tx:null,fix:!!(ev&&i<2)})});
+  for(const c in XSPOT)if(XSPOT[c][0]===room){const sp=XSPOT[c][1];npcs.push({id:c,x:sp[0],y:sp[1],hx:sp[0],hy:sp[1],wt:3,tx:null,fix:c==='fotograf'})}
+  Snd.murmur(npcs.length);hud();save();
+}
+function curEave(){const e=EAVES.find(e=>e.d===S.day&&e.ph===S.phase&&e.room===S.loc);if(!e)return null;const a=npcs[0],b=npcs[1];return a&&b?{e,x:(a.x+b.x)/2,y:Math.min(a.y,b.y)-104}:null}
+function objsHere(){return MAPS[S.loc].objs.filter(o=>!o.if||o.if())}
+
+/* ---------- Zeichnen ---------- */
+let cv,cx;
+function rr(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
+function drawFloor(M){
+  if(M.floor==='tile'||M.floor==='lab'){const a=M.floor==='lab'?'#d9dedc':'#c9c2b2',b=M.floor==='lab'?'#c6cdca':'#aaa291';for(let y=80;y<H;y+=40)for(let x=0;x<W;x+=40){cx.fillStyle=((x+y)/40)%2?a:b;cx.fillRect(x,y,40,40)}}
+  else if(M.floor==='parquet'){cx.fillStyle='#8a6238';cx.fillRect(0,80,W,H);cx.strokeStyle='rgba(0,0,0,.18)';cx.lineWidth=1;for(let y=80;y<H;y+=20){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();for(let x=(y/20%2)*40;x<W;x+=80){cx.beginPath();cx.moveTo(x,y);cx.lineTo(x,y+20);cx.stroke()}}}
+  else if(M.floor==='grass'){cx.fillStyle='#6f9a54';cx.fillRect(0,80,W,H);cx.fillStyle='rgba(40,80,30,.35)';for(let i=0;i<260;i++){const x=(i*137)%W,y=90+(i*89)%460;cx.fillRect(x,y,2,5)}
+    cx.fillStyle='rgba(200,120,40,.5)';for(let i=0;i<50;i++){cx.beginPath();cx.ellipse((i*211)%W,100+(i*173)%440,4,2.5,i,0,7);cx.fill()}}
+  else{cx.fillStyle=M.cc;cx.fillRect(0,80,W,H);cx.strokeStyle='rgba(255,220,150,.25)';cx.lineWidth=3;cx.strokeRect(34,112,W-68,H-146);cx.fillStyle='rgba(0,0,0,.08)';for(let y=120;y<H-40;y+=36)for(let x=50+(y%72?18:0);x<W-50;x+=36){cx.beginPath();cx.arc(x,y,3,0,7);cx.fill()}}
+}
+function drawWall(M){const g=cx.createLinearGradient(0,0,0,90);g.addColorStop(0,M.wall);g.addColorStop(1,'#00000055');cx.fillStyle=M.wall;cx.fillRect(0,0,W,90);cx.fillStyle=g;cx.fillRect(0,0,W,90);
+  if(M.floor==='grass'){cx.fillStyle='rgba(255,255,255,.08)';for(let y=6;y<84;y+=13)for(let x=(y%26?0:20);x<W;x+=40)cx.fillRect(x,y,36,10);
+    cx.fillStyle='#2a3440';for(const x of [80,200,320,640,760,880]){rr(x-24,14,48,60,6);cx.fill();cx.fillStyle='#8fb4c9';cx.fillRect(x-20,18,40,52);cx.fillStyle='#2a3440';cx.fillRect(x-1,18,2,52);cx.fillRect(x-20,43,40,2)}}
+  else{cx.fillStyle='rgba(0,0,0,.25)';cx.fillRect(0,62,W,28);cx.fillStyle='rgba(255,255,255,.12)';cx.fillRect(0,60,W,3)}
+  cx.fillStyle='#1a1512';cx.fillRect(0,88,W,5)}
+function drawDoor(d){const g=doorGeo(d);cx.font='bold 15px Georgia';cx.textAlign='center';
+  if(d.side==='top'){cx.fillStyle='#3a2616';rr(d.p-44,18,88,72,6);cx.fill();cx.fillStyle='#6b4627';cx.fillRect(d.p-38,24,36,66);cx.fillRect(d.p+2,24,36,66);cx.fillStyle='#d9b45a';cx.beginPath();cx.arc(d.p-6,60,3,0,7);cx.arc(d.p+6,60,3,0,7);cx.fill();label(d.label,d.p,12)}
+  else if(d.side==='bottom'){cx.fillStyle='#3a2616';cx.fillRect(d.p-44,H-12,88,12);cx.fillStyle='rgba(255,240,200,.25)';cx.fillRect(d.p-44,H-40,88,28);label('▼ '+d.label,d.p,H-18)}
+  else{const x=d.side==='left'?0:W-14;cx.fillStyle='#3a2616';cx.fillRect(x,d.p-46,14,92);cx.fillStyle='rgba(255,240,200,.25)';cx.fillRect(d.side==='left'?14:W-42,d.p-40,28,80);
+    cx.save();cx.translate(d.side==='left'?34:W-34,d.p-56);label((d.side==='left'?'◀ ':'')+d.label+(d.side==='right'?' ▶':''),d.side==='left'?44:-44,0);cx.restore()}}
+function label(t,x,y){cx.font='bold 14px Georgia';cx.textAlign='center';const w=cx.measureText(t).width+12;cx.fillStyle='rgba(20,16,12,.75)';rr(x-w/2,y-12,w,18,4);cx.fill();cx.fillStyle='#f3ead8';cx.fillText(t,x,y+2)}
+function drawFurn(f){const {x,y,w,h}=f;cx.save();
+  const sh=()=>{cx.fillStyle='rgba(0,0,0,.28)';rr(x+4,y+8,w,h,6);cx.fill()};
+  switch(f.k){
+   case 'rug':cx.fillStyle=f.c;rr(x,y,w,h,8);cx.fill();cx.strokeStyle='rgba(255,220,150,.5)';cx.lineWidth=2;rr(x+8,y+8,w-16,h-16,6);cx.stroke();break;
+   case 'path':cx.fillStyle='#d6c49a';cx.fillRect(x,y,w,h);break;
+   case 'table':case 'pult':sh();cx.fillStyle='#5b3a1e';rr(x,y+h-4,w,10,3);cx.fill();cx.fillStyle=f.k==='pult'?'#7a4f28':'#8a5a2e';rr(x,y,w,h,5);cx.fill();cx.fillStyle='rgba(255,255,255,.12)';rr(x+3,y+3,w-6,h/3,4);cx.fill();break;
+   case 'round':sh();cx.fillStyle='#e9e2d2';cx.beginPath();cx.ellipse(x+w/2,y+h/2,w/2,h/2,0,0,7);cx.fill();cx.fillStyle='#fff';cx.beginPath();cx.ellipse(x+w/2,y+h/2-3,w/2-6,h/2-8,0,0,7);cx.fill();
+     cx.fillStyle='#c9b27a';for(const a of [0.6,2.2,3.9,5.3]){cx.beginPath();cx.arc(x+w/2+Math.cos(a)*22,y+h/2-3+Math.sin(a)*18,6,0,7);cx.fill()}break;
+   case 'bench':sh();cx.fillStyle='#4c6b47';rr(x,y,w,h,5);cx.fill();cx.strokeStyle='rgba(0,0,0,.3)';for(let i=1;i<4;i++){cx.beginPath();cx.moveTo(x+4,y+i*h/4);cx.lineTo(x+w-4,y+i*h/4);cx.stroke()}break;
+   case 'sofa':sh();cx.fillStyle='#6e2f2a';rr(x,y,w,h,12);cx.fill();cx.fillStyle='#8c4038';rr(x+6,y+14,w-12,h-20,8);cx.fill();break;
+   case 'counter':sh();cx.fillStyle='#5b3a1e';rr(x,y,w,h,4);cx.fill();cx.fillStyle='#d9d4c8';for(let i=0;i<5;i++){cx.beginPath();cx.arc(x+24+i*44,y+14,9,0,7);cx.fill()}break;
+   case 'shelf':cx.fillStyle='#5b4a3a';rr(x,y,w,h,3);cx.fill();for(let i=0;i<12;i++){cx.fillStyle=['#8fb4c9','#c9b27a','#9ab58a','#b98a8a'][i%4];cx.fillRect(x+10+i*29,y+3,10,14)}break;
+   case 'plant':cx.fillStyle='#6b4627';rr(x+6,y+h-14,w-12,14,3);cx.fill();cx.fillStyle='#2f6b3a';for(const a of [0,1.2,2.5,3.8,5]){cx.beginPath();cx.ellipse(x+w/2+Math.cos(a)*9,y+h/2-6+Math.sin(a)*8,11,6,a,0,7);cx.fill()}break;
+   case 'tree':cx.fillStyle='rgba(0,0,0,.25)';cx.beginPath();cx.ellipse(x+w/2+6,y+h-4,w*.6,h*.3,0,0,7);cx.fill();cx.fillStyle='#5b3a1e';cx.fillRect(x+w/2-6,y+h/2,12,h/2);
+     for(const [a,b,c] of [[0,-10,'#b8732a'],[-16,-22,'#c98a34'],[16,-24,'#a8602a'],[0,-38,'#d49a3c']]){cx.fillStyle=c;cx.beginPath();cx.arc(x+w/2+a,y+h/2+b,26,0,7);cx.fill()}break;
+   case 'pond':cx.fillStyle='#4f8aa8';cx.beginPath();cx.ellipse(x+w/2,y+h/2,w/2,h/2,0,0,7);cx.fill();cx.strokeStyle='rgba(255,255,255,.4)';cx.lineWidth=1.5;cx.beginPath();cx.ellipse(x+w/2-20,y+h/2-6,26,8,0,0,7);cx.stroke();break;
+   case 'fire':cx.fillStyle='#2a221c';rr(x,y,w,h+10,6);cx.fill();cx.fillStyle='#120e0b';rr(x+22,y+22,w-44,h-12,10);cx.fill();cx.fillStyle='#e8842a';cx.beginPath();cx.ellipse(x+w/2,y+h-2,20,12+Math.sin(tNow*9)*3,0,0,7);cx.fill();cx.fillStyle='#ffd45a';cx.beginPath();cx.ellipse(x+w/2,y+h+2,9,7+Math.sin(tNow*13)*2,0,0,7);cx.fill();break;
+   case 'chair':cx.fillStyle='#5b3a1e';rr(x,y,w,h,4);cx.fill();cx.fillStyle='#9a6a3a';rr(x+2,y+2,w-4,h-7,3);cx.fill();break;
+   case 'win':cx.fillStyle='#2a2018';rr(x-4,y-4,w+8,h+8,4);cx.fill();cx.fillStyle=S.day===2?'#b9c9d2':'#a9c7d6';cx.fillRect(x,y,w,h);cx.fillStyle='rgba(255,255,255,.35)';cx.beginPath();cx.moveTo(x+w*.55,y);cx.lineTo(x+w*.8,y);cx.lineTo(x+w*.45,y+h);cx.lineTo(x+w*.2,y+h);cx.fill();cx.fillStyle='#2a2018';cx.fillRect(x+w/2-1.5,y,3,h);cx.fillRect(x,y+h/2-1.5,w,3);
+     cx.fillStyle=f.c||'#7a2f2a';cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+w*.3,y);cx.quadraticCurveTo(x+w*.22,y+h*.6,x,y+h);cx.fill();cx.beginPath();cx.moveTo(x+w,y);cx.lineTo(x+w*.7,y);cx.quadraticCurveTo(x+w*.78,y+h*.6,x+w,y+h);cx.fill();break;
+   case 'pic':cx.fillStyle='#b8893a';rr(x-4,y-4,w+8,h+8,2);cx.fill();cx.fillStyle=f.c;cx.fillRect(x,y,w,h);if(f.chart){cx.strokeStyle='#27405e';cx.lineWidth=1.5;cx.beginPath();for(let i=0;i<=w-12;i+=2)cx.lineTo(x+6+i,y+h-8-Math.pow(Math.cos(i/6),2)*(h-18)*Math.exp(-Math.pow((i-w/2+6)/30,2)));cx.stroke()}
+     else{cx.fillStyle='rgba(255,255,255,.25)';cx.beginPath();cx.ellipse(x+w*.6,y+h*.4,w*.22,h*.2,0,0,7);cx.fill();cx.fillStyle='rgba(0,0,0,.25)';cx.fillRect(x,y+h*.68,w,h*.32)}break;
+   case 'sconce':{const g=cx.createRadialGradient(x,y,2,x,y,34);g.addColorStop(0,'rgba(255,220,140,.75)');g.addColorStop(1,'rgba(255,220,140,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x,y,34,0,7);cx.fill();cx.fillStyle='#b8893a';cx.fillRect(x-2,y+4,4,14);cx.fillStyle='#fff3c8';cx.beginPath();cx.ellipse(x,y,6,8,0,0,7);cx.fill();break}
+   case 'coats':cx.fillStyle='#3a2616';cx.fillRect(x,y+4,w,4);['#3b3a3f','#6b5236','#27405e','#4a4f45'].forEach((c,i)=>{cx.fillStyle=c;rr(x+6+i*23,y+8,18,h-10,5);cx.fill();cx.fillStyle='#1d1a16';cx.beginPath();cx.ellipse(x+15+i*23,y+2,10,3.5,0,0,7);cx.fill();rr(x+10+i*23,y-7,10,8,3);cx.fill()});break;
+   case 'flower':cx.fillStyle='#4f7a3c';cx.beginPath();cx.ellipse(x+w/2,y+h/2,w/2,h/2,0,0,7);cx.fill();for(let i=0;i<14;i++){cx.fillStyle=['#e8c94a','#d9695a','#f3ead8','#b86ab0'][i%4];cx.beginPath();cx.arc(x+w/2+Math.cos(i*2.4)*w*.36*((i%3+1)/3),y+h/2+Math.sin(i*2.4)*h*.32*((i%3+1)/3),3.5,0,7);cx.fill()}break;
+   case 'lamp':{cx.fillStyle='rgba(0,0,0,.25)';cx.beginPath();cx.ellipse(x+7,y+12,10,4,0,0,7);cx.fill();cx.fillStyle='#1d1a16';cx.fillRect(x+5,y-56,4,68);const g=cx.createRadialGradient(x+7,y-62,2,x+7,y-62,26);g.addColorStop(0,'rgba(255,230,160,.8)');g.addColorStop(1,'rgba(255,230,160,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x+7,y-62,26,0,7);cx.fill();cx.fillStyle='#1d1a16';rr(x,y-72,14,18,3);cx.fill();cx.fillStyle='#ffe9a8';cx.fillRect(x+3,y-69,8,12);break}
+   case 'books':cx.fillStyle='#3a2616';rr(x,y,w,h,3);cx.fill();for(let r=0;r<3;r++){cx.fillStyle='#22160c';cx.fillRect(x+4,y+4+r*23,w-8,20);for(let i=0;i<(w-10)/9;i++){cx.fillStyle=['#7a2f2a','#27405e','#2f5d4a','#b8893a','#5a4a3c','#8a8580'][(i*7+r*3)%6];cx.fillRect(x+6+i*9,y+6+r*23+(i*5+r)%4,7,18-(i*5+r)%4)}}break;
+   case 'clock':{cx.fillStyle='#b8893a';cx.beginPath();cx.arc(x,y,19,0,7);cx.fill();cx.fillStyle='#f6f1e4';cx.beginPath();cx.arc(x,y,15,0,7);cx.fill();cx.strokeStyle='#1d1a16';cx.lineWidth=2;const a=tNow/40+S.day+S.phase*2.2;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+Math.sin(a)*8,y-Math.cos(a)*8);cx.moveTo(x,y);cx.lineTo(x+Math.sin(a*12)*12,y-Math.cos(a*12)*12);cx.stroke();break}
+   case 'piano':sh();cx.fillStyle='#16130f';rr(x,y,w,h,8);cx.fill();cx.fillStyle='#f6f1e4';cx.fillRect(x+8,y+h-18,w-16,12);cx.fillStyle='#16130f';for(let i=0;i<12;i++)cx.fillRect(x+13+i*8.4,y+h-18,4,7);cx.fillStyle='rgba(255,255,255,.1)';rr(x+6,y+6,w-12,h/3,5);cx.fill();break;
+   case 'chess':for(let i=0;i<5;i++)for(let j=0;j<5;j++){cx.fillStyle=(i+j)%2?'#2a2018':'#e9dcc2';cx.fillRect(x+i*5,y+j*5,5,5)}break;
+   case 'flask':for(const [a,c] of [[0,'#8fb4c9'],[18,'#9ab58a'],[36,'#c9b27a']]){cx.fillStyle='rgba(255,255,255,.7)';cx.fillRect(x+a+4,y,4,10);cx.beginPath();cx.arc(x+a+6,y+17,9,0,7);cx.fill();cx.fillStyle=c;cx.beginPath();cx.arc(x+a+6,y+18,7,0,Math.PI);cx.fill()}break;
+   case 'duck':{const a=tNow*.35,dx2=x+Math.cos(a)*46,dy2=y+Math.sin(a)*16;cx.fillStyle='#f3ead8';cx.beginPath();cx.ellipse(dx2,dy2,9,6,0,0,7);cx.fill();cx.beginPath();cx.arc(dx2-Math.sin(a)*8,dy2-5,4.5,0,7);cx.fill();cx.fillStyle='#d98a2a';cx.fillRect(dx2-Math.sin(a)*13-2,dy2-6,4,2.5);break}
+   case 'tripod':cx.strokeStyle='#3a2616';cx.lineWidth=3;for(const a of [-10,0,10]){cx.beginPath();cx.moveTo(x+13,y-18);cx.lineTo(x+13+a,y+h);cx.stroke()}cx.fillStyle='#1c1814';rr(x-2,y-38,30,22,3);cx.fill();cx.fillStyle='#8fb4c9';cx.beginPath();cx.arc(x+13,y-27,6,0,7);cx.fill();break;
+  }cx.restore()}
+function drawObj(o){const {x,y,w,h}=o,un=!S.read.includes(o.id==='tafel'?'tafel'+S.day:o.id);cx.save();
+  switch(o.k){
+   case 'tafel':cx.fillStyle='#4a3420';rr(x-6,y-4,w+12,h+10,4);cx.fill();cx.fillStyle='#22382e';cx.fillRect(x,y,w,h);cx.strokeStyle='rgba(255,255,255,.7)';cx.lineWidth=1.4;cx.font='italic 17px Georgia';cx.fillStyle='rgba(255,255,255,.85)';cx.textAlign='left';
+     cx.fillText(S.day===1?'λ = h / p':S.day===2?'Δx · Δp ≥ h / 4π':'»… und verwirrte ihre Sprache«',x+16,y+26);cx.font='italic 13px Georgia';cx.fillText(S.day===1?'ψ ?':S.day===2?'|ψ|²':'– P. E.',x+w-70,y+52);
+     for(let i=0;i<3;i++){cx.beginPath();cx.moveTo(x+20,y+40+i*7);cx.bezierCurveTo(x+60,y+34+i*7,x+100,y+46+i*7,x+150,y+40+i*7);cx.stroke()}break;
+   case 'board':cx.fillStyle='#4a3420';rr(x-4,y-4,w+8,h+8,3);cx.fill();cx.fillStyle='#a8885a';cx.fillRect(x,y,w,h);cx.fillStyle='#f3ead8';cx.fillRect(x+8,y+8,44,40);cx.fillRect(x+60,y+10,30,22);cx.fillRect(x+96,y+8,26,44);cx.fillStyle='#8c2f23';for(const p of [[30,10],[75,12],[109,10]]){cx.beginPath();cx.arc(x+p[0],y+p[1],2.5,0,7);cx.fill()}break;
+   case 'paper':cx.fillStyle='#f6f1e4';cx.save();cx.translate(x+w/2,y+h/2);cx.rotate(-.12);cx.fillRect(-w/2,-h/2,w,h);cx.strokeStyle='#777';cx.lineWidth=.8;for(let i=1;i<4;i++){cx.beginPath();cx.moveTo(-w/2+3,-h/2+i*h/4);cx.lineTo(w/2-3,-h/2+i*h/4);cx.stroke()}cx.restore();break;
+   case 'book':cx.fillStyle='#1c1814';rr(x,y,w,h,2);cx.fill();cx.fillStyle='#f6f1e4';cx.fillRect(x+2,y+2,w-4,h-5);break;
+   case 'app1':case 'app2':cx.fillStyle='#2a2a2e';rr(x,y+12,36,26,4);cx.fill();cx.fillStyle='#b8893a';cx.fillRect(x+36,y+22,w-70,5);cx.fillStyle='#1c1814';cx.fillRect(x+w/2-3,y+6,6,38);
+     cx.fillStyle='#d9dedc';if(o.k==='app1'){cx.fillRect(x+w/2-3,y+18,6,4);cx.fillRect(x+w/2-3,y+28,6,4)}else cx.fillRect(x+w/2-3,y+22,6,6);
+     cx.fillStyle='#3d5a48';rr(x+w-30,y,14,50,3);cx.fill();cx.fillStyle='#9fe0b0';for(let i=0;i<5;i++)cx.fillRect(x+w-27,y+5+i*9,8,3+Math.sin(tNow*3+i)*1);break;
+   case 'pump':cx.fillStyle='#55504a';rr(x,y,w,h,6);cx.fill();cx.fillStyle='#8a8580';cx.beginPath();cx.arc(x+w/2,y+h/2,14,0,7);cx.fill();cx.strokeStyle='#8c2f23';cx.lineWidth=3;cx.beginPath();cx.moveTo(x+w/2-8,y+h/2-8);cx.lineTo(x+w/2+8,y+h/2+8);cx.moveTo(x+w/2+8,y+h/2-8);cx.lineTo(x+w/2-8,y+h/2+8);cx.stroke();break;
+  }
+  if(un){const s=2+Math.sin(tNow*4)*1.5,px=x+w-2,py=o.k==='tafel'||o.k==='board'?y+h-2:y-4;cx.fillStyle='#ffd45a';cx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,r=i%2?s:s*3;cx.lineTo(px+Math.cos(a)*r,py+Math.sin(a)*r)}cx.fill()}
+  cx.restore()}
+function drawPerson(x,y,L,mv,name,mark){const b=mv?Math.sin(tNow*13)*1.6:0,sw=mv?Math.sin(tNow*13)*5:0,coat=L.coat||L.suit,Z=1.5;cx.save();cx.translate(x,y);cx.scale(Z,Z);x=0;y=0;const hy=y-40+b;
+  cx.fillStyle='rgba(0,0,0,.3)';cx.beginPath();cx.ellipse(x,y+1,15,6,0,0,7);cx.fill();
+  cx.fillStyle='#1d1a16';rr(x-8,y-12,7,12+sw*.3,2);cx.fill();rr(x+1,y-12,7,12-sw*.3,2);cx.fill();
+  cx.fillStyle=coat;rr(x-12,y-31+b,24,24,7);cx.fill();cx.fillStyle='rgba(255,255,255,.14)';rr(x-12,y-31+b,10,24,7);cx.fill();
+  rr(x-16,y-29+b+sw*.4,6,16,3);cx.fillStyle=coat;cx.fill();rr(x+10,y-29+b-sw*.4,6,16,3);cx.fill();
+  if(L.tie!=='none'){cx.fillStyle='#f4f1ea';cx.beginPath();cx.moveTo(x-4,y-31+b);cx.lineTo(x+4,y-31+b);cx.lineTo(x,y-23+b);cx.fill()}
+  const hc=L.hair;
+  if(L.style==='wild'){cx.fillStyle=hc;for(const [a,c] of [[-10,-4],[10,-4],[-12,4],[12,4],[0,-10],[-6,-9],[6,-9]]){cx.beginPath();cx.arc(x+a,hy+c,6.5,0,7);cx.fill()}}
+  if(L.style==='bun'){cx.fillStyle=hc;cx.beginPath();cx.arc(x+2,hy-12,6,0,7);cx.fill()}
+  if(L.style==='long'){cx.fillStyle=hc;rr(x-12,hy-8,24,22,8);cx.fill()}
+  cx.fillStyle=L.old?'#e6cdb4':'#ebcba8';cx.beginPath();cx.arc(x,hy,10.5,0,7);cx.fill();
+  if(L.beard){cx.fillStyle=hc;cx.beginPath();cx.arc(x,hy+2,10.5,.15,Math.PI-.15);cx.fill()}
+  cx.fillStyle=hc;cx.beginPath();const rec=L.hl<27&&L.style==='cap';
+  if(rec){cx.arc(x,hy,11,Math.PI*1.05,Math.PI*1.3);cx.lineTo(x-6,hy-5);cx.fill();cx.beginPath();cx.arc(x,hy,11,Math.PI*1.7,Math.PI*1.95);cx.lineTo(x+6,hy-5);cx.fill()}
+  else{cx.arc(x,hy,11,Math.PI*1.02,Math.PI*1.98);cx.quadraticCurveTo(x+(L.part||0)/4,hy-4,x-11,hy-1);cx.fill()}
+  cx.fillStyle='#2b2118';cx.beginPath();cx.arc(x-4,hy+1,1.4,0,7);cx.arc(x+4,hy+1,1.4,0,7);cx.fill();
+  if(L.mo){cx.strokeStyle=L.moc;cx.lineWidth=L.mo==='big'?3:1.8;cx.beginPath();cx.moveTo(x-5,hy+6);cx.lineTo(x+5,hy+6);cx.stroke()}
+  if(L.glasses){cx.strokeStyle='#2a2420';cx.lineWidth=1.3;cx.beginPath();cx.arc(x-4,hy+1,3.6,0,7);cx.moveTo(x+7.6,hy+1);cx.arc(x+4,hy+1,3.6,0,7);cx.stroke()}
+  if(L.pipe){cx.strokeStyle='#3b2414';cx.lineWidth=2.5;cx.beginPath();cx.moveTo(x+3,hy+7);cx.lineTo(x+12,hy+10);cx.stroke();cx.fillStyle='#5b3418';cx.fillRect(x+10,hy+5,5,7)}
+  if(L.hat){cx.fillStyle=L.hat;cx.beginPath();cx.ellipse(x,hy-7,14,4,0,0,7);cx.fill();rr(x-8,hy-17,16,11,4);cx.fill()}
+  if(name){cx.font='bold 10px Georgia';cx.textAlign='center';const w=cx.measureText(name).width+7;cx.fillStyle='rgba(243,234,216,.92)';rr(x-w/2,y+5,w,13,2);cx.fill();cx.fillStyle='#1d1a16';cx.fillText(name,x,y+15)}
+  if(mark){const yy=hy-28+Math.sin(tNow*5)*3;cx.fillStyle='#8c2f23';cx.beginPath();cx.arc(x,yy,9,0,7);cx.fill();cx.fillStyle='#fff';cx.font='bold 14px sans-serif';cx.textAlign='center';cx.fillText('!',x,yy+5)}
+  cx.restore()}
+function draw(){const M=MAPS[S.loc];cx.clearRect(0,0,W,H);drawFloor(M);
+  M.furn.filter(f=>f.k==='rug'||f.k==='path').forEach(drawFurn);drawWall(M);M.doors.forEach(drawDoor);
+  M.furn.filter(f=>f.k!=='rug'&&f.k!=='path').forEach(drawFurn);objsHere().forEach(drawObj);
+  const ps=npcs.map(n=>({y:n.y,f:()=>drawPerson(n.x,n.y,LOOK[n.id],n.mv,sn(n.id),marked(n.id))}));
+  ps.push({y:PL.y,f:()=>drawPerson(PL.x,PL.y,Object.assign({tie:'tie'},S.look),PL.mv,null,false)});ps.sort((a,b)=>a.y-b.y).forEach(p=>p.f());
+  const ev=curEave();if(ev&&!S.heard.includes(ev.e.id)){const y=ev.y+Math.sin(tNow*3)*3;cx.fillStyle='#fffaf0';rr(ev.x-22,y-14,44,26,10);cx.fill();cx.strokeStyle='#8a7753';cx.lineWidth=1.5;cx.stroke();cx.fillStyle='#27405e';for(let i=-1;i<2;i++){cx.beginPath();cx.arc(ev.x+i*10,y-1,3,0,7);cx.fill()}}
+  if(PL.path.length){const t=PL.path[PL.path.length-1];cx.strokeStyle='rgba(255,255,255,.7)';cx.lineWidth=2;cx.beginPath();cx.ellipse(t[0],t[1],9+Math.sin(tNow*8)*2,4,0,0,7);cx.stroke()}
+  if(banner&&tNow<banner.until){cx.font='italic 18px Georgia';cx.textAlign='center';const w=cx.measureText(banner.t).width+30;cx.fillStyle='rgba(20,16,12,.85)';rr(W/2-w/2,104,w,34,6);cx.fill();cx.fillStyle='#f3d38a';cx.fillText(banner.t,W/2,127)}
+}
+
+/* ---------- Bewegung und Interaktion ---------- */
+const dist=(a,b,c,d)=>Math.hypot(a-c,b-d);
+function canStand(x,y){return free(...cellOf(x,y))}
+function update(dt){
+  let dx=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0),dy=(keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0);
+  const sp=200*dt;PL.mv=false;
+  if(dx||dy){PL.path=[];PL.act=null;const l=Math.hypot(dx,dy);dx*=sp/l;dy*=sp/l;if(canStand(PL.x+dx,PL.y)){PL.x+=dx;PL.mv=true}if(canStand(PL.x,PL.y+dy)){PL.y+=dy;PL.mv=true}}
+  else if(PL.path.length){const [tx,ty]=PL.path[0],d=dist(PL.x,PL.y,tx,ty);if(d<=sp){PL.x=tx;PL.y=ty;PL.path.shift();if(!PL.path.length&&PL.act){const a=PL.act;PL.act=null;a()}}else{PL.x+=(tx-PL.x)/d*sp;PL.y+=(ty-PL.y)/d*sp}PL.mv=true}
+  if(PL.mv&&tNow-lastStep>.28){lastStep=tNow;Snd.step()}
+  for(const n of npcs){n.mv=false;if(n.fix)continue;if(n.tx!=null){const d=dist(n.x,n.y,n.tx,n.ty);if(d<2||dist(n.x,n.y,PL.x,PL.y)<52){n.tx=null;n.wt=2+Math.random()*6}else{n.x+=(n.tx-n.x)/d*38*dt;n.y+=(n.ty-n.y)/d*38*dt;n.mv=true}}
+    else if((n.wt-=dt)<0){const tx=n.hx+(Math.random()*90-45),ty=n.hy+(Math.random()*70-35);let ok=true;for(let i=0;i<=6;i++)if(!canStand(n.x+(tx-n.x)*i/6,n.y+(ty-n.y)*i/6))ok=false;
+      if(ok&&!npcs.some(m=>m!==n&&dist(tx,ty,m.x,m.y)<58)){n.tx=tx;n.ty=ty}else n.wt=1}}
+  for(const d of MAPS[S.loc].doors){const g=doorGeo(d);if(dist(PL.x,PL.y,g.trig[0],g.trig[1])<22&&(dx||dy)){enterRoom(d.to,S.loc);return}}
+  // Was ist in der Nähe?
+  let best=null,bd=1e9;const cand=(d,o)=>{if(d<bd){bd=d;best=o}};
+  for(const n of npcs)cand(dist(PL.x,PL.y,n.x,n.y)-(n.fix?6:0),{lim:84,t:'Mit '+C[n.id].n+' sprechen',f:()=>talk(n.id)});
+  for(const o of objsHere())cand(dist(PL.x,PL.y,o.stand[0],o.stand[1])+14,{lim:60,t:o.label+' ansehen',f:()=>readObj(o)});
+  const ev=curEave();if(ev&&!S.heard.includes(ev.e.id))cand(dist(PL.x,PL.y,ev.x,ev.y+104)-22,{lim:110,t:'Dem Gespräch von '+ev.e.who.map(sn).join(' und ')+' zuhören',f:()=>listen(ev.e)});
+  nearest=best&&bd<best.lim?best:null;
+  const pb=$('prompt');if(nearest){if(pb.dataset.t!==nearest.t){pb.textContent=nearest.t;pb.dataset.t=nearest.t}pb.style.visibility='visible'}else{pb.style.visibility='hidden';pb.dataset.t=''}
+  PL.x=Math.max(22,Math.min(938,PL.x));S.px=PL.x;S.py=PL.y;
+}
+function goTo(x,y,act){PL.path=findPath(PL.x,PL.y,x,y);PL.act=act||null;if(!PL.path.length&&act&&dist(PL.x,PL.y,x,y)<30){PL.act=null;act()}}
+function clickAt(mx,my){
+  const ev=curEave();if(ev&&!S.heard.includes(ev.e.id)&&dist(mx,my,ev.x,ev.y)<34){goTo(ev.x,ev.y+160,()=>listen(ev.e));return}
+  for(const n of npcs)if(dist(mx,my,n.x,n.y-36)<44){const a=Math.atan2(PL.y-n.y,PL.x-n.x);let tx=n.x+Math.cos(a)*58,ty=n.y+Math.sin(a)*58;if(!canStand(tx,ty)){tx=n.x;ty=n.y+58}goTo(tx,ty,()=>talk(n.id));return}
+  for(const o of objsHere())if(mx>o.x-12&&mx<o.x+o.w+12&&my>o.y-12&&my<o.y+o.h+12){goTo(o.stand[0],o.stand[1],()=>readObj(o));return}
+  for(const d of MAPS[S.loc].doors){const g=doorGeo(d),hit=d.side==='top'?(Math.abs(mx-d.p)<50&&my<100):d.side==='bottom'?(Math.abs(mx-d.p)<50&&my>H-46):d.side==='left'?(mx<46&&Math.abs(my-d.p)<50):(mx>W-46&&Math.abs(my-d.p)<50);
+    if(hit){goTo(g.trig[0],g.trig[1],()=>enterRoom(d.to,S.loc));return}}
+  goTo(mx,my);
+}
+let lastT=0;
+function loop(ts){const dt=Math.min(.05,(ts-lastT)/1000||0);lastT=ts;if(running&&!$('ov').classList.contains('on')){tNow+=dt;update(dt);draw()}requestAnimationFrame(loop)}
+
+/* ---------- Leisten, Fenster ---------- */
+function hud(){const M=MAPS[S.loc];$('locName').textContent=M.n+' · '+M.sub;$('dayName').textContent=DAYS[S.day]+(S.phase?' · Nachmittag':' · Vormittag');
+  $('nbBtn').textContent='📓 Notizbuch ('+S.notes.length+')';const m=missing().length;$('tkBtn').textContent='✉ Aufträge'+(m?' ('+m+' offen)':' ✓');
+  $('phBtn').textContent='📷 '+PHYS.filter(inPhoto).length+'/11';$('sndBtn').textContent=S.snd?'🔊':'🔇';$('dayBtn').textContent=S.day<3?'Tag beenden ▸':'Konferenz beenden ▸'}
+function open(h){$('panel').innerHTML=h;$('ov').classList.add('on');$('panel').scrollTop=0;keys={}}
+function close(){$('ov').classList.remove('on');hud();save()}
+function give(n){if(n&&!has(n)){S.notes.push(n);Snd.chime();return `<div class="gain">📓 Neue Notiz: <b>${NOTES[n].t}</b></div>`}return ''}
+function avail(c){return T[c].topics.filter(t=>!t.if||t.if())}
+function talk(c,body,qtext){
+  const g=body==null?T[c].greet():body;if(!met(c))S.met.push(c);
+  open(`<div class="talk"><div class="por">${portrait(c)}<b>${C[c].n}</b><i>${C[c].r}</i>${C[c].x?'':`<span class="pill ${inPhoto(c)?'in':''}">${inPhoto(c)?'📷 kommt aufs Gruppenfoto':'📷 noch '+(3-(S.cnt[c]||0))+' Gespräche bis zum Foto'}</span>`}</div><div>
+   <div class="bubble">${qtext?`<p class="q">Sie: „${qtext}“</p>`:''}${g}</div><div class="opts" id="opts"></div></div></div>`);
+  const O=$('opts');
+  avail(c).forEach(t=>{const b=document.createElement('button'),k=c+'.'+t.id;if(S.asked.includes(k)&&!t.again)b.className='asked';b.textContent='» '+t.q;
+    b.onclick=()=>{let a,g2='';Snd.click();if(t.need&&S.day<t.need)a=later;else{a=t.a();if(!S.asked.includes(k)){S.asked.push(k);bump(c)}if(a!==later){g2=give(t.give);addFlag(t.flag)}}
+      if(a!=='')talk(c,a+g2,t.q)};O.appendChild(b)});
+  if(S.notes.length&&c!=='fotograf'){const b=document.createElement('button');b.className='show';b.textContent='📓 Eine Notiz vorlegen …';b.onclick=()=>pick(c);O.appendChild(b)}
+  if(c==='pauli'&&Object.values(S.rumors).includes('open')){const b=document.createElement('button');b.className='show';b.textContent='🗞 Ein Gerücht prüfen lassen …';b.onclick=pickRumor;O.appendChild(b)}
+  const e=document.createElement('button');e.className='bye';e.textContent='Gespräch beenden';e.onclick=close;O.appendChild(e);save();
+}
+function pick(c){
+  open(`<h3>Welche Notiz legen Sie ${C[c].n} vor?</h3><div id="pk"></div><p><button class="btn light" id="bk">Zurück</button></p>`);
+  S.notes.forEach(n=>{const b=document.createElement('button');b.className='note pick';b.innerHTML=`<b>${NOTES[n].t}</b><small>${NOTES[n].src}</small>`;
+    b.onclick=()=>{const r=T[c].react[n],k=c+'>'+n;let a,g2='';Snd.page();
+      if(!r)a=T[c].def;else if(r.need&&S.day<r.need)a=later;else if(r.if&&!r.if())a=r.else;else{a=r.a();g2=give(r.give);addFlag(r.flag);if(!S.asked.includes(k)){S.asked.push(k);bump(c)}}
+      talk(c,a+g2,'Was sagen Sie zu „'+NOTES[n].t+'“?')};$('pk').appendChild(b)});
+  $('bk').onclick=()=>talk(c);
+}
+function pickRumor(){
+  open('<h3>Welches Gerücht soll Pauli prüfen?</h3><div id="pk"></div><p><button class="btn light" id="bk">Zurück</button></p>');
+  Object.keys(S.rumors).filter(k=>S.rumors[k]==='open').forEach(k=>{const b=document.createElement('button');b.className='note pick rum';b.innerHTML=RUM[k].t;b.onclick=()=>rumorQ(k);$('pk').appendChild(b)});
+  $('bk').onclick=()=>talk('pauli');
+}
+function rumorQ(k,msg){const R=RUM[k];
+  if(!has(R.need)){talk('pauli','Bevor ich Ihnen das zerpflücke, sollten Sie selbst wissen, wovon die Rede ist. Ihnen fehlt die Notiz „'+NOTES[R.need].t+'“. Recherchieren Sie erst – dann kommen Sie wieder.','Stimmt dieses Gerücht?');return}
+  open(`<div class="talk"><div class="por">${portrait('pauli')}<b>Wolfgang Pauli</b><i>das „Gewissen der Physik“</i></div><div><div class="bubble"><p class="q">${R.t}</p>${msg||'So ein Unsinn. Aber ich sage es Ihnen nicht vor. Sie haben recherchiert – also: <b>Was ist daran falsch?</b>'}</div><div class="opts" id="opts"></div></div></div>`);
+  R.o.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{
+    if(i===R.c){S.rumors[k]='done';bump('pauli');Snd.chime();talk('pauli',R.ok+`<div class="gain">🗞 Gerücht widerlegt (${refuted()} von 5). Die Richtigstellung erscheint in Ihrem Artikel.</div>`,'Das Gerücht ist falsch, denn …')}
+    else rumorQ(k,['Falsch. Lesen Sie Ihre eigenen Notizen, bevor Sie mir die Zeit stehlen. Noch einmal: <b>Was ist daran falsch?</b>','Auch das ist Unfug. Denken Sie nach, dann antworten Sie. <b>Was ist daran falsch?</b>'][Math.random()<.5?0:1])};$('opts').appendChild(b)});
+}
+/* Gegenstände */
+const OBJT={
+ tafel:()=>S.day===1?'<p>In de Broglies steiler Schrift: <b>λ = h / p</b>. Darunter, in anderer Hand, eine lange Gleichung mit einem dick unterstrichenen <b>ψ</b> – und daneben mit Kreide gekritzelt: <i>„Und was schwingt da eigentlich?“</i></p><p>Die Frage scheint noch offen zu sein. Schrödinger und Born könnten mehr wissen.</p>':S.day===2?'<p>Die Tafel ist frisch beschrieben: <b>Δx · Δp ≥ h / 4π</b>, daneben <b>|ψ|² = Wahrscheinlichkeitsdichte</b>.</p><p>Ganz unten steht in Borns sauberer Schrift: <i>„Die Quantenmechanik ist eine abgeschlossene Theorie.“</i> Jemand hat drei Fragezeichen dahintergesetzt.</p>':'<p>Jemand hat die Formeln weggewischt und einen Bibelvers angeschrieben – vom Turmbau zu Babel, als der Herr die Sprache der Menschen verwirrte, sodass keiner den anderen mehr verstand.</p><p>Darunter die Initialen <b>P. E.</b> Ehrenfest hat Humor.</p>',
+ programm:()=>'<p><b>Fünfter Solvay-Kongress für Physik · „Elektronen und Photonen“</b></p><p>Berichte: W. L. Bragg (Reflexion von Röntgenstrahlen) · A. H. Compton (Strahlung und Elektronen) · L. de Broglie (Die neue Dynamik der Quanten) · M. Born und W. Heisenberg (Quantenmechanik) · E. Schrödinger (Wellenmechanik)</p><p>Anschließend allgemeine Aussprache, eingeleitet von N. Bohr. Vorsitz: H. A. Lorentz.</p>',
+ brett:()=>'<p><b>Teilnehmerliste:</b> 29 Namen aus ganz Europa und Amerika. Marie Curie ist die einzige Frau darunter.</p><p><i>Was hier noch niemand wissen kann: 17 dieser 29 Menschen haben einen Nobelpreis erhalten oder werden ihn noch erhalten. Man wird diese Tagung später die klügste Versammlung nennen, die je fotografiert wurde.</i></p>',
+ heft:()=>'<p>Ein schmales Heft, auf dem Deckel: <b>W. H.</b></p><p><i>„Helgoland, Juni 1925. Kein Heuschnupfen mehr. Nur Größen zulassen, die man beobachten kann! Frequenzen, Intensitäten. Die Bahn streichen.“</i></p><p><i>„Seltsam: Das Produkt hängt von der Reihenfolge ab. Stört mich. — Drei Uhr nachts, die Energie bleibt erhalten. Bin zum Felsen gegangen und habe auf den Sonnenaufgang gewartet.“</i></p>'+(has('N6')?'':'<p>Das gehört offenbar Heisenberg. Sie sollten ihn nach seiner Matrizenmechanik fragen.</p>'),
+ zeitung:()=>'<p><b>Abend-Telegraph</b>, Ausgabe von gestern. Auf Seite eins, gezeichnet K. Federle:</p><p><i>„PHYSIKER SCHAFFEN DIE WIRKLICHKEIT AB! Brüsseler Gelehrte erklären: Nichts ist mehr sicher.“</i></p><p>Im Text kein einziges Experiment, keine einzige Formel. Das können Sie besser.</p>',
+ serviette:()=>'<p>Eine Stoffserviette, mit Bleistift bekritzelt: ein Schirm mit zwei Spalten, davor eine Blende mit einem Spalt. Die Blende hängt an zwei kleinen Spiralfedern. Pfeile nach oben und unten, daneben: <i>„Rückstoß → Weg!“</i></p>'+(has('N9')?'<p>Sie erkennen die Zeichnung: Das ist Einsteins Gedankenexperiment.</p>':'<p>Das sieht nach Einstein aus. Was er damit wohl beweisen will?</p>'),
+ manuskript:()=>'<p>Ein Stapel eng beschriebener Blätter, fast jede Zeile durchgestrichen und neu gefasst. Titel: <i>„Das Quantenpostulat und die neuere Entwicklung der Atomistik“</i>.</p><p>Ein Wort ist auf jeder Seite unterstrichen: <b>komplementär</b>. Am Rand: <i>„Welle <u>oder</u> Teilchen – je nach Anordnung. Nie beides zugleich.“</i></p><p>Bohr feilt offenbar seit Wochen an jedem Satz.</p>',
+ brief:()=>'<p>Ein Brief, an Max Born adressiert, vom Dezember 1926. Die Handschrift ist unverkennbar die Einsteins. Sie überfliegen ihn mit schlechtem Gewissen:</p><p><i>Die Quantenmechanik sei sehr eindrucksvoll, schreibt er. Aber eine innere Stimme sage ihm, dass sie noch nicht das Wahre sei. Die Theorie liefere viel, bringe uns dem Geheimnis des „Alten“ aber kaum näher. Er jedenfalls sei überzeugt, dass der nicht würfelt.</i></p><p>Born trägt diesen Brief also seit einem Jahr mit sich herum.</p>',
+ block:()=>'<p>Ein Notizblock, fast leer. Auf der ersten Seite steht in winziger, sehr gerader Schrift:</p><p class="formula">x · p − p · x = i · h / 2π</p><p><i>„Nicht vertauschbar. → Heisenberg.“</i></p><p>Sonst nichts. Kein Wort zu viel – das kann nur Dirac gehören.</p>',
+ gruss:()=>'<p>Eine Ansichtskarte vom Brüsseler Rathausplatz, noch ohne Briefmarke. Die Schrift ist die von Ehrenfest:</p><p><i>„Liebe Freunde in Leiden! Es ist herrlich hier. Bohr überragt alle. Erst verstand ihn keiner, dann hat er Schritt für Schritt alle besiegt. Einstein bringt jeden Morgen ein neues Gedankenexperiment wie ein Schachtelteufelchen – und Bohr sucht jedes Mal unter einer Wolke aus Pfeifenrauch die Antwort heraus. Unbezahlbar!“</i></p>',
+ pumpe:()=>'<p>Eine Vakuumpumpe. Sie steht still, am Gehäuse hängt ein Zettel: <i>„Defekt seit Dienstag. Ursache unbekannt.“</i></p><p>Darunter hat jemand mit Bleistift ergänzt: <i>„Ursache bekannt: Prof. Pauli ging vorbei.“</i></p>'
+};
+function readObj(o){
+  if(o.id==='exp1'){exp1();return}if(o.id==='exp2'){exp2();return}
+  if(o.k==='tafel')Snd.chalk();else Snd.page();
+  const k=o.id==='tafel'?'tafel'+S.day:o.id;if(!S.read.includes(o.id))S.read.push(o.id);if(!S.read.includes(k))S.read.push(k);
+  open(`<h3>${o.label}</h3><div class="paperlook">${OBJT[o.id]()}</div><p><button class="btn" id="cl">Zurücklegen</button></p>`);$('cl').onclick=close;
+}
+/* Szenen: Mithören und Abend */
+function scene(title,lines,done){let i=0;const step=()=>{if(i>=lines.length){done();return}const [c,t]=lines[i++];
+    open(c==='narr'?`<h3>${title}</h3><p class="narr">${t}</p><p><button class="btn" id="nx">Weiter ▸</button></p>`
+      :`<h3>${title}</h3><div class="talk"><div class="por">${portrait(c)}<b>${C[c].n}</b></div><div><div class="bubble">${t}</div><p><button class="btn" id="nx">Weiter ▸</button></p></div></div>`);
+    Snd.click();$('nx').onclick=step};step()}
+function listen(e){scene('Sie hören zu …',e.lines,()=>{if(!S.heard.includes(e.id)){S.heard.push(e.id);e.who.forEach(bump)}close()})}
+/* Notizbuch mit Reitern */
+function notebook(tab){tab=tab||'n';const ts=TASKS[S.day],done=ts.filter(tdone).length;
+  let h=`<h3>Notizbuch von ${esc(S.name)}</h3><div class="tabs"><button data-t="n" class="${tab==='n'?'on':''}">Notizen (${S.notes.length})</button><button data-t="g" class="${tab==='g'?'on':''}">Gerüchte (${Object.keys(S.rumors).length})</button><button data-t="r" class="${tab==='r'?'on':''}">Wer mit wem?</button></div>`;
+  if(tab==='n'){if(!S.notes.length)h+='<p>Noch leer. Sprechen Sie mit den Physikern.</p>';S.notes.forEach(n=>h+=`<div class="note"><b>${NOTES[n].t}</b><small>${NOTES[n].src}</small>${NOTES[n].x}</div>`)}
+  else if(tab==='g'){if(!Object.keys(S.rumors).length)h+='<p>Noch keine Gerüchte. Ihr Konkurrent Federle prahlt gern mit seinen Schlagzeilen.</p>';
+    for(const k in S.rumors)h+=`<div class="note rum"><b>${S.rumors[k]==='done'?'✔ Widerlegt':'❓ Ungeprüft'}</b><small>Kurt Federle, „Abend-Telegraph“</small>${RUM[k].t}${S.rumors[k]==='done'?'<br><b>Richtig ist:</b> '+RUM[k].fix:''}</div>`}
+  else h+=relHTML();
+  open(h+'<p><button class="btn" id="cl">Schließen</button></p>');$('cl').onclick=close;
+  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>notebook(b.dataset.t));
+}
+function relHTML(){const act=REL.filter(r=>r[4]());const R=150,cxm=210,cym=185,pos={};PHYS.forEach((c,i)=>{const a=-Math.PI/2+i*2*Math.PI/PHYS.length;pos[c]=[cxm+Math.cos(a)*R*1.25,cym+Math.sin(a)*R]});
+  let s=`<svg viewBox="0 0 420 370" class="relsvg">`;
+  act.forEach(r=>{const a=pos[r[0]],b=pos[r[1]];s+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${r[2]==='+'?'#2f5d4a':'#8c2f23'}" stroke-width="2.5" ${r[2]==='-'?'stroke-dasharray="6 4"':''}/>`});
+  PHYS.forEach(c=>{const p=pos[c],k=act.some(r=>r[0]===c||r[1]===c);s+=`<circle cx="${p[0]}" cy="${p[1]}" r="23" fill="${k?'#f3ead8':'#cdbd9c'}" stroke="#1d1a16" stroke-width="1.5"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-size="9.5" font-family="Georgia">${sn(c).replace('de ','')}</text>`});
+  s+='</svg><p class="small"><span style="color:#2f5d4a">▬ stützt / baut auf</span> &nbsp; <span style="color:#8c2f23">▪▪ widerspricht</span> &nbsp; Die Tafel füllt sich mit Ihren Entdeckungen ('+act.length+' von '+REL.length+').</p>';
+  act.forEach(r=>s+=`<div class="rel ${r[2]==='+'?'p':'m'}"><b>${sn(r[0])} ${r[2]==='+'?'→':'⚡'} ${sn(r[1])}:</b> ${r[3]}</div>`);return s}
+function tasks(){let h=`<h3>Aufträge · ${DAYS[S.day]}</h3><div class="telegram" style="transform:none;margin:0 0 .8em">TELEGRAMM DER REDAKTION STOP ${S.day===1?'KLÄREN SIE WAS ES MIT DEN MATERIEWELLEN AUF SICH HAT':S.day===2?'HEUTE BORN UND HEISENBERG STOP WAS BLEIBT VOM ALTEN WELTBILD':'EINSTEIN GEGEN BOHR STOP WIR WOLLEN DEN AUSGANG WISSEN STOP UND PRÜFEN SIE WAS DIE KONKURRENZ SCHREIBT'} STOP</div>`;
+  TASKS[S.day].forEach(t=>h+=`<div class="task ${tdone(t)?'done':''}">${tdone(t)?'✔':'○'} ${t.t}${t.r?` (${Math.min(refuted(),t.r)}/${t.r})`:''}</div>`);
+  h+=`<p class="small">Außerdem lohnt sich: Gegenstände ansehen, Gesprächen zuhören (Sprechblase), im Labor experimentieren und mit allen fürs Gruppenfoto reden.</p><p><button class="btn light" id="tp">Tipp von Ehrenfest</button> <button class="btn" id="cl">Schließen</button></p><div id="tpx"></div>`;
+  open(h);$('cl').onclick=close;$('tp').onclick=()=>{$('tpx').innerHTML='<div class="fb good">'+hintText()+'</div>'}}
+function photoHTML(print){return `<div class="photo ${print?'print':''}">${PHYS.map(c=>`<figure class="${inPhoto(c)?'':'sil'}">${portrait(c)}<figcaption>${inPhoto(c)?sn(c):'?'}</figcaption></figure>`).join('')}</div>`}
+function photo(){const n=PHYS.filter(inPhoto).length;open(`<h3>Das Gruppenfoto · ${n} von 11</h3><p>${n===11?'Alle sind beisammen! „Bitte recht freundlich!“ – Die Platte ist belichtet. Das Bild erscheint über Ihrem Artikel.':'Aufs Bild kommt, wer sich ausführlich mit Ihnen unterhalten hat: mindestens drei Gespräche, vorgelegte Notizen oder mitgehörte Unterhaltungen.'}</p>${photoHTML()}<p><button class="btn" id="cl">Schließen</button></p>`);if(n===11&&!fl('foto')){addFlag('foto');Snd.chime()}$('cl').onclick=close}
+
+/* ---------- Mini-Experimente ---------- */
+const sinc=u=>u===0?1:Math.sin(Math.PI*u)/(Math.PI*u);
+function predict(title,q,opts,c,flag,then){
+  open(`<h3>${title}</h3><div class="talk"><div class="por">${portrait('laborant')}<b>Der Laborant</b></div><div><div class="bubble">${q}</div><div class="opts" id="opts"></div></div></div>`);
+  opts.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{addFlag(flag+'done');if(i===c)addFlag(flag+'ok');then(i===c)};$('opts').appendChild(b)});
+  const e=document.createElement('button');e.className='bye';e.textContent='Lieber später';e.onclick=close;$('opts').appendChild(e);
+}
+function exp1(pred){
+  if(!fl('pred1done')){predict('Doppelspalt-Apparatur','Wir schießen Elektronen <b>einzeln</b> auf zwei enge Spalte. Dahinter steht ein Leuchtschirm. Bevor ich einschalte: <b>Was erwarten Sie auf dem Schirm?</b>',['Zwei Streifen hinter den Spalten – wie bei Schrotkugeln.','Jedes einzelne Elektron verschmiert zu einem schwachen Streifenmuster.','Einzelne Punkte an zufälligen Stellen – erst viele ergeben ein Streifenmuster.'],2,'pred1',exp1);return}
+  if(!S.read.includes('exp1'))S.read.push('exp1');
+  open(`<h3>Doppelspalt-Apparatur</h3>${pred!=null?`<div class="fb ${pred?'good':'wrong'}">${pred?'Ihr Tipp war richtig – sehen Sie selbst.':'Mal sehen, ob Ihr Tipp stimmt. Schauen Sie genau hin.'}</div>`:''}
+   <canvas id="xc" width="640" height="300" class="xcv"></canvas>
+   <p class="xb"><button class="btn light" id="x1">1 Elektron</button> <button class="btn light" id="x50">50 Elektronen</button> <button class="btn light" id="x500">500 Elektronen</button> <label class="mc" style="display:inline-block;margin:0"><input type="checkbox" id="xw"> Weg an den Spalten messen</label> <button class="btn light" id="xr">Schirm löschen</button></p>
+   <p class="small" id="xs"></p><div id="xn"></div><p><button class="btn" id="cl">Apparatur verlassen</button></p>`);
+  const c=$('xc').getContext('2d');let hits=[],cnt=[0,0],seenW=false,seenI=false;
+  const smp=w=>{for(;;){const x=Math.random()*2-1,e=Math.pow(sinc(x/.85),2),p=w?e*.5:e*Math.pow(Math.cos(Math.PI*x/.17),2);if(Math.random()<p)return x}};
+  const drawX=()=>{c.fillStyle='#10140f';c.fillRect(0,0,640,300);c.fillStyle='#1c241c';c.fillRect(0,200,640,100);const bins=new Array(64).fill(0);
+    c.fillStyle='#9fe0b0';hits.forEach(h=>{c.globalAlpha=.85;c.fillRect(320+h[0]*310,10+h[1]*180,2.2,2.2);bins[Math.max(0,Math.min(63,Math.floor((h[0]+1)*32)))]++});c.globalAlpha=1;
+    const m=Math.max(8,...bins);c.fillStyle='#d9b45a';bins.forEach((b,i)=>c.fillRect(i*10+1,298-b/m*92,8,b/m*92));
+    c.fillStyle='#f3ead8';c.font='13px Georgia';c.fillText('Leuchtschirm',8,22);c.fillText('Häufigkeit der Treffer',8,216);
+    $('xs').textContent=`Treffer: ${hits.length} · ohne Wegmessung abgefeuert: ${cnt[0]} · mit Wegmessung: ${cnt[1]}`;
+    if(cnt[0]>=300)seenI=true;if(cnt[1]>=300)seenW=true;
+    if(seenI&&seenW&&!has('E1')){$('xn').innerHTML=give('E1')+'<div class="fb good">Ohne Wegmessung entstehen Streifen, mit Wegmessung nicht – und in beiden Fällen ist der einzelne Treffer nicht vorhersagbar. Zeigen Sie die Notiz ruhig Born, Bohr oder Einstein.</div>'}
+    else if(!has('E1'))$('xn').innerHTML='<p class="small">Feuern Sie mindestens 300 Elektronen ohne und 300 mit Wegmessung ab, dann können Sie Ihre Beobachtung notieren.</p>'};
+  const fire=n=>{const w=$('xw').checked;for(let i=0;i<n;i++){hits.push([smp(w),Math.random()]);Snd.blip()}cnt[w?1:0]+=n;drawX()};
+  $('x1').onclick=()=>fire(1);$('x50').onclick=()=>fire(50);$('x500').onclick=()=>fire(500);$('xr').onclick=()=>{hits=[];drawX()};$('xw').onchange=()=>{hits=[];drawX()};$('cl').onclick=close;drawX();
+}
+function exp2(pred){
+  if(!fl('pred2done')){predict('Einzelspalt-Apparatur','Hier fliegt ein Elektronenstrahl durch einen einzelnen Spalt, dessen Breite Sie verstellen können. <b>Was geschieht mit dem Fleck auf dem Schirm, wenn Sie den Spalt enger machen?</b>',['Der Fleck wird schmaler – der Strahl wird ja enger.','Der Fleck wird breiter.','Es ändert sich nichts.'],1,'pred2',exp2);return}
+  if(!S.read.includes('exp2'))S.read.push('exp2');
+  open(`<h3>Einzelspalt-Apparatur</h3>${pred!=null?`<div class="fb ${pred?'good':'wrong'}">${pred?'Ihr Tipp war richtig – prüfen Sie es nach.':'Prüfen Sie Ihren Tipp am Regler nach.'}</div>`:''}
+   <canvas id="xc" width="640" height="260" class="xcv"></canvas>
+   <p>Spaltbreite Δx: <input type="range" id="xb" min="10" max="200" value="80" style="width:55%;vertical-align:middle"> <b id="xv"></b></p>
+   <p class="small" id="xs"></p><div id="xn"></div><p><button class="btn" id="cl">Apparatur verlassen</button></p>`);
+  const c=$('xc').getContext('2d');let lo=false,hi=false;
+  const drawX=()=>{const b=+$('xb').value;c.fillStyle='#10140f';c.fillRect(0,0,640,260);c.fillStyle='#55504a';c.fillRect(60,20,10,95-b/8);c.fillRect(60,125+b/8,10,115-b/8);
+    c.fillStyle='#9fe0b0';c.globalAlpha=.25;c.beginPath();c.moveTo(70,120-b/8);c.lineTo(560,130-Math.min(120,3600/b));c.lineTo(560,130+Math.min(120,3600/b));c.lineTo(70,120+b/8);c.fill();c.globalAlpha=1;
+    c.fillRect(0,117,60,6);c.fillStyle='#1c241c';c.fillRect(560,10,70,240);
+    for(let y=0;y<240;y++){const u=(y-120)/120*b/36,I=Math.pow(sinc(u),2);c.fillStyle=`rgba(159,224,176,${I})`;c.fillRect(562,10+y,66,1);c.fillStyle='#d9b45a';c.fillRect(556-I*46,10+y,1.5,1)}
+    c.fillStyle='#f3ead8';c.font='13px Georgia';c.fillText('Elektronenstrahl',6,104);c.fillText('Spalt',48,254);c.fillText('Schirm',566,254);
+    $('xv').textContent=b+' nm';const dp=52.73/b;$('xs').innerHTML=`Ort am Spalt festgelegt auf Δx = ${b} nm → Impulsunbestimmtheit quer zum Strahl mindestens Δp = h/(4π·Δx) ≈ ${dp.toFixed(2).replace('.',',')} · 10⁻²⁷ kg·m/s. Das Produkt Δx·Δp bleibt ≥ h/(4π) ≈ 5,3 · 10⁻³⁵ Js.`;
+    if(b<=25)lo=true;if(b>=170)hi=true;
+    if(lo&&hi&&!has('E2'))$('xn').innerHTML=give('E2')+'<div class="fb good">Enger Spalt, breiter Fächer: Je genauer der Ort festliegt, desto unbestimmter die Querrichtung des Impulses. Was wohl Heisenberg dazu sagt?</div>';
+    else if(!has('E2'))$('xn').innerHTML='<p class="small">Stellen Sie den Spalt einmal ganz eng und einmal ganz weit, dann können Sie Ihre Beobachtung notieren.</p>'};
+  $('xb').oninput=drawX;$('cl').onclick=close;drawX();
+}
+
+/* ---------- Tagesablauf ---------- */
+function endDay(){const m=missing();
+  if(m.length){open(`<h3>Noch nicht fertig</h3><div class="telegram" style="transform:none;margin:0 0 1em">MATERIAL REICHT NOCH NICHT STOP ES FEHLEN ${m.length} AUFTRÄGE STOP BLEIBEN SIE DRAN STOP</div>${m.map(t=>`<div class="task">○ ${t.t}</div>`).join('')}<p><b>Ehrenfest flüstert Ihnen zu:</b> ${hintText()}</p><p><button class="btn" id="cl">Weiter recherchieren</button></p>`);$('cl').onclick=close;return}
+  open(`<h3>${S.day<3?'Den Tag beenden?':'Die Konferenz beenden?'}</h3><p>Sie haben alle Aufträge erfüllt. ${S.day<3?'Was Sie heute nicht entdeckt haben, können Sie zum Teil morgen nachholen – die Gespräche und Aushänge von heute sind dann aber vorbei.':'Danach geht es zum Epilog und zum Redaktionsschluss. Wollen Sie vorher noch das Gruppenfoto vervollständigen oder im Labor experimentieren?'}</p><p><button class="btn" id="nx">Zum Abendessen ▸</button> <button class="btn light" id="cl">Noch bleiben</button></p>`);
+  $('cl').onclick=close;$('nx').onclick=()=>scene('Abend im Hotel Métropole',EVE[S.day],()=>{
+    if(S.day<3){S.day++;S.phase=0;S.acts=0;PL.x=480;PL.y=S.day===3?490:420;S.px=PL.x;S.py=PL.y;enterRoom(S.day===3?'hotel':'wandel');close();tasks()}
+    else{close();S.phase_='epi';save();epilog()}});
+}
+
+/* ---------- Start ---------- */
+const HAIRS=['#5a3d28','#d2ab5e','#1f1a17','#a8482a','#8a8580'],COATS=['#b59a6a','#4b5563','#4d6b3c','#27405e','#7a2f2a'],STYLES=[['cap','kurz'],['long','lang'],['bun','Dutt'],['wild','wild']];
+function chooser(){const mk=(id,arr,key,isCol)=>{$(id).innerHTML='';arr.forEach(v=>{const val=isCol?v:v[0],b=document.createElement('button');b.className='sw'+(S.look[key]===val?' on':'');if(isCol)b.style.background=v;else b.textContent=v[1];b.onclick=()=>{S.look[key]=val;chooser()};$(id).appendChild(b)})};
+  mk('chHair',HAIRS,'hair',1);mk('chStyle',STYLES,'style');mk('chCoat',COATS,'coat',1);
+  $('chHat').innerHTML='';[['','ohne Hut'],['#3a332b','mit Hut']].forEach(v=>{const b=document.createElement('button');b.className='sw'+(S.look.hat===v[0]?' on':'');b.textContent=v[1];b.onclick=()=>{S.look.hat=v[0];chooser()};$('chHat').appendChild(b)});
+  const c=$('avc').getContext('2d');cx=c;c.clearRect(0,0,120,130);c.save();c.translate(60,120);c.scale(1.45,1.45);drawPerson(0,0,Object.assign({tie:'tie'},S.look),false);c.restore();cx=cv.getContext('2d')}
+function startGame(){S.phase_='game';show('game');PL.x=S.px;PL.y=S.py;enterRoom(S.loc);
+  if(!S.met.length&&!S.read.length&&!fl('intro')){addFlag('intro');open(`<h3>Montag, 24. Oktober 1927</h3><p>Sie stehen im Konferenzsaal des Instituts im Leopoldpark. Vorn begrüßt der greise Vorsitzende Hendrik Lorentz die Gäste – ein guter erster Gesprächspartner.</p>
+   <p><b>So spielen Sie:</b></p><ul><li><b>Laufen:</b> Tippen oder klicken Sie auf den Boden – oder nutzen Sie die Pfeiltasten.</li><li><b>Sprechen und Ansehen:</b> Tippen Sie eine Person oder einen funkelnden Gegenstand an. In der Nähe erscheint unten eine Schaltfläche (Leertaste).</li><li><b>Türen</b> führen in andere Räume: Konferenzsaal, Labor, Park und Hotel.</li><li><b>Weitertragen:</b> Jede Notiz können Sie anderen vorlegen. Oft erfahren Sie erst so das Entscheidende.</li><li>Ein rotes <b>!</b> zeigt, bei wem ein Auftrag weitergeht. Eine <b>Sprechblase</b> zwischen zwei Personen heißt: Hier können Sie zuhören.</li></ul>
+   <p><button class="btn" id="cl">Zu den Aufträgen ▸</button></p>`);$('cl').onclick=()=>{close();tasks()}}}
+function resume(){if(S.phase_==='game')startGame();else if(S.phase_==='epi')epilog();else if(S.phase_==='quiz')quiz();else if(S.phase_==='art')article()}
+function boot(){
+  cv=$('cv');cx=cv.getContext('2d');$('cast').innerHTML=PHYS.map(portrait).join('');chooser();
+  $('goBtn').onclick=()=>{const n=$('nameIn').value.trim();if(n.length<2){$('nameIn').focus();$('nameIn').style.borderColor='#e33';return}const lk=S.look;S=fresh();S.look=lk;S.name=n;startGame()};
+  const old=load();if(old){$('contBtn').style.display='';$('contBtn').textContent='Spielstand von '+old.name+' fortsetzen';$('contBtn').onclick=()=>{S=old;if(S.snd){Snd.init()}resume()}}
+  $('nbBtn').onclick=()=>notebook();$('tkBtn').onclick=tasks;$('phBtn').onclick=photo;$('dayBtn').onclick=endDay;$('prompt').onclick=()=>{if(nearest)nearest.f()};
+  $('sndBtn').onclick=()=>{S.snd=!S.snd;if(S.snd){Snd.init();if(Snd.ctx&&Snd.ctx.state==='suspended')Snd.ctx.resume();Snd.chime()}Snd.murmur(npcs.length);hud();save()};
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();clickAt((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height)});
+  addEventListener('keydown',e=>{if($('ov').classList.contains('on')||!running)return;if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;keys[e.key.length===1?e.key.toLowerCase():e.key]=true;
+    if(e.key===' '||e.key==='Enter'||e.key.toLowerCase()==='e'){if(nearest){e.preventDefault();nearest.f()}}if(e.key.startsWith('Arrow'))e.preventDefault()});
+  addEventListener('keyup',e=>{keys[e.key.length===1?e.key.toLowerCase():e.key]=false});
+  requestAnimationFrame(loop);
+}
+boot();
+
+</script>
+</body>
+</html>
