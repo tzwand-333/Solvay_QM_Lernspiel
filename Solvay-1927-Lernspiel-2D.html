@@ -155,6 +155,16 @@ label.mc{display:block;padding:.45em .6em;margin:.3em 0;background:#fffaf0;borde
 .sw{min-width:2.2em;height:2.2em;border-radius:4px;border:2px solid #6b5d48;background:var(--paper2);padding:0 .5em}
 .sw.on{border-color:#fff;box-shadow:0 0 0 2px var(--gold)}
 @media print{.photo{filter:grayscale(1)}}
+/* Telegramm-Formular, Laborhinweise, Glossar, Zerfallsmodell, Lehrkraft */
+.telegram.tform{transform:none;max-width:none;margin:.4em 0 .8em;line-height:2.2;font-size:.95rem}
+.tsel{font-family:inherit;font-size:.9rem;max-width:100%;margin:0 .15em;background:#fffaf0}
+.labhint{display:block;margin-top:.6em;padding:.35em .6em;border-left:4px solid var(--green);background:#e8f0ea;font-size:.92rem;font-style:italic}
+.gl dt{font-weight:bold;font-variant:small-caps;margin-top:.5em}.gl dd{margin:0 0 .2em 1em}
+.glf{display:flex;gap:.3em;flex-wrap:wrap;margin:.3em 0 .6em}.glf input{flex:1;min-width:12em}
+.atoms{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-width:420px;margin:.6em auto}
+.atoms button{aspect-ratio:1;border-radius:50%;border:2px solid #6b5d48;background:#c9a04a;padding:0;font-size:.7rem}
+.atoms button.gone{background:#e9dcc2;border-style:dashed;opacity:.5}.atoms button.bet{box-shadow:0 0 0 3px var(--red)}
+.tk{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.4em;margin:.4em 0 .8em}.tk .btn{padding:.4em .5em;font-size:.88rem}
 </style>
 </head>
 <body>
@@ -177,8 +187,8 @@ label.mc{display:block;padding:.45em .6em;margin:.3em 0;background:#fffaf0;borde
       <div class="row"><span>Hut</span><div id="chHat" class="row"></div></div>
     </div>
   </div>
-  <p><button class="btn" id="goBtn">Zur Konferenz ▸</button> <button class="btn light" id="contBtn" style="display:none">Spielstand fortsetzen</button></p>
-  <p class="small">Lernspiel zur Quantenphysik (BPE 11.2). Alle Gespräche, Briefe und Notizen im Spiel sind frei formuliert – historisch fundiert, aber keine Originalzitate. Der Reporter Federle und seine Zeitung sind erfunden. Die Figuren sind stilisierte Zeichnungen.</p>
+  <p><button class="btn" id="goBtn">Zur Konferenz ▸</button> <button class="btn light" id="contBtn" style="display:none">Spielstand fortsetzen</button> <button class="btn light" id="fileBtn">📂 Spielstand aus Datei laden</button><input type="file" id="fileIn" accept=".json,application/json" style="display:none"></p>
+  <p class="small">Lernspiel zur Quantenphysik (BPE 11.2). Alle Gespräche, Briefe und Notizen im Spiel sind nacherzählt und historisch fundiert. Bekannte Aussprüche folgen eng den überlieferten Formulierungen aus Briefen, Erinnerungen und Berichten der Beteiligten, sind aber keine wörtlichen Zitate; Ort und Zeitpunkt sind teils frei gewählt. Der Reporter Federle und seine Zeitung sind erfunden. Die Figuren sind stilisierte Zeichnungen.</p>
 </section>
 
 <section id="game" class="screen">
@@ -188,6 +198,8 @@ label.mc{display:block;padding:.45em .6em;margin:.3em 0;background:#fffaf0;borde
     <button class="btn light" id="nbBtn">📓 Notizbuch</button>
     <button class="btn light" id="phBtn" title="Gruppenfoto">📷</button>
     <button class="btn light" id="sndBtn" title="Geräusche an/aus">🔇</button>
+    <button class="btn light" id="svBtn" title="Spielstand als Datei sichern">💾</button>
+    <button class="btn light" id="lkBtn" title="Lehrkraft-Modus" style="display:none">🎓</button>
     <button class="btn" id="dayBtn">Tag beenden ▸</button>
   </div>
   <div id="stage"><canvas id="cv" width="960" height="560"></canvas></div>
@@ -306,6 +318,7 @@ Object.assign(NOTES,{
  D1:{t:'Reihenfolge zählt',src:'Dirac',x:'In der Quantenmechanik ist x·p nicht dasselbe wie p·x; der Unterschied ist durch h festgelegt. Größen, die sich so verhalten, haben nie gleichzeitig scharfe Werte – daraus folgt Heisenbergs Unbestimmtheitsrelation mathematisch.'},
  D2:{t:'Quantisiertes Licht',src:'Dirac',x:'Dirac wandte 1927 die Quantenmechanik auf das Lichtfeld selbst an. Photonen können entstehen und verschwinden. So wird Einsteins Lichtquant Teil der Theorie, und die Aussendung von Licht durch Atome wird berechenbar.'},
  E1:{t:'Experiment: Doppelspalt',src:'eigener Versuch im Labor',x:'Jedes Elektron trifft als Punkt an einer nicht vorhersagbaren Stelle auf. Erst viele Treffer bilden das Streifenmuster. Misst man an den Spalten den Weg, verschwinden die Streifen.'},
+ E3:{t:'Experiment: Elektronenbeugung',src:'eigener Versuch im Labor',x:'Elektronen, die eine dünne Graphitfolie durchqueren, erzeugen auf dem Schirm Ringe – ein Beugungsbild wie bei Röntgenlicht. Je höher die Beschleunigungsspannung, desto größer der Impuls und desto enger die Ringe. Die aus dem Ringdurchmesser gemessene Wellenlänge stimmt mit λ = h/p überein.'},
  E2:{t:'Experiment: Einzelspalt',src:'eigener Versuch im Labor',x:'Je enger der Spalt (kleines Δx), desto breiter fächert der Strahl auf (großes Δp quer zur Flugrichtung). Das Produkt Δx·Δp wird nie kleiner als h/(4π).'},
  N18:{t:'Antimaterie (1928/1932)',src:'Epilog',x:'Diracs Gleichung verbindet Quantenmechanik und Relativitätstheorie. Sie liefert den Spin von selbst und sagt Antiteilchen voraus. 1932 wird das Positron entdeckt: Teilchen und Antiteilchen können paarweise entstehen und sich vernichten.'}
 });
@@ -338,8 +351,8 @@ const MAPS={
   spots:[[270,170],[345,170],[560,170],[800,190],[90,300],[480,300]]},
  labor:{n:'Labor',sub:'Institut für Physiologie',floor:'lab',wall:'#7d8a8c',
   doors:[{to:'wandel',side:'left',p:300,label:'Wandelgang'}],
-  furn:[{k:'table',x:150,y:180,w:250,h:64},{k:'table',x:560,y:180,w:250,h:64},{k:'shelf',x:300,y:100,w:360,h:22},{k:'table',x:790,y:430,w:90,h:60},{k:'table',x:130,y:440,w:210,h:50},{k:'flask',x:150,y:446,nb:1},{k:'flask',x:250,y:446,nb:1},{k:'win',x:60,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:170,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:724,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:834,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'clock',x:480,y:40,nb:1},{k:'pic',x:300,y:20,w:110,h:50,c:'#e9e6df',nb:1,chart:1}],
-  objs:[{id:'exp1',k:'app1',x:190,y:186,w:170,h:50,label:'Doppelspalt-Apparatur',stand:[275,290]},{id:'exp2',k:'app2',x:600,y:186,w:170,h:50,label:'Einzelspalt-Apparatur',stand:[685,290]},{id:'pumpe',k:'pump',x:806,y:438,w:58,h:44,label:'Vakuumpumpe',stand:[740,470],if:()=>S.day>=2}],
+  furn:[{k:'table',x:150,y:180,w:250,h:64},{k:'table',x:560,y:180,w:250,h:64},{k:'shelf',x:300,y:100,w:360,h:22},{k:'table',x:790,y:430,w:90,h:60},{k:'table',x:130,y:440,w:210,h:50},{k:'flask',x:278,y:446,nb:1},{k:'win',x:60,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:170,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:724,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'win',x:834,y:14,w:66,h:62,nb:1,c:'#8a8f8c'},{k:'clock',x:480,y:40,nb:1},{k:'pic',x:300,y:20,w:110,h:50,c:'#e9e6df',nb:1,chart:1}],
+  objs:[{id:'exp1',k:'app1',x:190,y:186,w:170,h:50,label:'Doppelspalt-Apparatur',stand:[275,290]},{id:'exp2',k:'app2',x:600,y:186,w:170,h:50,label:'Einzelspalt-Apparatur',stand:[685,290]},{id:'exp3',k:'app3',x:144,y:442,w:120,h:44,label:'Elektronenbeugungsröhre',stand:[205,525]},{id:'pumpe',k:'pump',x:806,y:438,w:58,h:44,label:'Vakuumpumpe',stand:[740,470],if:()=>S.day>=2}],
   spots:[[470,420],[400,340]]},
  park:{n:'Leopoldpark',sub:'hinter dem Institut',floor:'grass',wall:'#8a5a44',
   doors:[{to:'wandel',side:'top',p:480,label:'Institut'},{to:'hotel',side:'right',p:300,label:'Hotel Métropole'}],
@@ -381,11 +394,31 @@ const HOW={
 };
 /* Gerüchte des Konkurrenten – Pauli prüft sie */
 const RUM={
- G2:{day:1,need:'N4',t:'„Schrödinger enthüllt: Am Doppelspalt teilt sich jedes Elektron in zwei Hälften!“',o:['Falsch ist nur die Zahl: Es teilt sich in viele kleine Teile.','Ein Elektron wird immer als Ganzes an einem Punkt nachgewiesen. Die Welle ψ beschreibt nur, wo das wahrscheinlich geschieht.','Elektronen fliegen in Wahrheit immer nur durch den linken Spalt.'],c:1,ok:'Na also. Halbe Elektronen hat noch keiner gesehen. Die Welle geht durch beide Spalte, nachgewiesen wird ein ganzes Teilchen.',fix:'Elektronen teilen sich nicht. Sie werden stets als Ganzes nachgewiesen; die Wellenfunktion gibt nur die Antreffwahrscheinlichkeit an.'},
- G3:{day:1,need:'N4',t:'„Born gesteht: Die neue Physik kann überhaupt nichts mehr vorhersagen!“',o:['Sie sagt die Verteilung vieler Ereignisse exakt voraus – nur das einzelne Ereignis nicht.','Stimmt, seit 1926 sind Vorhersagen in der Physik unmöglich.','Sie sagt jedes einzelne Ereignis exakt voraus, man muss nur genau genug rechnen.'],c:0,ok:'Richtig. Die Statistik stimmt auf viele Stellen genau. Wer das „nichts“ nennt, hat nie ein Spektrum gesehen.',fix:'Die Quantenmechanik sagt Wahrscheinlichkeiten und damit die Verteilung vieler Messungen exakt voraus. Unvorhersagbar ist nur das Einzelereignis.'},
- G1:{day:2,need:'N5',t:'„Heisenberg räumt ein: Unsere Messgeräte sind einfach noch zu ungenau. Bessere Instrumente werden die Unschärfe beseitigen.“',o:['Stimmt, in zwanzig Jahren ist das Problem gelöst.','Die Unbestimmtheit gilt nur für Elektronen in Göttingen.','Die Unbestimmtheit ist eine Eigenschaft der Natur. Ein Quantenobjekt besitzt Ort und Impuls nicht gleichzeitig als scharfe Werte.'],c:2,ok:'So ist es. Das hat mit der Werkstatt nichts zu tun. Kein noch so gutes Gerät misst, was es nicht gibt.',fix:'Die Unbestimmtheitsrelation ist keine Frage der Messtechnik, sondern eine grundsätzliche Eigenschaft von Quantenobjekten.'},
- G5:{day:2,need:'N8',t:'„Einstein erklärt die Quantenmechanik für falsch!“',o:['Einstein hält die Theorie für erfolgreich, aber für unvollständig – nicht für falsch.','Einstein hat die Theorie gar nicht verstanden.','Stimmt, Einstein hat einen Rechenfehler gefunden.'],c:0,ok:'Genau. Der Alte bestreitet keine einzige Vorhersage. Er vermisst etwas dahinter. Das ist ein Unterschied, den ein Reporter kennen sollte.',fix:'Einstein erkennt die Erfolge der Quantenmechanik an. Er hält sie für unvollständig, nicht für falsch.'},
- G4:{day:3,need:'N7',t:'„Bohr bestätigt: Mit etwas Geschick sieht man Welle und Teilchen im selben Versuch zugleich.“',o:['Stimmt, man braucht dafür nur zwei Schirme.','Beide Bilder zeigen sich nie im selben Versuch. Der Aufbau entscheidet: Weg-Information oder Interferenz.','Das Elektron ist immer Welle, das Teilchen ist eine Täuschung.'],c:1,ok:'Richtig – komplementär heißt: entweder, oder. Wer den Weg kennt, hat keine Streifen.',fix:'Wellen- und Teilchenbild sind komplementär: Ein Versuch zeigt entweder den Weg oder die Interferenz, nie beides.'}
+ G2:{day:1,need:'N4',t:'„Schrödinger enthüllt: Am Doppelspalt teilt sich jedes Elektron in zwei Hälften!“',o:[
+   {t:'Das Elektron teilt sich zwar am Doppelspalt, aber die beiden Hälften vereinigen sich vor dem Schirm wieder. Deshalb weist man dort nur ganze Elektronen nach.',w:'Hübsch ausgedacht und durch nichts belegt. Misst man an den Spalten nach, findet man immer ein ganzes Elektron – an einem einzigen Spalt, nie eine Hälfte an jedem.'},
+   {t:'Ein Elektron wird stets als Ganzes an einem Punkt nachgewiesen. Durch beide Spalte „geht“ nur die Welle ψ, und die gibt an, wo das Elektron wahrscheinlich auftrifft.',ok:1},
+   {t:'Jedes Elektron fliegt durch genau einen Spalt. Das Streifenmuster entsteht, weil sich die Elektronen hinter den Spalten gegenseitig ablenken.',w:'Das Muster entsteht auch, wenn die Elektronen einzeln und mit großem zeitlichem Abstand fliegen. Da stört niemand den anderen. Probieren Sie es im Labor mit einzelnen Elektronen.'}],
+  ok:'Na also. Halbe Elektronen hat noch keiner gesehen. Die Welle geht durch beide Spalte, nachgewiesen wird ein ganzes Teilchen.',fix:'Elektronen teilen sich nicht. Sie werden stets als Ganzes nachgewiesen; die Wellenfunktion gibt nur die Antreffwahrscheinlichkeit an.'},
+ G3:{day:1,need:'N4',t:'„Born gesteht: Die neue Physik kann überhaupt nichts mehr vorhersagen!“',o:[
+   {t:'Sie sagt die Verteilung vieler Messergebnisse exakt voraus, etwa die Lage der Spektrallinien oder das Streifenmuster. Unvorhersagbar ist nur das einzelne Ereignis.',ok:1},
+   {t:'Sie sagt auch einzelne Ereignisse genau voraus – vorausgesetzt, man kennt die Wellenfunktion des Elektrons vollständig.',w:'Falsch. Auch wer ψ vollständig kennt, kennt nur Wahrscheinlichkeiten. Wo das nächste Elektron landet, weiß niemand – auch Born nicht.'},
+   {t:'Sie liefert nur grobe Schätzungen, weil Wahrscheinlichkeiten immer ungenau sind. Für genaue Zahlen braucht man weiterhin die klassische Mechanik.',w:'Unfug. Die Wahrscheinlichkeiten selbst sind scharf berechnet und stimmen auf viele Stellen mit den Messungen überein. Im Atom versagt gerade die klassische Mechanik.'}],
+  ok:'Richtig. Die Statistik stimmt auf viele Stellen genau. Wer das „nichts“ nennt, hat nie ein Spektrum gesehen.',fix:'Die Quantenmechanik sagt Wahrscheinlichkeiten und damit die Verteilung vieler Messungen exakt voraus. Unvorhersagbar ist nur das Einzelereignis.'},
+ G1:{day:2,need:'N5',t:'„Heisenberg räumt ein: Unsere Messgeräte sind einfach noch zu ungenau. Bessere Instrumente werden die Unschärfe beseitigen.“',o:[
+   {t:'Die Unschärfe entsteht, weil das Messlicht das Elektron anstößt. Mit schwächerem oder langwelligerem Licht ließe sie sich beliebig verkleinern.',w:'Langwelliges Licht stößt sanfter, zeigt den Ort aber unschärfer – das Produkt bleibt. Und vor allem: Die Unbestimmtheit ist nicht bloß eine Störung durch das Messen. Das Elektron hat gar keine scharfen Werte für Ort und Impuls zugleich.'},
+   {t:'Die Unschärfe betrifft nur gleichzeitige Messungen. Misst man Ort und Impuls kurz nacheinander, erhält man beide Werte scharf.',w:'Die zweite Messung macht die erste zunichte. Nach einer scharfen Ortsmessung ist der Impuls unbestimmt und umgekehrt. Dirac würde sagen: Die Reihenfolge zählt.'},
+   {t:'Die Unbestimmtheit ist eine Eigenschaft der Natur. Ein Quantenobjekt besitzt Ort und Impuls nicht gleichzeitig als scharfe Werte – kein noch so gutes Gerät ändert das.',ok:1}],
+  ok:'So ist es. Das hat mit der Werkstatt nichts zu tun. Kein noch so gutes Gerät misst, was es nicht gibt.',fix:'Die Unbestimmtheitsrelation ist keine Frage der Messtechnik, sondern eine grundsätzliche Eigenschaft von Quantenobjekten.'},
+ G5:{day:2,need:'N8',t:'„Einstein erklärt die Quantenmechanik für falsch!“',o:[
+   {t:'Einstein erkennt die richtigen Vorhersagen an, hält die Theorie aber für unvollständig: Hinter den Wahrscheinlichkeiten müsse es etwas geben, das das Einzelereignis festlegt.',ok:1},
+   {t:'Einstein hält die Theorie für widersprüchlich. Mit seinen Gedankenexperimenten will er zeigen, dass ihre Vorhersagen im Labor nicht eintreffen.',w:'Er bestreitet keine einzige Vorhersage. Seine Gedankenexperimente sollen zeigen, dass man mehr wissen kann, als die Theorie zulässt – sie wäre dann unvollständig, nicht falsch.'},
+   {t:'Einstein lehnt die Quantenmechanik ab, weil sie seiner Lichtquantenhypothese von 1905 widerspricht.',w:'Im Gegenteil: Die Lichtquanten sind sein eigenes Kind und inzwischen Teil der Theorie – fragen Sie Dirac. Sein Einwand betrifft den Zufall.'}],
+  ok:'Genau. Der Alte bestreitet keine einzige Vorhersage. Er vermisst etwas dahinter. Das ist ein Unterschied, den ein Reporter kennen sollte.',fix:'Einstein erkennt die Erfolge der Quantenmechanik an. Er hält sie für unvollständig, nicht für falsch.'},
+ G4:{day:3,need:'N7',t:'„Bohr bestätigt: Mit etwas Geschick sieht man Welle und Teilchen im selben Versuch zugleich.“',o:[
+   {t:'Man sieht beide zugleich, wenn man den Weg nur behutsam genug misst, sodass die Elektronen dabei kaum gestört werden.',w:'Genau das ist Einsteins bewegliche Blende. Bohr hat gezeigt: Jede Messung, die den Weg verrät, verwischt die Streifen – wie behutsam sie auch ist.'},
+   {t:'Bohr meint, das Elektron sei abwechselnd Welle und Teilchen und wechsle in rascher Folge zwischen beiden Zuständen.',w:'Komplementär heißt nicht abwechselnd. Welches Bild passt, hängt vom Versuchsaufbau ab, nicht von der Zeit.'},
+   {t:'Beide Bilder zeigen sich nie im selben Versuch. Der Aufbau entscheidet, ob man den Weg erfährt oder Interferenz sieht – beides zugleich geht nicht.',ok:1}],
+  ok:'Richtig – komplementär heißt: entweder, oder. Wer den Weg kennt, hat keine Streifen.',fix:'Wellen- und Teilchenbild sind komplementär: Ein Versuch zeigt entweder den Weg oder die Interferenz, nie beides.'}
 };
 /* Mitgehörte Gespräche */
 const EAVES=[
@@ -400,9 +433,9 @@ const EAVES=[
 ];
 /* Abendszenen */
 const EVE={
- 1:[['narr','Abend im Hotel Métropole. An der langen Tafel sitzen die Teilnehmer beim Essen – Sie haben einen Platz am Ende ergattert.'],['schroedinger','Meine Welle ist wirklich, Born. Sie können sie nicht einfach zur Wettquote erklären.'],['born','Und doch schlägt jedes Elektron als Punkt ein, lieber Schrödinger. Was soll die Welle anderes sein als ein Maß für die Wahrscheinlichkeit?'],['debroglie','Vielleicht führt die Welle ein Teilchen …'],['pauli','Vielleicht auch nicht.'],['einstein','Ich habe heute nur zugehört. Morgen habe ich Fragen.'],['narr','Sie telegrafieren nach Berlin: Materie hat Wellennatur, Schrödinger hat die Gleichung dazu – und Born behauptet, die Welle sei nur eine Wahrscheinlichkeit.']],
- 2:[['narr','Zweiter Abend. Die Stimmung ist angespannter als gestern.'],['heisenberg','Es bleibt dabei: Eine Bahn des Elektrons gibt es nicht. Ort und Impuls sind nie zugleich scharf.'],['dirac','Es folgt aus der Reihenfolge. x mal p ist nicht p mal x.'],['pauli','Zwei Sätze von Dirac an einem Abend. Notieren Sie das, Herr Reporter.'],['einstein','Eine Theorie, die nur würfelt, ist nicht fertig. Ich zeige es Ihnen morgen, Bohr.'],['bohr','Dann … dann bis morgen früh, Einstein.'],['narr','Ihr zweites Telegramm: Bahnen gibt es im Atom nicht mehr, der Zufall gehört zum Fundament – und Einstein will morgen das Gegenteil beweisen.']],
- 3:[['narr','Der letzte Abend. Lorentz erhebt sich und klopft an sein Glas.'],['lorentz','Meine Damen und Herren, wir haben in diesen Tagen erlebt, wie ein neues Bild der Natur entsteht. Ich danke Ihnen allen – auch für den Streit.'],['einstein','Bohr, Sie haben gewonnen. Für heute.'],['bohr','Wir haben beide gewonnen, Einstein. Ohne Ihre Einwände hätten wir unsere eigene Theorie nicht verstanden.'],['curie','Und nun, meine Herren, zurück ins Labor. Die Natur hat das letzte Wort.'],['pauli','Ausnahmsweise habe ich dem nichts hinzuzufügen.'],['narr','Die Koffer werden gepackt. Doch der Streit zwischen Einstein und Bohr ist nicht vorbei – er fängt gerade erst an.']]
+ 1:[['narr','Abend im Hotel Métropole. An der langen Tafel sitzen die Teilnehmer beim Essen – Sie haben einen Platz am Ende ergattert.'],['schroedinger','Meine Welle ist wirklich, Born. Sie können sie nicht einfach zur Wettquote erklären.'],['born','Und doch schlägt jedes Elektron als Punkt ein, lieber Schrödinger. Was soll die Welle anderes sein als ein Maß für die Wahrscheinlichkeit?'],['debroglie','Vielleicht führt die Welle ein Teilchen …'],['pauli','Vielleicht auch nicht.'],['einstein','Ich habe heute nur zugehört. Morgen habe ich Fragen.'],['narr','Nach dem Essen eilen Sie zum Telegrafenamt an der Ecke. Die Redaktion in Berlin wartet auf Ihren ersten Bericht.']],
+ 2:[['narr','Zweiter Abend. Die Stimmung ist angespannter als gestern.'],['heisenberg','Es bleibt dabei: Eine Bahn des Elektrons gibt es nicht. Ort und Impuls sind nie zugleich scharf.'],['dirac','Es folgt aus der Reihenfolge. x mal p ist nicht p mal x.'],['pauli','Zwei Sätze von Dirac an einem Abend. Notieren Sie das, Herr Reporter.'],['einstein','Eine Theorie, die nur würfelt, ist nicht fertig. Ich zeige es Ihnen morgen, Bohr.'],['bohr','Dann … dann bis morgen früh, Einstein.'],['narr','Wieder zum Telegrafenamt. Der Beamte am Schalter kennt Sie schon: „Noch mehr über die Quanten, Monsieur?“']],
+ 3:[['narr','Der letzte Abend. Lorentz erhebt sich und klopft an sein Glas.'],['lorentz','Meine Damen und Herren, wir haben in diesen Tagen erlebt, wie ein neues Bild der Natur entsteht. Ich danke Ihnen allen – auch für den Streit.'],['einstein','Bohr, Sie haben gewonnen. Für heute.'],['bohr','Wir haben beide gewonnen, Einstein. Ohne Ihre Einwände hätten wir unsere eigene Theorie nicht verstanden.'],['curie','Und nun, meine Herren, zurück ins Labor. Die Natur hat das letzte Wort.'],['pauli','Ausnahmsweise habe ich dem nichts hinzuzufügen.'],['narr','Die Koffer werden gepackt. Doch der Streit zwischen Einstein und Bohr ist nicht vorbei – er fängt gerade erst an.'],['narr','Ein letztes Mal zum Telegrafenamt. Morgen früh geht Ihr Zug nach Berlin.']]
 };
 /* Beziehungstafel: [von, nach, Art (+ stützt / − widerspricht), Text, Bedingung] */
 const REL=[
@@ -425,12 +458,14 @@ const REL=[
  ['lorentz','einstein','+','Lorentz und Einstein hängen am Bild einer anschaulichen Wirklichkeit',()=>(S.cnt.lorentz||0)>=3]
 ];
 /* Dialoge */const later='Darüber sprechen wir besser, wenn die Vorträge dazu gehalten sind. Kommen Sie morgen wieder.';
+// Hinweis auf ein Laborexperiment: vorher Einladung, nachher Rückbezug auf die eigene Beobachtung
+function lab(n,todo,done){return has(n)?(done?`<span class="labhint">🔬 ${done}</span>`:''):`<span class="labhint">🔬 ${todo}</span>`}
 const T={
  lorentz:{
   greet:()=>S.day===1?(met('lorentz')?'Ah, die Presse. Haben Sie sich schon zurechtgefunden?':'Willkommen in Brüssel. Ich leite diese Konferenz – und ich gestehe, ich habe selten so viele junge Leute so alte Gewissheiten umstoßen sehen.'):S.day===2?'Heute tragen Born und Heisenberg vor. Halten Sie sich gut fest.':'Der letzte Tag. Die eigentliche Konferenz, sagt man mir, findet beim Frühstück im Hotel statt.',
   topics:[
    {id:'l1',q:'Worum geht es auf dieser Konferenz?',give:'N1',a:()=>'Um Elektronen und Photonen. Sie erinnern sich: Planck fand 1900, dass Strahlung Energie nur in Portionen E = h·f abgibt. Einstein nahm das 1905 ernst und erklärte damit den Photoeffekt – Licht als Strom von Quanten. Seither wissen wir nicht mehr recht, was eine Welle und was ein Teilchen ist. Genau darüber streiten wir hier.'},
-   {id:'l2',q:'Wie komme ich an meine Geschichte?',a:()=>'Fragen Sie die Herrschaften – und Madame Curie. Vor allem aber: Tragen Sie weiter, was Sie hören. Legen Sie einem Physiker die Notiz eines anderen vor, und Sie werden staunen, was er darauf antwortet. Wenn Sie nicht weiterwissen, fragen Sie Ehrenfest. Er kennt jeden und vermittelt zwischen allen.'},
+   {id:'l2',q:'Wie komme ich an meine Geschichte?',a:()=>'Fragen Sie die Herrschaften – und Madame Curie. Vor allem aber: Tragen Sie weiter, was Sie hören. Legen Sie einem Physiker die Notiz eines anderen vor, und Sie werden staunen, was er darauf antwortet. Wenn Sie nicht weiterwissen, fragen Sie Ehrenfest. Er kennt jeden und vermittelt zwischen allen. Und versäumen Sie das Labor nicht: Dort können Sie manche Behauptung selbst nachprüfen.'},
    {id:'l3',if:()=>S.day===3,q:'Ihr Fazit als Vorsitzender?',a:()=>has('N10')?'Sie haben Bohrs Antwort an Einstein gehört? Dann wissen Sie mehr als mancher Teilnehmer. Die neue Theorie hält stand. Ob sie mir gefällt, ist eine andere Frage.':'Die neue Theorie rechnet richtig, daran zweifelt niemand mehr. Aber was sie über die Wirklichkeit sagt – hören Sie dazu Einstein und Bohr im Hotel.'}
   ],
   react:{N5:{a:()=>'Ich bin ein alter Mann. In meiner Physik hatte ein Elektron zu jedem Zeitpunkt einen Ort und eine Geschwindigkeit. Dieses Ideal gebe ich ungern auf – aber ich sehe, dass die Jungen ohne es auskommen.'},
@@ -440,7 +475,7 @@ const T={
  debroglie:{
   greet:()=>met('pauli')&&S.day>1?'Sie haben mit Pauli gesprochen? Dann kennen Sie die Einwände gegen meinen Vortrag bereits.':'Bonjour. Sie interessieren sich für Wellen? Dann sind Sie bei mir richtig.',
   topics:[
-   {id:'d1',q:'Was hat es mit Ihren Materiewellen auf sich?',give:'N2',a:()=>(has('N1')?'Lorentz hat Ihnen von den Lichtquanten erzählt? Dann drehen Sie den Gedanken um: ':'Einstein zeigte, dass die Lichtwelle Teilcheneigenschaften hat. Ich drehte den Gedanken um: ')+'Wenn Wellen Teilchen sein können, dann gehört auch zu jedem Teilchen eine Welle. Ihre Wellenlänge ist λ = h/p. Je größer der Impuls, desto kürzer die Welle. Dieses Jahr haben Davisson und Germer Elektronen an Kristallen gebeugt – die Welle ist also wirklich da.'},
+   {id:'d1',q:'Was hat es mit Ihren Materiewellen auf sich?',give:'N2',a:()=>(has('N1')?'Lorentz hat Ihnen von den Lichtquanten erzählt? Dann drehen Sie den Gedanken um: ':'Einstein zeigte, dass die Lichtwelle Teilcheneigenschaften hat. Ich drehte den Gedanken um: ')+'Wenn Wellen Teilchen sein können, dann gehört auch zu jedem Teilchen eine Welle. Ihre Wellenlänge ist λ = h/p. Je größer der Impuls, desto kürzer die Welle. Dieses Jahr haben Davisson und Germer Elektronen an Kristallen gebeugt – die Welle ist also wirklich da.'+lab('E3','Im Labor des Instituts steht eine Elektronenbeugungsröhre. Dort können Sie die Wellenlänge von Elektronen selbst nachmessen.','Sie haben die Ringe in der Beugungsröhre selbst gemessen? Dann wissen Sie es besser als mancher hier im Saal.')},
    {id:'d2',if:()=>has('N2'),q:'Ist das Elektron nun Welle oder Teilchen?',a:()=>'Ich glaube: beides zugleich. Ein wirkliches Teilchen, das von seiner Welle geführt wird wie ein Korken von der Dünung. '+(met('pauli')?'Pauli hat mir im Saal vorgerechnet, wo das hakt. Ich konnte nicht auf alles antworten.':'Die Göttinger und Kopenhagener sehen das anders – für sie gibt es keine Bahn mehr, nur Wahrscheinlichkeiten.')}
   ],
   react:{N3:{a:()=>'Schrödinger hat aus meiner Idee eine Gleichung gemacht – eine sehr schöne. Nur das Teilchen hat er dabei ganz abgeschafft. So weit wollte ich nie gehen.'},
@@ -469,7 +504,7 @@ const T={
    {id:'b2',if:()=>!has('N4'),q:'Was bedeutet die Wellenfunktion?',a:()=>has('N3')?'Sie haben Schrödinger gehört? Dann legen Sie mir Ihre Notiz doch einmal vor – ich sage Ihnen, wo er irrt.':'Dazu müssten Sie erst hören, was Schrödinger selbst über seine Wellen denkt. Er spaziert meist im Park. Bringen Sie mir seine Sicht mit.'},
    {id:'b3',if:()=>has('N4'),q:'Lässt sich der Zufall nicht doch wegrechnen?',a:()=>S.day<2?later:'Nein. Schießen Sie Elektronen einzeln auf den Doppelspalt: Wo das nächste landet, kann niemand sagen – auch nicht bei vollkommener Kenntnis der Anfangsbedingungen. Erst viele Treffer ergeben das Streifenmuster, und das berechnen wir exakt. Heisenberg und ich halten die Quantenmechanik für eine abgeschlossene Theorie. Der Zufall gehört zu ihrem Fundament.',give:'N13',need:2}
   ],
-  react:{N3:{give:'N4',a:()=>'Schrödinger glaubt, das Elektron sei über den Raum verschmiert. Aber haben Sie je ein halbes Elektron auf dem Schirm gesehen? Es schlägt immer als Ganzes ein, an einem Punkt. Meine Deutung: ψ ist keine Materiewolke. Ihr Amplitudenquadrat |ψ|² ist die Dichte der Antreffwahrscheinlichkeit. Wo |ψ|² groß ist, finden wir das Teilchen oft, wo es null ist, nie. Die Welle breitet sich streng gesetzmäßig aus – aber sie sagt nur Wahrscheinlichkeiten voraus.'},
+  react:{N3:{give:'N4',a:()=>'Schrödinger glaubt, das Elektron sei über den Raum verschmiert. Aber haben Sie je ein halbes Elektron auf dem Schirm gesehen? Es schlägt immer als Ganzes ein, an einem Punkt. Meine Deutung: ψ ist keine Materiewolke. Ihr Amplitudenquadrat |ψ|² ist die Dichte der Antreffwahrscheinlichkeit. Wo |ψ|² groß ist, finden wir das Teilchen oft, wo es null ist, nie. Die Welle breitet sich streng gesetzmäßig aus – aber sie sagt nur Wahrscheinlichkeiten voraus.'+lab('E1','Prüfen Sie es nach: An der Doppelspalt-Apparatur im Labor können Sie Elektronen einzeln abschießen. Achten Sie darauf, wo jedes einzelne landet.','Sie haben es im Labor selbst gesehen: Jedes Elektron ein einzelner Punkt, erst viele zusammen ergeben die Streifen.')},
    N8:{a:()=>'Das hat mir Einstein schon letztes Jahr geschrieben: Die Theorie liefere viel, bringe uns dem Geheimnis des Alten aber kaum näher. Es schmerzt mich, denn ich verehre ihn. Aber die Experimente sind auf unserer Seite.'},
    N2:{a:()=>'De Broglies Beziehung ist richtig und wichtig. Nur führt seine Welle kein Teilchen an der Leine – sie gibt an, wo es wahrscheinlich auftaucht.'},
    N5:{a:()=>'Heisenbergs Relation ist die logische Folge: Wenn nur Wahrscheinlichkeiten festliegen, kann es keine scharfe Bahn geben.'}},
@@ -481,7 +516,7 @@ const T={
    {id:'h0',if:()=>S.day===1,q:'Was halten Sie von Schrödingers Wellen?',a:()=>has('N3')?'Rechnerisch bequem, zugegeben. Aber seine Deutung – ein Elektron als verschmierte Wolke – halte ich für falsch. Wolken hinterlassen keine punktförmigen Treffer. Morgen erkläre ich Ihnen, wie wir es in Göttingen sehen.':'Hören Sie ihn erst selbst an, er ist im Park. Morgen sage ich Ihnen dann, warum ich seine Anschaulichkeit für trügerisch halte.'},
    {id:'h1',q:'Was ist Ihre Matrizenmechanik?',need:2,give:'N6',a:()=>'Im Sommer 1925 saß ich mit Heuschnupfen auf Helgoland und beschloss, radikal zu sein: Niemand hat je die Bahn eines Elektrons im Atom gesehen. Wir sehen nur Spektrallinien – Frequenzen und Helligkeiten. Also baute ich eine Mechanik, die ausschließlich solche beobachtbaren Größen enthält. Die Bahn kommt darin nicht mehr vor. '+(has('N3')?'Schrödinger nennt das unanschaulich. Ich nenne es ehrlich.':'')},
    {id:'h2',if:()=>has('N6'),q:'Was besagt Ihre Unbestimmtheitsrelation?',need:2,give:'N5',a:()=>'Stellen Sie sich vor, Sie wollen den Ort eines Elektrons unter einem Mikroskop bestimmen. Für ein scharfes Bild brauchen Sie kurzwelliges Licht – dessen Photonen aber tragen viel Impuls und stoßen das Elektron unkontrollierbar an. Je genauer der Ort, desto unbestimmter der Impuls. In Formeln: Δx · Δp ≥ h/(4π). Das Produkt der beiden Unbestimmtheiten kann eine feste Grenze nie unterschreiten.'},
-   {id:'h3',if:()=>has('N5'),q:'Ist das nicht bloß ein Problem ungeschickter Messung?',a:()=>(met('bohr')?'Bohr hat mich da selbst korrigiert, und er hat recht: ':'Nein, und Bohr hat mich da selbst korrigiert: ')+'Es liegt nicht an der Störung allein. Ein Quantenobjekt besitzt Ort und Impuls gar nicht gleichzeitig als scharfe Eigenschaften. Die Wellennatur erzwingt das – ein enger Spalt legt den Ort fest und fächert dafür die Richtungen auf. Deshalb hat der Begriff „Bahn“ im Atom keinen Sinn.'}
+   {id:'h3',if:()=>has('N5'),q:'Ist das nicht bloß ein Problem ungeschickter Messung?',a:()=>(met('bohr')?'Bohr hat mich da selbst korrigiert, und er hat recht: ':'Nein, und Bohr hat mich da selbst korrigiert: ')+'Es liegt nicht an der Störung allein. Ein Quantenobjekt besitzt Ort und Impuls gar nicht gleichzeitig als scharfe Eigenschaften. Die Wellennatur erzwingt das – ein enger Spalt legt den Ort fest und fächert dafür die Richtungen auf. Deshalb hat der Begriff „Bahn“ im Atom keinen Sinn.'+lab('E2','Im Labor steht eine Einzelspalt-Apparatur mit verstellbarem Spalt. Machen Sie den Spalt eng – und sehen Sie, was mit dem Strahl geschieht.','Am Einzelspalt im Labor haben Sie es gesehen: enger Spalt, breiter Fächer.')}
   ],
   react:{N3:{a:()=>'Die Mathematik ist brauchbar. Die Deutung ist es nicht. Fragen Sie Born, was ψ wirklich bedeutet.'},
    N4:{a:()=>'Born hat recht, und meine Relation ist die Konsequenz daraus.'},
@@ -519,7 +554,7 @@ const T={
   greet:()=>fl('eFinal')?'Ah, mein Bote. Sagen Sie Bohr nichts – aber ich habe schon eine neue Idee.':S.day===1?'Ein Zeitungsmann! Setzen Sie sich. Ich bin hier ohnehin eher Zuhörer als Redner.':has('N10')?'Sie kommen von Bohr, ich sehe es Ihnen an. Nun?':'Guten Morgen. Haben Sie gut geschlafen? Ich nicht – die Quanten lassen mich nicht.',
   topics:[
    {id:'e1',q:'Sie haben die Lichtquanten eingeführt. Sind Sie zufrieden mit dem, was daraus wurde?',a:()=>(has('N1')?'Lorentz hat Ihnen die Vorgeschichte erzählt, gut. ':'')+'Ich habe 1905 gesagt, Licht bestehe aus Quanten, und man hat mich jahrelang dafür belächelt. Heute sind die Quanten überall – und ich bin es, der Bedenken hat. Die neue Mechanik ist imposant. Aber eine innere Stimme sagt mir, dass sie noch nicht der wahre Jakob ist.'},
-   {id:'e2',if:()=>has('N5')&&has('N8'),q:'Wie wollen Sie Heisenbergs Relation widerlegen?',need:3,give:'N9',a:()=>'Mit einem Experiment im Kopf. Nehmen Sie den Doppelspalt. Davor ein Schirm mit einem einzelnen Spalt – aber nicht fest montiert, sondern beweglich an Federn aufgehängt. Fliegt ein Teilchen zum oberen Spalt, wird es dort nach oben abgelenkt und versetzt dem Schirm einen Rückstoß nach unten; zum unteren Spalt umgekehrt. Ich messe den Rückstoß und kenne den Weg. Und hinten sehe ich trotzdem die Interferenzstreifen. Weg und Welle zugleich – damit wäre gezeigt, dass die Theorie nicht alles beschreibt, was wirklich ist. Bringen Sie das Bohr!'},
+   {id:'e2',if:()=>has('N5')&&has('N8'),q:'Wie wollen Sie Heisenbergs Relation widerlegen?',need:3,give:'N9',a:()=>'Mit einem Experiment im Kopf. Nehmen Sie den Doppelspalt. Davor ein Schirm mit einem einzelnen Spalt – aber nicht fest montiert, sondern beweglich an Federn aufgehängt. Fliegt ein Teilchen zum oberen Spalt, wird es dort nach oben abgelenkt und versetzt dem Schirm einen Rückstoß nach unten; zum unteren Spalt umgekehrt. Ich messe den Rückstoß und kenne den Weg. Und hinten sehe ich trotzdem die Interferenzstreifen. Weg und Welle zugleich – damit wäre gezeigt, dass die Theorie nicht alles beschreibt, was wirklich ist. Bringen Sie das Bohr!'+lab('E1','Die Doppelspalt-Apparatur im Labor hat eine Wegmessung. Versuchen Sie ruhig, Weg und Streifen zugleich zu bekommen!','Sie sagen, im Labor seien mit Wegmessung die Streifen verschwunden? Jene Apparatur ist grob. Meine Blende ist raffinierter.')},
    {id:'e3',if:()=>has('N5')&&!has('N8'),q:'Was sagen Sie zu Heisenbergs Relation?',a:()=>'Eine Grenze für das, was man wissen kann? Darüber sage ich etwas, sobald Sie mir zeigen, was Born aus den Wellen gemacht hat. Damit fängt das Übel an.'}
   ],
   react:{N4:{need:2,give:'N8',a:()=>'Borns Wahrscheinlichkeiten. Sehen Sie, für viele Teilchen ist das wunderbar – Statistik eben, wie bei Gasmolekülen. Aber für das einzelne Elektron soll es keinen Grund geben, warum es hier landet und nicht dort? Das glaube ich nicht. Die Theorie leistet viel, aber sie ist unvollständig. Es muss darunter etwas geben, das festlegt, was wirklich geschieht. Der Alte würfelt nicht.'},
@@ -534,7 +569,7 @@ const T={
   greet:()=>fl('eFinal')?'Einstein denkt weiter nach, sagen Sie? Das fürchte und das hoffe ich. Wir sind ihm viel schuldig – er zwingt uns, genau zu sein.':has('N9')&&!has('N10')?'Sie haben etwas von Einstein für mich? Ich sehe es an Ihrem Gesicht. Zeigen Sie her.':met('einstein')?'Sie haben mit Einstein gesprochen … Er ist unser strengster Prüfer. Was möchten Sie wissen?':'Guten Tag. Verzeihen Sie, wenn ich langsam spreche – ich versuche, nie klarer zu reden, als ich denke.',
   topics:[
    {id:'bo0',if:()=>S.day===1,q:'Wie sehen Sie die Lage der Physik?',a:()=>'Wir haben zwei Bilder – Welle und Teilchen –, und keines reicht allein. Viele halten das für einen Mangel. Ich glaube, es ist eine Lehre. Aber hören Sie zuerst die Vorträge; morgen sage ich Ihnen mehr.'},
-   {id:'bo1',q:'Was meinen Sie mit Komplementarität?',need:2,give:'N7',a:()=>'Fragen Sie am Doppelspalt nach der Welle, erhalten Sie Interferenzstreifen. Fragen Sie nach dem Teilchen – durch welchen Spalt? –, erhalten Sie eine Antwort, aber die Streifen sind fort. Beide Bilder schließen einander aus, und doch brauchen wir beide für die ganze Wahrheit. Das nenne ich komplementär. Welche Seite sich zeigt, hängt vom Versuchsaufbau ab. '+(has('N5')?'Heisenbergs Relation ist der zahlenmäßige Ausdruck davon.':'')+' Wir können einem Quantenobjekt keine Eigenschaften zuschreiben, ohne zu sagen, wie wir es beobachten.'},
+   {id:'bo1',q:'Was meinen Sie mit Komplementarität?',need:2,give:'N7',a:()=>'Fragen Sie am Doppelspalt nach der Welle, erhalten Sie Interferenzstreifen. Fragen Sie nach dem Teilchen – durch welchen Spalt? –, erhalten Sie eine Antwort, aber die Streifen sind fort. Beide Bilder schließen einander aus, und doch brauchen wir beide für die ganze Wahrheit. Das nenne ich komplementär. Welche Seite sich zeigt, hängt vom Versuchsaufbau ab. '+(has('N5')?'Heisenbergs Relation ist der zahlenmäßige Ausdruck davon.':'')+' Wir können einem Quantenobjekt keine Eigenschaften zuschreiben, ohne zu sagen, wie wir es beobachten.'+lab('E1','An der Doppelspalt-Apparatur im Labor lässt sich die Wegmessung ein- und ausschalten. Achten Sie dabei auf die Streifen.','Sie haben im Labor die Wegmessung selbst eingeschaltet – und die Streifen verschwanden. Das ist Komplementarität.')},
    {id:'bo2',if:()=>has('N10'),q:'Hat Einstein sich geschlagen gegeben?',a:()=>fl('eFinal')?'Nein, und er wird es nie. Er nennt die Theorie nun widerspruchsfrei, aber unvollständig. Ich erwarte beim nächsten Treffen ein neues Gedankenexperiment.':'Fragen Sie ihn selbst. Legen Sie ihm meine Antwort vor – ich bin gespannt, was er sagt.'}
   ],
   react:{N9:{need:3,give:'N10',a:()=>'Ah … ja. Sehr schön, sehr scharfsinnig. Aber sehen Sie: Einstein behandelt seine Blende wie ein Ding der alten Physik. Um den winzigen Rückstoß zu erkennen, muss ich den Impuls der Blende vorher äußerst genau kennen. Dann aber – Heisenberg! – ist ihr Ort entsprechend unbestimmt. Der Spalt zittert gewissermaßen, und zwar gerade so weit, dass sich helle und dunkle Streifen überdecken. Das Muster ist fort. Kenne ich den Weg, verliere ich die Interferenz; will ich die Interferenz, muss ich die Blende festschrauben und erfahre den Weg nicht. Tragen Sie ihm das zurück.'},
@@ -548,7 +583,7 @@ const T={
   greet:()=>S.day===3?'Sie müssen das miterleben! Einstein springt jeden Morgen wie ein Schachtelmännchen mit einem neuen Einwand hoch – und abends hat Bohr ihn zerlegt.':'Ah, die Presse! Ich kenne hier alle. Wenn Sie nicht weiterwissen: Fragen Sie mich.',
   topics:[
    {id:'tip',q:'Können Sie mir einen Tipp geben?',a:()=>hintText(),again:1},
-   {id:'eh1',q:'Wie erleben Sie den Streit?',a:()=>S.day<3?'Ich habe gestern einen Vers vom Turmbau zu Babel an die Tafel geschrieben – von der Sprachverwirrung. Jeder redet hier seine eigene Sprache: Wellen, Matrizen, Wahrscheinlichkeiten. Und doch meinen sie dasselbe Atom.':'Ich liebe beide, Einstein und Bohr. Aber ich habe Einstein gesagt: Du argumentierst gegen die Quantentheorie so, wie deine Gegner gegen die Relativitätstheorie. Er hat es sich angehört. Überzeugt habe ich ihn nicht.'}
+   {id:'eh1',q:'Wie erleben Sie den Streit?',a:()=>S.day===1?'Mir geht ein Bibelvers nicht aus dem Kopf – der vom Turmbau zu Babel, als die Sprache der Menschen verwirrt wurde. Jeder redet hier seine eigene Sprache: Wellen, Matrizen, Wahrscheinlichkeiten. Und doch meinen sie dasselbe Atom.':S.day===2?'Es wird immer babylonischer. Ich habe große Lust, den Vers vom Turmbau einmal an die Tafel zu schreiben – vielleicht merken die Herren dann, dass sie aneinander vorbeireden.':'Haben Sie die Tafel im Saal gesehen? Den Vers vom Turmbau zu Babel habe ich heute früh angeschrieben. Und noch etwas: Ich liebe beide, Einstein und Bohr. Aber ich habe Einstein gesagt: Du argumentierst gegen die Quantentheorie so, wie deine Gegner gegen die Relativitätstheorie. Er hat es sich angehört. Überzeugt habe ich ihn nicht.'}
   ],
   react:{},
   def:'Schön notiert! Aber zeigen Sie das nicht mir – zeigen Sie es dem, den es ärgert. Dann bekommen Sie eine Antwort.'
@@ -557,9 +592,10 @@ const T={
   greet:()=>met('curie')?'Sie haben noch Fragen? Bitte.':'Guten Tag. Sie wundern sich über die einzige Frau im Saal? Ich mich längst nicht mehr.',
   topics:[
    {id:'c1',q:'Wie sehen Sie als Experimentatorin die neue Theorie?',a:()=>'Ich misstraue jedem Gedanken, der sich nicht messen lässt. Aber diese Theorie sagt Messwerte richtig voraus, und zwar erstaunlich genau. Das genügt mir zunächst. Über Philosophie mögen die Herren beim Frühstück streiten.'},
+   {id:'c3',if:()=>has('N14'),q:'Können Sie mir den Zufall beim Zerfall zeigen?',again:1,a:()=>{setTimeout(decayDemo,50);return ''}},
    {id:'c2',if:()=>!has('N14'),q:'Kennen Sie den Zufall aus Ihrem Labor?',a:()=>has('N4')?(S.day<2?later:'O ja. Zeigen Sie mir, was Born dazu sagt – legen Sie mir die Notiz vor.'):'Besser als die meisten hier. Aber bringen Sie mir erst, was Born über die Wahrscheinlichkeit sagt. Dann erzähle ich Ihnen von meinem Radium.'}
   ],
-  react:{N4:{need:2,give:'N14',a:()=>'Wahrscheinlichkeit als Naturgesetz – das kenne ich seit dreißig Jahren. Nehmen Sie zwei Radiumatome, in allem vollkommen gleich. Das eine zerfällt in dieser Sekunde, das andere in tausend Jahren. Ich kann die Halbwertszeit auf Promille genau angeben. Aber warum dieses Atom gerade jetzt zerfällt, dafür gibt es keine Ursache, die man finden könnte. Gleiche Ausgangslage, verschiedene Wirkung. Die Kausalität im alten Sinn gilt im Atom nicht.'},
+  react:{N4:{need:2,give:'N14',a:()=>'Wahrscheinlichkeit als Naturgesetz – das kenne ich seit dreißig Jahren. Nehmen Sie zwei Radiumatome, in allem vollkommen gleich. Das eine zerfällt in dieser Sekunde, das andere in tausend Jahren. Ich kann die Halbwertszeit auf Promille genau angeben. Aber warum dieses Atom gerade jetzt zerfällt, dafür gibt es keine Ursache, die man finden könnte. Gleiche Ausgangslage, verschiedene Wirkung. Die Kausalität im alten Sinn gilt im Atom nicht. Wenn Sie wollen, zeige ich es Ihnen an einem kleinen Modell – fragen Sie mich danach.'},
    N5:{a:()=>'Solange Herr Heisenberg mir sagt, wie groß die Unbestimmtheit ist, kann ich damit arbeiten. Eine Grenze, die man berechnen kann, ist für eine Experimentatorin kein Unglück.'}},
   def:'Das müssen die Theoretiker unter sich ausmachen. Ich halte mich an Messungen.'
  }
@@ -594,39 +630,136 @@ const QA=[
 ];
 const QB=[['1900','Planck: Energie wird in Quanten E = h·f abgegeben'],['1905','Einstein: Lichtquanten erklären den Photoeffekt'],['1924','de Broglie: Materiewellen, λ = h/p'],['1925','Heisenberg: Matrizenmechanik ohne Bahnen'],['1926','Schrödinger: Wellengleichung für ψ – kurz darauf Borns Wahrscheinlichkeitsdeutung'],['1927','Heisenberg: Unbestimmtheitsrelation']];
 const QC=[
- {k:'Nichtdeterminiertheit',q:'Was bedeutet Nichtdeterminiertheit?',o:['Das einzelne Ereignis (z. B. der Auftreffort eines Elektrons) ist nicht vorhersagbar; berechenbar ist nur die Wahrscheinlichkeitsverteilung.','Die Messgeräte sind noch zu ungenau, um den Auftreffort vorherzusagen.','Quantenobjekte halten sich an keinerlei Gesetze.'],
+ {k:'Nichtdeterminiertheit',q:'Was bedeutet Nichtdeterminiertheit?',o:[
+   {t:'Der Auftreffort eines einzelnen Elektrons ist durch seinen Anfangszustand festgelegt. Weil wir diesen nie vollständig kennen, müssen wir mit Wahrscheinlichkeiten rechnen.',w:'So ist es beim Würfeln: Der Zufall ist dort nur Unwissen. Das war Einsteins Hoffnung. Nach der Quantenmechanik legt auch der vollständig bekannte Zustand ψ den einzelnen Auftreffort nicht fest.'},
+   {t:'Für ein einzelnes Elektron lässt sich der Auftreffort nicht vorhersagen, auch bei vollständig bekanntem Zustand. Exakt berechenbar ist die Verteilung vieler Treffer.',ok:1},
+   {t:'Weder einzelne Treffer noch ihre Verteilung lassen sich vorhersagen. Auch das Streifenmuster sieht bei jeder Wiederholung des Versuchs anders aus.',w:'Zu weit gegriffen: Die Verteilung vieler Treffer folgt exakt aus |ψ|² und kommt bei jeder Wiederholung gleich heraus. Probieren Sie es im Labor mit 500 Elektronen.'}],
   f:'Borns Punkt: Die Verteilung vieler Treffer folgt exakt aus |ψ|² – der einzelne Treffer nicht. Mit Messgenauigkeit hat das nichts zu tun.'},
- {k:'Nichtkausalität',q:'Was bedeutet Nichtkausalität?',o:['Jede Wirkung hat mehrere Ursachen gleichzeitig.','Gleiche Ausgangsbedingungen führen nicht zum gleichen Ergebnis; für das Einzelereignis lässt sich keine Ursache angeben.','Die Wirkung tritt zeitlich vor der Ursache ein.'],c:1,
+ {k:'Nichtkausalität',q:'Was bedeutet Nichtkausalität?',o:[
+   {t:'Jeder Zerfall hat eine Ursache im Inneren des Kerns, etwa eine zufällige Bewegung seiner Bausteine. Weil wir sie nicht beobachten können, wirkt der Zerfall ursachenlos.',w:'Das wäre eine verborgene Ursache – klassisch gedacht. Die Quantenmechanik kennt keine: Zwei gleiche Kerne unterscheiden sich in nichts, und doch zerfallen sie zu verschiedenen Zeiten.'},
+   {t:'In der Quantenwelt kann die Wirkung zeitlich vor der Ursache eintreten, weil die Zeit für Quantenobjekte keine feste Richtung hat.',w:'Die Reihenfolge von Ursache und Wirkung bleibt unangetastet. Beim Einzelereignis fehlt die Ursache überhaupt – nicht ihre Reihenfolge.'},
+   {t:'Gleiche Ausgangsbedingungen führen nicht immer zum gleichen Ergebnis: Für den Zerfallszeitpunkt eines einzelnen Kerns lässt sich keine Ursache angeben.',ok:1}],
   f:'Curies Radium: zwei völlig gleiche Kerne, verschiedene Zerfallszeitpunkte – ohne auffindbaren Grund.'},
- {k:'Nichtobjektivierbarkeit',q:'Was bedeutet Nichtobjektivierbarkeit?',o:['Physiker können sich über Messergebnisse nie einigen.','Quantenobjekte existieren nur in der Vorstellung des Beobachters.','Eigenschaften wie Ort oder Weg kommen einem Quantenobjekt nicht unabhängig von der Messung zu; der Versuchsaufbau bestimmt, was sich zeigt.'],c:2,
+ {k:'Nichtobjektivierbarkeit',q:'Was bedeutet Nichtobjektivierbarkeit?',o:[
+   {t:'Jedes Elektron nimmt einen bestimmten Weg. Die Messung stört es aber so stark, dass dieser Weg nachträglich nicht mehr objektiv festgestellt werden kann.',w:'Das ist die Störungs-Vorstellung, die Bohr an Heisenberg korrigiert hat. Hätte jedes Elektron vorher einen bestimmten Weg, gäbe es auch ohne Wegmessung keine Interferenzstreifen.'},
+   {t:'Eigenschaften wie Ort oder Weg kommen einem Quantenobjekt nicht unabhängig von der Messung zu. Der Versuchsaufbau legt fest, ob sich Weg oder Interferenz zeigt.',ok:1},
+   {t:'Quantenobjekte existieren erst, wenn ein Mensch sie bewusst beobachtet. Ohne Beobachter gibt es weder Elektronen noch Messergebnisse.',w:'Zu weit: Das Elektron existiert. „Messen“ heißt Wechselwirkung mit einem Gerät – dazu braucht es kein Bewusstsein. Unbestimmt sind einzelne Eigenschaften, nicht das Objekt.'}],
   f:'Bohrs Komplementarität: Erst der Versuchsaufbau legt fest, ob sich Weg oder Interferenz zeigt. Das Elektron „hat“ vorher keinen bestimmten Weg.'},
- {k:'Nichtlokalität',q:'Was bedeutet Nichtlokalität?',o:['Verschränkte Quantenobjekte bilden ein Ganzes: Eine Messung am einen legt das Ergebnis am anderen sofort fest – ohne Signalübertragung.','Quantenobjekte bewegen sich schneller als das Licht.','Man kann Nachrichten ohne Zeitverzug übertragen.'],c:0,
+ {k:'Nichtlokalität',q:'Was bedeutet Nichtlokalität?',o:[
+   {t:'Verschränkte Quantenobjekte tauschen bei der Messung ein Signal aus, das schneller als Licht ist. So lassen sich Nachrichten ohne Zeitverzug übertragen.',w:'Die einzelnen Ergebnisse sind zufällig. Den Zusammenhang sieht man erst, wenn man beide Messreihen auf gewöhnlichem Weg vergleicht. Nachrichten lassen sich so nicht senden.'},
+   {t:'Verschränkte Quantenobjekte tragen ihre Messergebnisse von Anfang an in sich, wie zwei Zettel in zwei Umschlägen. Die Messung liest nur ab, was längst feststand.',w:'Das war Einsteins Hoffnung (EPR). Die Experimente nach Bell haben solche „mitgegebenen Zettel“ ausgeschlossen.'},
+   {t:'Verschränkte Quantenobjekte bilden ein Ganzes: Eine Messung am einen legt das Ergebnis am anderen sofort fest, über jede Entfernung – ohne dass ein Signal übertragen wird.',ok:1}],
   f:'EPR und Bell: Die Korrelation ist da, aber sie lässt sich nicht zum Senden von Nachrichten nutzen – die Relativitätstheorie bleibt unverletzt.'}
 ];
-QC[0].c=0;
-const QE={q:'Am Doppelspalt wird zusätzlich gemessen, durch welchen Spalt jedes Elektron fliegt. Was zeigt der Schirm?',o:['Das Interferenzmuster wird schärfer.','Das Interferenzmuster verschwindet; es bleibt die Überlagerung zweier Einzelspalt-Verteilungen.','Es kommen keine Elektronen mehr an.'],c:1,f:'Weg-Information und Interferenz schließen sich aus – genau das zeigte Bohr an Einsteins beweglicher Blende.'};
+const QD={q:'Für ein Staubkorn (m = 10⁻⁹ kg, Δx = 10⁻⁶ m) ergibt dieselbe Rechnung Δv ≈ 5 · 10⁻²⁰ m/s. Was folgt daraus?',o:[
+  {t:'Die Unbestimmtheitsrelation gilt nur für Elektronen und andere sehr kleine Teilchen. Auf ein Staubkorn ist sie gar nicht anwendbar.',w:'Doch: Sie gilt für alle Körper – Sie haben sie eben für das Staubkorn ausgerechnet. Das Ergebnis ist nur winzig.'},
+  {t:'Bei makroskopischen Körpern ist die Unbestimmtheit unmessbar klein. Deshalb gilt dort praktisch die klassische Physik mit scharfen Bahnen.',ok:1},
+  {t:'Weil Δv auch beim Staubkorn größer als null ist, lässt sich seine Bahn grundsätzlich nicht verfolgen – genau wie beim Elektron.',w:'Grundsätzlich ist die Bahn unscharf, aber 5 · 10⁻²⁰ m/s liegt weit unter jeder Messgenauigkeit. Praktisch hat das Staubkorn eine Bahn; beim Elektron dagegen sind es 600 km/s.'}]};
+const QE={q:'Am Doppelspalt wird zusätzlich gemessen, durch welchen Spalt jedes Elektron fliegt. Was zeigt der Schirm?',o:[
+  {t:'Das Interferenzmuster bleibt erhalten, weil die Wegmessung den Durchgang nur registriert und die Elektronen dabei nicht ablenkt.',w:'Genau das wollte Einstein mit seiner beweglichen Blende zeigen. Jede Messung, die den Weg verrät, zerstört die Interferenz – das war Bohrs Antwort.'},
+  {t:'Die Streifen bleiben an denselben Stellen, werden aber schwächer, weil die Messung einen Teil der Elektronen abfängt.',w:'Bei vollständiger Wegmessung verschwinden die Streifen ganz – nicht nur teilweise. Schalten Sie im Labor die Wegmessung ein.'},
+  {t:'Das Interferenzmuster verschwindet. Es bleibt die Summe der beiden Einzelspalt-Verteilungen – ein breiter Fleck ohne Streifen.',ok:1}],
+  f:'Weg-Information und Interferenz schließen sich aus – genau das zeigte Bohr an Einsteins beweglicher Blende.'};
+/* Abendtelegramme: Lückentext (Auswahl) und ein eigener Satz. Die vervollständigten Sätze gehen in den Artikel ein. */
+const TELE={
+ 1:{date:'24. OKTOBER 1927',own:'Erklären Sie Ihren Lesern in einem eigenen Satz, was eine „Materiewelle“ ist.',s:[
+  ['Louis de Broglie zeigt: Nicht nur Licht, auch Materie hat Wellennatur. Zu einem Teilchen mit dem Impuls p gehört die Wellenlänge ',[
+    {t:'λ = h · p',w:'Dann hätten schnelle Teilchen lange Wellen. Es ist umgekehrt: Je größer der Impuls, desto kürzer die Welle. Prüfen Sie es an der Elektronenbeugungsröhre im Labor.'},
+    {t:'λ = h / p',ok:1},
+    {t:'λ = p / h',w:'Auch so würde λ mit dem Impuls wachsen, und die Einheit stimmt nicht: Nur h/p ergibt eine Länge (Js geteilt durch kg·m/s = m).'}],'.'],
+  ['Erwin Schrödinger beschreibt das Elektron durch eine Wellenfunktion ψ. Max Born deutet ',[
+    {t:'ψ als die über den Raum verschmierte Ladung des Elektrons',w:'Das ist Schrödingers eigene Hoffnung. Born widerspricht: Ein verschmiertes Elektron müsste einen schwachen Fleck hinterlassen – man findet aber immer ganze, punktförmige Treffer.'},
+    {t:'ψ als die Bahn, auf der das Elektron um den Kern läuft',w:'Bahnen kommen in der neuen Mechanik gar nicht mehr vor. ψ ist eine Welle im ganzen Raum, keine Linie.'},
+    {t:'|ψ|² als Antreffwahrscheinlichkeitsdichte',ok:1}],'.'],
+  ['Am Doppelspalt trifft jedes Elektron ',[
+    {t:'als Ganzes an einer nicht vorhersagbaren Stelle',ok:1},
+    {t:'als schwaches, über den Schirm verteiltes Streifenmuster',w:'Dann gäbe es Bruchteile von Elektronen. An der Doppelspalt-Apparatur im Labor sehen Sie: Jedes Elektron erzeugt einen einzigen Punkt.'},
+    {t:'genau hinter einem der beiden Spalte',w:'So verhielten sich Schrotkugeln. Dann gäbe es zwei Streifen hinter den Spalten, aber nie das Muster mit vielen hellen und dunklen Streifen.'}],' auf; erst viele Treffer zusammen ergeben das Interferenzmuster.'],
+  ['Wo |ψ|² groß ist, wird das Elektron ',[
+    {t:'mit Sicherheit nachgewiesen',w:'Eine Wahrscheinlichkeitsdichte sagt „häufig“, nicht „sicher“. Sicher ist nur: Wo |ψ|² null ist, findet man es nie.'},
+    {t:'häufig nachgewiesen',ok:1},
+    {t:'besonders schnell nachgewiesen',w:'|ψ|² sagt etwas über den Ort, an dem man das Teilchen findet – nicht über seine Geschwindigkeit.'}],', wo es null ist, nie.']]},
+ 2:{date:'25. OKTOBER 1927',own:'Erklären Sie in einem eigenen Satz, warum man im Atom nicht mehr von einer Elektronenbahn sprechen kann.',s:[
+  ['Werner Heisenberg zeigt: Ort und Impuls eines Quantenobjekts sind ',[
+    {t:'zugleich scharf messbar, sobald die Messgeräte genau genug sind',w:'Das ist Federles Fehler. Die Unbestimmtheit ist keine Frage der Technik, sondern eine Eigenschaft der Natur.'},
+    {t:'stets gleich ungenau, sodass Δx und Δp immer gleich groß sind',w:'Δx und Δp hängen voneinander ab: Wird das eine kleiner, wird das andere größer. Nur ihr Produkt hat eine untere Grenze.'},
+    {t:'nie zugleich beliebig genau bestimmt',ok:1}],'; es gilt Δx · Δp ≥ h/(4π).'],
+  ['Ein enger Spalt legt den Ort eines Elektrons fest – dafür wird der Fleck auf dem Schirm dahinter ',[
+    {t:'schmaler',w:'So wäre es bei Kugeln. Bei Quantenobjekten wächst Δp, wenn Δx kleiner wird. Probieren Sie es an der Einzelspalt-Apparatur im Labor.'},
+    {t:'breiter',ok:1},
+    {t:'nicht verändert',w:'Probieren Sie es an der Einzelspalt-Apparatur im Labor: Die Breite des Flecks hängt deutlich von der Spaltbreite ab.'}],'.'],
+  ['Paul Dirac führt die Relation darauf zurück, dass es bei Ort und Impuls auf ',[
+    {t:'die Reihenfolge',ok:1},
+    {t:'die Genauigkeit der Rechnung',w:'Es ist kein Rundungsfehler: Auch exakt gerechnet bleibt x·p verschieden von p·x – der Unterschied ist durch h festgelegt.'},
+    {t:'die Temperatur des Messgeräts',w:'Mit dem Messgerät hat Diracs Regel nichts zu tun. Sie betrifft die Größen selbst: x·p ist nicht p·x.'}],' ankommt: x·p ist nicht dasselbe wie p·x.'],
+  ['Albert Einstein hält die Quantenmechanik für ',[
+    {t:'falsch, weil ihre Vorhersagen im Labor nicht eintreffen',w:'Einstein bestreitet keine einzige Vorhersage. Er vermisst etwas hinter den Wahrscheinlichkeiten.'},
+    {t:'erfolgreich, aber unvollständig',ok:1},
+    {t:'vollständig, aber unnötig kompliziert',w:'Vollständig ist sie für ihn gerade nicht: Es müsse darunter etwas geben, das festlegt, was wirklich geschieht.'}],': Der Zufall könne nicht das letzte Wort sein.']]},
+ 3:{date:'26. OKTOBER 1927',own:'Fassen Sie in einem eigenen Satz zusammen, worin sich Einstein und Bohr einig sind – und worin nicht.',s:[
+  ['Einstein will an einer beweglich aufgehängten Blende ',[
+    {t:'den Weg des Teilchens messen und trotzdem Interferenz sehen',ok:1},
+    {t:'die Geschwindigkeit der Elektronen im Spalt bestimmen',w:'Der Rückstoß der Blende soll den Weg verraten, nicht die Geschwindigkeit. Lesen Sie Ihre Notiz „Einsteins Gedankenexperiment“.'},
+    {t:'nachweisen, dass sich jedes Elektron am Spalt teilt',w:'Im Gegenteil: Einstein will zeigen, dass jedes Teilchen einen bestimmten Weg nimmt – und trotzdem Streifen entstehen.'}],'.'],
+  ['Niels Bohr antwortet: Auch die Blende unterliegt ',[
+    {t:'der Relativitätstheorie',w:'Mit der Relativitätstheorie konterte Bohr erst 1930 beim Lichtkasten. 1927 genügte Heisenbergs Relation: Ist der Impuls der Blende genau bekannt, ist ihr Ort unscharf.'},
+    {t:'keiner Quantenregel, weil sie ein großer Körper ist',w:'Das ist Einsteins Annahme – und Bohrs Einwand: Um den Rückstoß eines einzelnen Teilchens zu messen, muss die Blende so empfindlich sein, dass sie selbst wie ein Quantenobjekt zählt.'},
+    {t:'der Unbestimmtheitsrelation',ok:1}],'. Wer den Weg kennt, verliert das Interferenzmuster.'],
+  ['Wellen- und Teilchenbild nennt Bohr komplementär: Sie zeigen sich ',[
+    {t:'nie im selben Versuch',ok:1},
+    {t:'abwechselnd in rascher Folge',w:'Komplementär heißt nicht abwechselnd. Welches Bild sich zeigt, hängt vom Versuchsaufbau ab, nicht von der Zeit.'},
+    {t:'zugleich, wenn man behutsam genug misst',w:'Genau das hat Bohr an Einsteins Blende widerlegt. Schalten Sie im Labor die Wegmessung ein: Die Streifen verschwinden.'}],'; welches sich zeigt, bestimmt der Versuchsaufbau.'],
+  ['Marie Curie ergänzt: Zwei gleiche Atomkerne zerfallen ',[
+    {t:'zu verschiedenen Zeiten, weil sie verschieden alt sind',w:'Atomkerne altern nicht: Ein alter Kern zerfällt in der nächsten Sekunde mit derselben Wahrscheinlichkeit wie ein frischer.'},
+    {t:'zur selben Zeit, wenn sie gleich alt sind',w:'Dann gäbe es ein festes Verfallsdatum statt einer Halbwertszeit. Lassen Sie sich von Madame Curie ihr Zerfallsmodell zeigen.'},
+    {t:'zu verschiedenen Zeiten, ohne dass sich eine Ursache angeben lässt',ok:1}],'.']]}
+};
+const teleProse=d=>TELE[d].s.map(x=>x[0]+x[1].find(o=>o.ok).t+x[2]).join(' ');
+function telegram(d,done){const T0=TELE[d];let first=null;const ords=T0.s.map(x=>shuf(x[1].map((_,i)=>i)));
+  const body=T0.s.map((x,i)=>`${x[0]}<select id="tg${i}" class="tsel"><option value="">– wählen –</option>${ords[i].map(j=>`<option value="${j}">${x[1][j].t}</option>`).join('')}</select>${x[2]} <b>STOP</b>`).join(' ');
+  open(`<h3>Abendtelegramm an die Redaktion</h3><p class="narr">Am Schalter des Telegrafenamts füllen Sie das Formular aus. Jedes Wort kostet Geld – aber falsch darf keins sein. Die Redaktion setzt aus Ihren Telegrammen später den Artikel zusammen.</p>
+   <div class="telegram tform"><b>TELEGRAMM · BRÜSSEL – BERLIN · ${T0.date}</b><br><br>${body}</div>
+   <p><b>Dazu Ihr eigener Satz:</b> ${T0.own}</p><textarea id="tw" maxlength="300" placeholder="Ein bis zwei Sätze in Ihren eigenen Worten …">${esc((S.tele[d]&&S.tele[d].own)||'')}</textarea><div id="tfb"></div>
+   <p><button class="btn" id="tsend">Telegramm aufgeben ▸</button>${S.teach?' <button class="btn light" id="tfill">🎓 Lösung einsetzen</button>':''}</p>`);
+  if(S.teach)$('tfill').onclick=()=>{T0.s.forEach((x,i)=>$('tg'+i).value=String(x[1].findIndex(o=>o.ok)));if($('tw').value.trim().length<25)$('tw').value='Testlauf der Lehrkraft: Hier steht der eigene Satz des Schülers.'};
+  $('tsend').onclick=()=>{let ok=0,msg=[];T0.s.forEach((x,i)=>{const e=$('tg'+i),v=e.value===''?-1:+e.value,r=v>=0&&!!x[1][v].ok;e.className='tsel '+(r?'ok':'bad');if(r)ok++;else msg.push(`<b>Lücke ${i+1}:</b> `+(v<0?'Hier fehlt noch etwas.':x[1][v].w))});
+    if(first===null)first=ok;const own=$('tw').value.trim();if(own.length<25)msg.push('<b>Eigener Satz:</b> Der Chefredakteur will einen ganzen Satz in Ihren eigenen Worten.');
+    if(msg.length){$('tfb').innerHTML=`<div class="fb wrong">Das Telegrafenamt gibt das Formular zurück:<br>${msg.join('<br>')}</div>`;return}
+    S.tele[d]={pts:first,max:T0.s.length,own};Snd.chime();save();done()};
+}
 const HEAD=['Der Zufall zieht in die Physik ein','Einstein gegen Bohr: Würfelt Gott?','Abschied von der Elektronenbahn'];
+/* Laborberichte: Fachbegriffe als Schreibhilfe (nur Hinweis, keine Bewertung) */
+const LABX={
+ exp1:{n:'Doppelspalt mit einzelnen Elektronen',note:'E1',terms:[['einzelne Treffer','einzeln|punkt'],['Interferenzstreifen','interferenz|streifen'],['Wahrscheinlichkeit','wahrscheinlich'],['Wegmessung','weg']]},
+ exp2:{n:'Einzelspalt mit verstellbarer Breite',note:'E2',terms:[['Spaltbreite','spalt'],['Ort und Impuls','impuls'],['Unbestimmtheit','unbestimmt|unschärf|unscharf|Δ'],['Auffächern','breit|fächer|beug']]},
+ exp3:{n:'Elektronenbeugung an Graphit',note:'E3',terms:[['Beschleunigungsspannung','spannung'],['Beugungsringe','ring'],['Wellenlänge','wellenlänge|λ'],['Impuls','impuls|schnell|geschwindig']]}
+};
+const NSTEP=7;
 let Q;
 function quiz(){
-  show('quiz'); Q=S.quiz||{step:0,pts:0,max:0,head:0,fazit:''}; S.quiz=Q; qstep();
+  show('quiz'); Q=S.quiz||{ver:2,step:0,pts:0,max:0,head:0,ownHead:'',fazit:'',lab:'',labx:''}; S.quiz=Q; qstep();
 }
 function qframe(title,intro,body){
-  $('quizWrap').innerHTML=`<p class="steps">Redaktionsschluss · Schritt ${Q.step+1} von 6</p><h1 style="font-variant:small-caps;margin:.1em 0">${title}</h1><p>${intro}</p><div class="card">${body}</div><div id="qfb"></div><p><button class="btn" id="qchk">Prüfen</button> <button class="btn" id="qnx" style="display:none">Weiter ▸</button></p>`;
-  window.scrollTo(0,0);
+  $('quizWrap').innerHTML=`<p class="steps">Redaktionsschluss · Schritt ${Q.step+1} von ${NSTEP} <button class="btn light" id="qsv" style="float:right;padding:.2em .6em;font-size:.8rem">💾 Spielstand sichern</button></p><h1 style="font-variant:small-caps;margin:.1em 0">${title}</h1><p>${intro}</p><div class="card">${body}</div><div id="qfb"></div><p><button class="btn" id="qchk">Prüfen</button> <button class="btn" id="qnx" style="display:none">Weiter ▸</button>${S.teach?' <button class="btn light" id="qfill">🎓 Lösung einsetzen</button>':''}</p>`;
+  $('qsv').onclick=saveFile;window.scrollTo(0,0);
 }
-function qdone(firstOK,total,got){ // Punkte nur beim ersten Versuch
-  return {firstOK,total,got};
-}
+// Auswahlaufgaben mit gemischten Antworten
+function mcHTML(name,opts){return shuf(opts.map((_,i)=>i)).map(j=>`<label class="mc" id="${name}_${j}"><input type="radio" name="${name}" value="${j}"> ${opts[j].t}</label>`).join('')}
+function mcCheck(name,opts){const s=document.querySelector(`input[name=${name}]:checked`),v=s?+s.value:-1,ok=v>=0&&!!opts[v].ok;
+  opts.forEach((_,j)=>$(name+'_'+j).className='mc'+(j===v?(ok?' ok':' bad'):''));return {v,ok,why:v>=0&&!ok?opts[v].w:''}}
+function mcSet(name,opts){document.querySelector(`input[name=${name}][value="${opts.findIndex(o=>o.ok)}"]`).checked=true}
+const fbGood=t=>`<div class="fb good">${t}</div>`,fbBad=t=>`<div class="fb wrong">${t}</div>`;
 function qstep(){
-  let tries=0; const fin=(pts,max)=>{ if(!Q['m'+Q.step]){Q.max+=max;Q.pts+=pts;Q['m'+Q.step]=1;save()} };
+  let tries=0,fill=null; const fin=(pts,max)=>{ if(!Q['m'+Q.step]){Q.max+=max;Q.pts+=pts;Q['m'+Q.step]=1;save()} };
   const nextBtn=()=>{ $('qchk').style.display='none'; $('qnx').style.display=''; $('qnx').onclick=()=>{Q.step++;save();qstep()} };
-  const fb=(ok,t)=>{$('qfb').innerHTML=`<div class="fb ${ok?'good':'wrong'}">${t}</div>`};
+  const fb=(ok,t)=>{$('qfb').innerHTML=ok?fbGood(t):fbBad(t)};
   if(Q.step===0){
     const order=['schroedinger','pauli','einstein','bohr','debroglie','dirac','heisenberg','born'];
     qframe('Wer hat was gesagt?','Der Chefredakteur blättert in Ihrem Notizbuch: „Ordnen Sie die Positionen den richtigen Köpfen zu.“',
       QA.map((q,i)=>`<div class="qrow"><div>${q[0]}</div><select id="a${i}"><option value="">– wählen –</option>${order.map(c=>`<option value="${c}">${C[c].n}</option>`).join('')}</select></div>`).join(''));
     $('qchk').onclick=()=>{tries++;let ok=0;QA.forEach((q,i)=>{const e=$('a'+i),r=e.value===q[1];e.className=r?'ok':'bad';if(r)ok++});
       fin(ok,QA.length); if(ok===QA.length){fb(1,'Alle Zuordnungen stimmen.');nextBtn()} else fb(0,`${ok} von ${QA.length} richtig. Korrigieren Sie die rot markierten Felder.${tries>=2?' Tipp: Ihr Notizbuch nennt bei jeder Notiz die Quelle.':''}`)};
+    fill=()=>QA.forEach((q,i)=>$('a'+i).value=q[1]);
   } else if(Q.step===1){
     let cur=[3,0,5,2,4,1];
     qframe('Was geschah wann?','„Unsere Leser brauchen die Vorgeschichte. Bringen Sie die Etappen in die richtige Reihenfolge – das Älteste nach oben.“','<div id="ol"></div>');
@@ -636,13 +769,14 @@ function qstep(){
       d.appendChild(u);d.appendChild(w);L.appendChild(d)})};draw();
     $('qchk').onclick=()=>{tries++;let ok=0;[...$('ol').children].forEach((d,i)=>{const r=cur[i]===i;d.className='ord '+(r?'ok':'bad');if(r)ok++});
       fin(ok===6?3:ok>=4?1:0,3); if(ok===6){fb(1,'Die Chronologie stimmt: '+QB.map(x=>x[0]).join(' → '));nextBtn()} else fb(0,`${ok} von 6 Etappen stehen an der richtigen Stelle.${tries>=2?' Tipp: Erst kamen die Quanten des Lichts, dann die Wellen der Materie, dann die beiden Mechaniken, zuletzt die Unbestimmtheit.':''}`)};
+    fill=()=>{cur=[0,1,2,3,4,5];draw()};
   } else if(Q.step===2){
-    qframe('Vier Abschiede von der klassischen Physik','„Jetzt der Kern Ihres Artikels. Was folgt aus der Quantenmechanik für unser Weltbild? Wählen Sie jeweils die treffende Erklärung.“',
-      QC.map((q,i)=>`<p><b>${q.q}</b></p>${q.o.map((o,j)=>`<label class="mc" id="c${i}_${j}"><input type="radio" name="c${i}" value="${j}"> ${o}</label>`).join('')}<div id="cf${i}"></div>`).join('<hr>'));
-    $('qchk').onclick=()=>{tries++;let ok=0;QC.forEach((q,i)=>{const s=document.querySelector(`input[name=c${i}]:checked`);const v=s?+s.value:-1;const r=v===q.c;
-      q.o.forEach((_,j)=>$(`c${i}_${j}`).className='mc'+(j===v?(r?' ok':' bad'):''));
-      $('cf'+i).innerHTML=r?`<div class="fb good">${q.f}</div>`:(v>=0?'<div class="fb wrong">Das trifft es nicht. Denken Sie an Ihre Notizen.</div>':'');if(r)ok++});
-      fin(ok,4); if(ok===4){fb(1,'Alle vier Folgerungen sind richtig erklärt.');nextBtn()} else fb(0,`${ok} von 4 richtig.`)};
+    qframe('Vier Abschiede von der klassischen Physik','„Jetzt der Kern Ihres Artikels. Was folgt aus der Quantenmechanik für unser Weltbild? Wählen Sie jeweils die treffende Erklärung – Vorsicht, die falschen klingen auch gelehrt.“',
+      QC.map((q,i)=>`<p><b>${q.q}</b></p>${mcHTML('c'+i,q.o)}<div id="cf${i}"></div>`).join('<hr>'));
+    $('qchk').onclick=()=>{tries++;let ok=0;QC.forEach((q,i)=>{const r=mcCheck('c'+i,q.o);
+      $('cf'+i).innerHTML=r.ok?fbGood(q.f):r.v>=0?fbBad('Nicht ganz: '+r.why):'';if(r.ok)ok++});
+      fin(ok,4); if(ok===4){fb(1,'Alle vier Folgerungen sind richtig erklärt.');nextBtn()} else fb(0,`${ok} von 4 richtig. Lesen Sie die Hinweise unter den rot markierten Antworten.`)};
+    fill=()=>QC.forEach((q,i)=>mcSet('c'+i,q.o));
   } else if(Q.step===3){
     const sci=(id,u)=>`<span class="sci"><input type="text" id="${id}m" inputmode="decimal" placeholder="z. B. 3,2"> · 10<sup><input type="text" id="${id}e" inputmode="numeric" placeholder="−20"></sup> ${u}</span>`;
     qframe('Der Chefredakteur will Zahlen','„Unbestimmtheit – schön und gut. Aber wie groß ist sie? Rechnen Sie es unseren Lesern vor.“',
@@ -650,46 +784,76 @@ function qstep(){
        <p class="small">h = 6,626 · 10⁻³⁴ Js · m<sub>e</sub> = 9,109 · 10⁻³¹ kg · Δx · Δp ≥ h/(4π) · p = m · v</p>
        <p><b>a)</b> Wie groß ist die Impulsunbestimmtheit mindestens?<br>Δp ≥ ${sci('p','kg·m/s')}</p>
        <p><b>b)</b> Welcher Geschwindigkeitsunbestimmtheit entspricht das?<br>Δv ≥ ${sci('v','m/s')}</p>
-       <p><b>c)</b> Für ein Staubkorn (m = 10⁻⁹ kg, Δx = 10⁻⁶ m) ergibt dieselbe Rechnung Δv ≈ 5 · 10⁻²⁰ m/s. Was folgt daraus?</p>
-       ${['Auch Staubkörner haben keine Bahn.','Bei makroskopischen Körpern ist die Unbestimmtheit unmessbar klein – deshalb gilt dort praktisch die klassische Physik.','Die Unbestimmtheitsrelation gilt nur für Elektronen.'].map((o,j)=>`<label class="mc" id="d_${j}"><input type="radio" name="d" value="${j}"> ${o}</label>`).join('')}`);
+       <p><b>c)</b> ${QD.q}</p>${mcHTML('d',QD.o)}<div id="df"></div>`);
     const val=id=>{const m=parseFloat($(id+'m').value.replace(',','.')),e=parseInt($(id+'e').value.replace('−','-').replace('–','-'),10);return m*Math.pow(10,e)};
     const near=(x,t)=>isFinite(x)&&Math.abs(x-t)/t<=.06;
-    $('qchk').onclick=()=>{tries++;const a=near(val('p'),5.273e-25),b=near(val('v'),5.789e5);const s=document.querySelector('input[name=d]:checked'),c=s&&s.value==='1';
+    $('qchk').onclick=()=>{tries++;const a=near(val('p'),5.273e-25),b=near(val('v'),5.789e5),r=mcCheck('d',QD.o),c=r.ok;
       ['pm','pe'].forEach(i=>$(i).className=a?'ok':'bad');['vm','ve'].forEach(i=>$(i).className=b?'ok':'bad');
-      [0,1,2].forEach(j=>$('d_'+j).className='mc'+(s&&+s.value===j?(c?' ok':' bad'):''));
+      $('df').innerHTML=r.v>=0&&!c?fbBad('Nicht ganz: '+r.why):'';
       const ok=(a?1:0)+(b?1:0)+(c?1:0); fin(ok,3);
       if(ok===3){fb(1,'Richtig: Δp ≈ 5,3 · 10⁻²⁵ kg·m/s und Δv ≈ 5,8 · 10⁵ m/s – fast 600 km pro Sekunde! Ein Elektron im Atom kann also gar nicht ruhen oder einer scharfen Bahn folgen.');nextBtn()}
       else fb(0,`${ok} von 3 richtig.`+(tries>=2?' Tipp: Δp = h / (4π · Δx), danach Δv = Δp / m<sub>e</sub>.':'')+(tries>=4?' Lösung: Δp ≈ 5,3 · 10⁻²⁵ kg·m/s, Δv ≈ 5,8 · 10⁵ m/s.':''))};
+    fill=()=>{$('pm').value='5,27';$('pe').value='-25';$('vm').value='5,79';$('ve').value='5';mcSet('d',QD.o)};
   } else if(Q.step===4){
-    qframe('Die Probe aufs Exempel','„Letzte Sachfrage, dann dürfen Sie schreiben.“',
-      `<p><b>${QE.q}</b></p>${QE.o.map((o,j)=>`<label class="mc" id="e_${j}"><input type="radio" name="e" value="${j}"> ${o}</label>`).join('')}`);
-    $('qchk').onclick=()=>{tries++;const s=document.querySelector('input[name=e]:checked'),c=s&&+s.value===QE.c;
-      [0,1,2].forEach(j=>$('e_'+j).className='mc'+(s&&+s.value===j?(c?' ok':' bad'):''));fin(c?1:0,1);
-      if(c){fb(1,QE.f);nextBtn()}else fb(0,'Nicht ganz. Denken Sie an Bohrs Antwort auf Einsteins bewegliche Blende.')};
+    qframe('Die Probe aufs Exempel','„Letzte Sachfrage, dann dürfen Sie schreiben.“',`<p><b>${QE.q}</b></p>${mcHTML('e',QE.o)}`);
+    $('qchk').onclick=()=>{tries++;const r=mcCheck('e',QE.o);fin(r.ok?1:0,1);
+      if(r.ok){fb(1,QE.f);nextBtn()}else fb(0,r.v<0?'Wählen Sie eine Antwort.':'Nicht ganz: '+r.why)};
+    fill=()=>mcSet('e',QE.o);
+  } else if(Q.step===5){
+    const done=Object.keys(LABX).filter(k=>has(LABX[k].note)),pre=Q.labx||done[0]||'exp1';
+    qframe('Selbst nachgeprüft','„Unsere Leser lieben Experimente. Schreiben Sie einen eigenen Absatz: Beschreiben Sie in 3 bis 5 Sätzen einen Versuch aus dem Labor – Aufbau, Beobachtung und was er über die Quantenwelt verrät.“',
+      `<p><b>Welchen Versuch beschreiben Sie?</b></p>${Object.keys(LABX).map(k=>`<label class="mc"><input type="radio" name="lx" value="${k}" ${k===pre?'checked':''}> ${LABX[k].n}${has(LABX[k].note)?' <i class="small">(selbst durchgeführt)</i>':''}</label>`).join('')}
+       ${done.length?'':'<p class="small">Sie waren noch nicht im Labor. Beschreiben Sie dann den Doppelspalt-Versuch, wie Born, Bohr und Einstein ihn erklärt haben.</p>'}
+       <p><b>Ihr Absatz</b> (mindestens 3 Sätze):</p><textarea id="lt" maxlength="900" style="min-height:8em">${esc(Q.lab)}</textarea>
+       <p class="small" id="lterms"></p>`);
+    const terms=()=>{const k=document.querySelector('input[name=lx]:checked').value,t=$('lt').value.toLowerCase();
+      $('lterms').innerHTML='Schreibhilfe – kommen diese Fachbegriffe vor? '+LABX[k].terms.map(([n,re])=>(new RegExp(re,'i').test(t)?'✔ ':'○ ')+n).join(' · ')};
+    $('lt').oninput=terms;document.querySelectorAll('input[name=lx]').forEach(r=>r.onchange=terms);terms();
+    $('qchk').textContent='Absatz abgeben ▸';
+    $('qchk').onclick=()=>{const t=$('lt').value.trim();Q.labx=document.querySelector('input[name=lx]:checked').value;Q.lab=t;save();
+      if(t.length<120||(t.match(/[.!?](\s|$)/g)||[]).length<3){fb(0,'Der Chefredakteur schüttelt den Kopf: „Drei Sätze mindestens – Aufbau, Beobachtung, Deutung.“');return}
+      Q.step++;save();qstep()};
+    fill=()=>{if($('lt').value.trim().length<120)$('lt').value='Elektronen werden einzeln auf zwei enge Spalte geschossen. Jedes Elektron erzeugt auf dem Schirm einen einzelnen Punkt an einer zufälligen Stelle. Erst viele Treffer ergeben Interferenzstreifen, die der Wahrscheinlichkeit |ψ|² folgen. Misst man den Weg, verschwinden die Streifen.';terms()};
   } else {
-    qframe('Ihr Artikel','„Gute Arbeit. Wählen Sie die Schlagzeile – und schreiben Sie den Schlussabsatz selbst.“',
+    qframe('Schlagzeile und Fazit','„Gute Arbeit. Wählen Sie die Schlagzeile – oder texten Sie selbst eine. Und schreiben Sie den Schlussabsatz.“',
       `<p><b>Schlagzeile</b></p>${HEAD.map((o,j)=>`<label class="mc"><input type="radio" name="hd" value="${j}" ${j===Q.head?'checked':''}> ${o}</label>`).join('')}
+       <label class="mc"><input type="radio" name="hd" value="-1" ${Q.head===-1?'checked':''}> Eigene Schlagzeile: <input type="text" id="oh" maxlength="70" style="width:60%" value="${esc(Q.ownHead)}"></label>
        <p><b>Ihr persönliches Fazit</b> (2–4 Sätze): Was hat Sie an der Quantenmechanik am meisten überrascht – und wessen Haltung überzeugt Sie mehr, Einsteins oder Bohrs?</p>
        <textarea id="fz" maxlength="700">${esc(Q.fazit)}</textarea>`);
+    $('oh').oninput=()=>{document.querySelector('input[name=hd][value="-1"]').checked=true};
     $('qchk').textContent='Artikel drucken lassen ▸';
-    $('qchk').onclick=()=>{Q.head=+document.querySelector('input[name=hd]:checked').value;Q.fazit=$('fz').value.trim();
+    $('qchk').onclick=()=>{Q.head=+document.querySelector('input[name=hd]:checked').value;Q.ownHead=$('oh').value.trim();Q.fazit=$('fz').value.trim();save();
+      if(Q.head===-1&&Q.ownHead.length<8){fb(0,'Ihre eigene Schlagzeile fehlt noch – oder wählen Sie eine der vorgeschlagenen.');return}
       if(Q.fazit.length<30){fb(0,'Der Chefredakteur schüttelt den Kopf: „Ein bisschen mehr eigene Meinung, bitte.“');return}
       S.phase_='art';save();article()};
+    fill=()=>{if($('fz').value.trim().length<30)$('fz').value='Testlauf der Lehrkraft: Mich hat überrascht, dass der Zufall zum Fundament der Physik gehört. Bohrs Haltung überzeugt mich mehr, weil die Experimente ihm recht geben.'};
   }
+  if(S.teach&&fill)$('qfill').onclick=fill;
 }
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
-/* Artikel */
+/* Artikel: Telegramme, eigene Texte und gesammelte Notizen ergeben den Text */
 function article(){
-  show('art'); const Q=S.quiz, pct=Q.max?Q.pts/Q.max:0, nn=S.notes.length;
+  show('art'); const Q=S.quiz, tp=[1,2,3].reduce((a,d)=>a+(S.tele[d]?S.tele[d].pts:0),0), tm=[1,2,3].reduce((a,d)=>a+(S.tele[d]?S.tele[d].max:0),0);
+  const pct=(Q.max+tm)?(Q.pts+tp)/(Q.max+tm):0, nn=S.notes.length;
   const rank=pct>=.85?['Titelseite!','Der Chefredakteur ist begeistert: kaum eine Korrektur nötig.']:pct>=.65?['Seite 3','Solide Arbeit – ein paar Stellen musste die Redaktion nachbessern.']:pct>=.4?['Wissenschaftsbeilage','Der Artikel erscheint, aber der Rotstift hatte einiges zu tun.']:['Lokalteil','Der Artikel erscheint – nach gründlicher Überarbeitung. Lesen Sie ihn noch einmal genau.'];
-  $('artTools').innerHTML=`<div class="rating"><b>Ihr Artikel erscheint: ${rank[0]}</b><br><span class="small">${rank[1]} Im ersten Anlauf richtig: ${Q.pts} von ${Q.max} Punkten · ${nn} von ${Object.keys(NOTES).length} Notizen gesammelt · ${PHYS.filter(inPhoto).length} von 11 auf dem Gruppenfoto · ${refuted()} Gerüchte widerlegt.</span></div>
-   <button class="btn" onclick="window.print()">Drucken / als PDF speichern</button><button class="btn light" id="rs">Neu beginnen</button>`;
-  $('rs').onclick=()=>{if(confirm('Spielstand wirklich löschen und neu beginnen?')){try{localStorage.removeItem('solvay1927v2')}catch(e){}location.reload()}};
-  const opt=(n,t)=>has(n)?t:'';
+  $('artTools').innerHTML=`<div class="rating"><b>Ihr Artikel erscheint: ${rank[0]}</b><br><span class="small">${rank[1]} Im ersten Anlauf richtig: Redaktionsschluss ${Q.pts} von ${Q.max}${tm?`, Telegramme ${tp} von ${tm}`:''} · ${nn} von ${Object.keys(NOTES).length} Notizen gesammelt · ${PHYS.filter(inPhoto).length} von 11 auf dem Gruppenfoto · ${refuted()} Gerüchte widerlegt.</span></div>
+   <button class="btn" onclick="window.print()">Drucken / als PDF speichern</button><button class="btn light" id="asv">💾 Spielstand sichern</button><button class="btn light" id="rs">Neu beginnen</button>`;
+  $('asv').onclick=saveFile;
+  $('rs').onclick=()=>{if(confirm('Spielstand wirklich löschen und neu beginnen? Sichern Sie ihn vorher mit 💾, wenn Sie ihn behalten wollen.')){try{localStorage.removeItem('solvay1927v2')}catch(e){}location.reload()}};
+  const opt=(n,t)=>has(n)?t:'', own=d=>S.tele[d]&&S.tele[d].own?`<p>${esc(S.tele[d].own)}</p>`:'';
+  const head=Q.head===-1&&Q.ownHead?esc(Q.ownHead):HEAD[Q.head>=0?Q.head:0];
+  const labTxt={E1:'Am Doppelspalt im Labor des Instituts konnte unser Berichterstatter selbst beobachten: Jedes Elektron landet als einzelner Punkt, erst viele bilden Streifen – und die verschwinden, sobald man den Weg misst.',
+    E2:'Im Labor zeigte ein verstellbarer Spalt die Relation ganz ohne Formeln: Je enger der Spalt, desto breiter fächert der Elektronenstrahl auf.',
+    E3:'In einer Beugungsröhre erzeugen Elektronen an einer Graphitfolie Ringe wie Röntgenlicht. Unser Berichterstatter hat ihren Durchmesser gemessen: Die Wellenlänge stimmt mit λ = h/p überein.'};
+  const lab=n=>has(n)&&!(Q.lab&&LABX[Q.labx]&&LABX[Q.labx].note===n)?`<p>${labTxt[n]}</p>`:'';
+  const pauli=['<b>Wolfgang Pauli</b>, das „Gewissen der Physik“, fand 1925 das Ausschließungsprinzip: Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Es begründet Bohrs Schalenbau der Atome und das Periodensystem.',
+    opt('P2','Als Erster berechnete er das Wasserstoffatom mit Heisenbergs Matrizen.'),opt('P3','Den Spin des Elektrons, den Ehrenfests Schüler Uhlenbeck und Goudsmit vorgeschlagen hatten, baute er in die Theorie ein.')].join(' ');
+  const dirac=['<b>Paul Dirac</b> zeigte, worauf die Unbestimmtheit beruht: x·p ist nicht p·x.',
+    opt('N12','Er vereinte Wellen- und Matrizenmechanik in einem gemeinsamen Rahmen.'),opt('D2','Er wandte die Quantenregeln auf das Licht selbst an – so wurden Einsteins Photonen Teil der Theorie.')].join(' ');
   $('paper').innerHTML=`
   <div class="mast"><h1>Berliner Morgen-Kurier</h1><div><span>Sonderbericht aus Brüssel</span><span>Sonnabend, 29. Oktober 1927</span><span>Wissenschaft</span></div></div>
-  <h2>${HEAD[Q.head]}</h2>
+  <h2>${head}</h2>
   <p class="sub">Auf der fünften Solvay-Konferenz ringen die führenden Physiker um die Deutung der neuen Quantenmechanik</p>
   <p class="by">Von unserem Sonderberichterstatter ${esc(S.name)}</p>
   ${photoHTML(true)}<p class="cap">Die Teilnehmer der Konferenz, soweit unser Berichterstatter sie vor die Kamera bekam (${PHYS.filter(inPhoto).length} von 11).</p>
@@ -698,36 +862,42 @@ function article(){
    <h4>Wie es dazu kam</h4>
    <p>${QB.map(x=>`<b>${x[0]}</b> ${x[1]}.`).join(' ')}</p>
    <h4>Welle und Wahrscheinlichkeit</h4>
-   <p>Louis de Broglie ordnet jedem Teilchen eine Welle zu:</p><p class="formula">λ = h / p</p>
-   <p>Erwin Schrödinger fand die Gleichung für die zugehörige Wellenfunktion ψ. Doch was schwingt da? Max Born gab die Antwort, die sich durchgesetzt hat: Das Amplitudenquadrat |ψ|² ist die <b>Antreffwahrscheinlichkeitsdichte</b>. Die Welle sagt, wo ein Elektron wahrscheinlich nachgewiesen wird – nicht, wo es „ist“. Am Doppelspalt landet jedes Elektron als Ganzes an einem Punkt; erst viele Treffer bilden das Interferenzmuster.</p>
-   ${opt('N11','<p>Heisenbergs Matrizenmechanik und Schrödingers Wellenmechanik sind dabei, wie Wolfgang Pauli betont, mathematisch gleichwertig'+opt('N12',' – Paul Dirac hat beide in einem gemeinsamen Rahmen vereint')+'. Gestritten wird um die Deutung.</p>')}
-   <h4>Zwei stille Baumeister</h4>
-   <p><b>Wolfgang Pauli</b>, das „Gewissen der Physik“, fand 1925 das Ausschließungsprinzip: Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Es begründet Bohrs Schalenbau der Atome und das Periodensystem. Pauli berechnete als Erster das Wasserstoffatom mit Heisenbergs Matrizen und baute den Spin des Elektrons in die Theorie ein.</p>
-   <p><b>Paul Dirac</b> zeigte, worauf alles beruht: In der Quantenmechanik zählt die Reihenfolge, x·p ist nicht p·x. Daraus folgt die Unbestimmtheitsrelation. Er vereinte Wellen- und Matrizenmechanik und wandte die Quantenregeln auf das Licht selbst an – so wurden Einsteins Photonen Teil der Theorie.</p>
+   <p>${teleProse(1)}</p>${own(1)}
+   ${opt('N13','<p>Born und Heisenberg nennen die Quantenmechanik eine „abgeschlossene Theorie“: Der Zufall gehört zu ihrem Fundament.</p>')}
+   ${opt('N11','<p>Heisenbergs Matrizenmechanik und Schrödingers Wellenmechanik sind dabei, wie Wolfgang Pauli betont, mathematisch gleichwertig. Gestritten wird um die Deutung.</p>')}
+   ${lab('E1')}${lab('E3')}
    <h4>Die Unbestimmtheitsrelation</h4>
-   <p>Werner Heisenberg zeigt: Ort und Impuls eines Quantenobjekts sind nie zugleich scharf bestimmt.</p><p class="formula">Δx · Δp ≥ h / (4π)</p>
+   <p>${teleProse(2)}</p>${own(2)}
    <div class="box"><b>Rechenbeispiel.</b> Elektron im Atom, Δx = 1,0 · 10⁻¹⁰ m:<br>Δp ≥ h/(4π·Δx) ≈ 5,3 · 10⁻²⁵ kg·m/s<br>Δv = Δp/m<sub>e</sub> ≈ 5,8 · 10⁵ m/s.<br>Für ein Staubkorn (10⁻⁹ kg, Δx = 10⁻⁶ m) dagegen Δv ≈ 5 · 10⁻²⁰ m/s – unmessbar klein. Darum merken wir im Alltag nichts davon.</div>
-   <p>Das ist kein Mangel der Messgeräte, sondern eine Eigenschaft der Natur. Der Begriff „Bahn“ verliert im Atom seinen Sinn. Entsprechend gilt für Energie und Zeit: ΔE · Δt ≥ h/(4π).</p>
+   <p>Das ist kein Mangel der Messgeräte, sondern eine Eigenschaft der Natur.</p>${lab('E2')}
+   <h4>Zwei stille Baumeister</h4>
+   <p>${pauli}</p><p>${dirac}</p>
    <h4>Vier Abschiede von der klassischen Physik</h4>
-   ${QC.map(q=>`<p><b>${q.k}.</b> ${q.o[q.c]} <i>${q.f}</i></p>`).join('')}
+   ${QC.map(q=>`<p><b>${q.k}.</b> ${q.o.find(o=>o.ok).t}</p>`).join('')}
    <h4>Einstein gegen Bohr</h4>
-   <p>Albert Einstein hält die Theorie für unvollständig; der Zufall könne nicht das letzte Wort sein. Sein Gedankenexperiment: Am Doppelspalt soll der Rückstoß einer beweglichen Blende verraten, welchen Weg das Teilchen nahm – ohne das Interferenzmuster zu zerstören. Niels Bohr kontert: Auch die Blende unterliegt der Unbestimmtheitsrelation. Wer ihren Rückstoß genau misst, kennt ihren Ort nicht mehr genau genug – das Muster verwischt. <b>Weg-Information und Interferenz schließen sich aus.</b> Bohr nennt Wellen- und Teilchenbild <b>komplementär</b>: Welches sich zeigt, bestimmt der Versuchsaufbau.</p>
-   <div class="box"><b>Nachtrag der Redaktion (1935 und später).</b> Einstein gab nicht auf. Mit Podolsky und Rosen (EPR) wies er auf verschränkte Teilchen hin, deren Messergebnisse über beliebige Entfernung zusammenhängen. Schrödinger spitzte die Deutungsfrage mit seiner berühmten Katze zu, die „tot und lebendig zugleich“ wäre. Experimente nach einer Idee von John Bell (1964) haben seither entschieden: Die Quantenmechanik behält recht, die Natur ist nichtlokal (Nobelpreis 2022 für Aspect, Clauser, Zeilinger). Dirac fand 1928 eine Gleichung, die Antiteilchen vorhersagt; 1932 wurde das Positron entdeckt.</div>
+   <p>${teleProse(3)}</p>${own(3)}
+   ${fl('eFinal')?'<p>Einstein räumt ein, die Theorie sei in sich widerspruchsfrei. Vollständig sei sie deshalb noch lange nicht.</p>':''}
+   ${Q.lab?`<h4>Selbst nachgeprüft: ${LABX[Q.labx]?LABX[Q.labx].n:'Im Labor'}</h4><p>${esc(Q.lab)}</p>`:''}
+   <div class="box"><b>Nachtrag der Redaktion (1928 und später).</b> Einstein gab nicht auf. Mit Podolsky und Rosen (EPR) wies er 1935 auf verschränkte Teilchen hin, deren Messergebnisse über beliebige Entfernung zusammenhängen. Schrödinger spitzte die Deutungsfrage mit seiner Katze zu, die „tot und lebendig zugleich“ wäre. Experimente nach einer Idee von John Bell (1964) haben seither entschieden: Die Quantenmechanik behält recht, die Natur ist nichtlokal (Nobelpreis 2022 für Aspect, Clauser, Zeilinger). Dirac fand 1928 eine Gleichung, die Antiteilchen vorhersagt; 1932 wurde das Positron entdeckt.</div>
    ${rumBox()}<h4>Fazit des Berichterstatters</h4>
    <p>${esc(Q.fazit)}</p>
   </div>
-  <p class="small" style="border-top:1px solid #000;margin-top:1em;padding-top:.4em">Lernspiel „Brüssel 1927“ · Physik, Technisches Gymnasium, BPE 11.2 · Die Zeitung ist erfunden, die Gespräche im Spiel sind frei formuliert.</p>`;
+  <p class="small" style="border-top:1px solid #000;margin-top:1em;padding-top:.4em">Lernspiel „Brüssel 1927“ · Physik, Technisches Gymnasium, BPE 11.2 · Die Zeitung ist erfunden. Die Gespräche im Spiel sind nacherzählt; bekannte Aussprüche folgen eng den überlieferten Formulierungen, sind aber keine wörtlichen Zitate.</p>`;
 }
 
 
 function rumBox(){const d=Object.keys(S.rumors).filter(k=>S.rumors[k]==='done');return d.length?'<div class="box"><b>Richtigstellungen.</b> Anders als ein Brüsseler Abendblatt meldete, gilt: '+d.map(k=>RUM[k].fix).join(' ')+'</div>':''}
 /* ---------- Zustand ---------- */
-const fresh=()=>({v:2,name:'',look:{hair:'#5a3d28',style:'cap',coat:'#b59a6a',hat:''},day:1,phase:0,loc:'saal',px:480,py:475,notes:[],met:[],asked:[],flags:[],rumors:{},cnt:{},acts:0,heard:[],read:[],phase_:'start',quiz:null,snd:false});
+const fresh=()=>({v:2,name:'',look:{hair:'#5a3d28',style:'cap',coat:'#b59a6a',hat:''},day:1,phase:0,loc:'saal',px:480,py:475,notes:[],met:[],asked:[],flags:[],rumors:{},cnt:{},acts:0,heard:[],read:[],phase_:'start',quiz:null,snd:false,tele:{},teach:false});
 let S=fresh();
 const has=n=>S.notes.includes(n), met=c=>S.met.includes(c), fl=f=>S.flags.includes(f);
 const addFlag=f=>{if(f&&!fl(f))S.flags.push(f)};
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function save(){try{localStorage.setItem('solvay1927v2',JSON.stringify(S))}catch(e){}}
-function load(){try{const d=JSON.parse(localStorage.getItem('solvay1927v2'));if(d&&d.v===2&&d.phase_!=='start')return d}catch(e){}return null}
+// Ältere Spielstände ergänzen: neue Felder mit Standardwerten, Quiz der alten Fassung (andere Schrittfolge) neu beginnen
+function fixState(d){if(!d||d.v!==2||!d.phase_||d.phase_==='start')return null;const f=fresh();d=Object.assign(f,d);d.look=Object.assign(fresh().look,d.look||{});
+  if(d.quiz&&!d.quiz.ver){if(d.phase_==='quiz')d.quiz=null;else d.quiz.ver=2}return d}
+function load(){try{return fixState(JSON.parse(localStorage.getItem('solvay1927v2')))}catch(e){}return null}
 const $=id=>document.getElementById(id);
 const sn=c=>c==='debroglie'?'de Broglie':C[c].x?C[c].n.replace(/^De[rn] /,''):C[c].n.split(' ').pop();
 function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('on',e.id===id));window.scrollTo(0,0);running=(id==='game')}
@@ -757,7 +927,7 @@ const inPhoto=c=>(S.cnt[c]||0)>=3;
   N5:{need:2,give:'D1',a:()=>'Heisenbergs Relation. Ja. Sie ist keine Zutat – sie folgt aus der Mathematik. Bei gewöhnlichen Zahlen ist 3 · 5 dasselbe wie 5 · 3. Für Ort x und Impuls p eines Quantenobjekts gilt das nicht: x·p und p·x unterscheiden sich, und zwar um einen festen Betrag, den h bestimmt. Erst den Ort messen und dann den Impuls ist etwas anderes als umgekehrt. Zwei Größen, die sich so verhalten, können nie gleichzeitig scharfe Werte haben. Heisenberg hat es am Mikroskop anschaulich gemacht. Bewiesen wird es so.'},
   N1:{need:2,give:'D2',a:()=>'Einsteins Lichtquanten. Bisher behandelte die Quantenmechanik nur die Materie; das Licht lief als gewöhnliche Welle nebenher. Das ist unbefriedigend. Ich habe dieses Jahr das Strahlungsfeld selbst den Quantenregeln unterworfen. Dann besteht es aus Photonen, die erzeugt und vernichtet werden. Ein angeregtes Atom sendet von selbst ein Photon aus – das hatte Einstein 1916 fordern müssen. Jetzt kommt es heraus.'},
   N6:{a:()=>'Heisenberg wusste zuerst nicht, dass er Matrizen benutzt. Mir fiel auf, dass sein Produkt von der Reihenfolge abhängt. Das war der Schlüssel.'},
-  P1:{a:()=>'Paulis Prinzip stimmt. Es lässt sich als Symmetrieforderung an die Wellenfunktion schreiben. Fermi und ich haben daraus die Statistik der Elektronen abgeleitet.'},
+  P1:{a:()=>'Paulis Prinzip stimmt. Man kann es als Symmetrieforderung an die Wellenfunktion schreiben: Vertauscht man zwei Elektronen, wechselt ψ das Vorzeichen. Daraus folgt eine eigene Statistik für Elektronen. Fermi in Florenz hat sie Anfang 1926 aus Paulis Prinzip gewonnen, ich einige Monate später auf diesem Weg – unabhängig voneinander. Seine Arbeit hatte ich übersehen; er hat mich höflich darauf hingewiesen.'},
   N8:{a:()=>'Einstein sorgt sich um die Deutung. Ich meine: Wenn die Gleichungen stimmen, ist das Wichtigste getan.'}});
  // Reaktionen der anderen auf Pauli und Dirac
  T.bohr.react.P1={a:()=>'Paulis Prinzip! Ich hatte den Schalenbau der Atome aus den Spektren und der Chemie erschlossen, mehr erraten als begründet. Warum eine Schale „voll“ ist, konnte ich nicht sagen. Pauli hat es gesagt. Er ist unser schärfster Kritiker – und fast immer zu Recht.'};
@@ -768,6 +938,9 @@ const inPhoto=c=>(S.cnt[c]||0)>=3;
  T.bohr.react.E1={a:()=>'Sie haben es selbst ausprobiert – das ist das Beste. Mit Wegmessung keine Streifen, ohne Wegmessung Streifen. Das ist Komplementarität zum Anfassen.'};
  T.einstein.react.E1={a:()=>'Hübsch, nicht? Jedes Elektron weiß anscheinend, wo es nicht hindarf. Aber woher weiß es das? Die Statistik stimmt, gewiss. Mich interessiert der einzelne Fall.'};
  T.einstein.react.D2={a:()=>'Der junge Dirac. Ich habe Mühe mit ihm – dieses Balancieren auf schmalem Grat zwischen Genie und Wahnsinn ist mir unheimlich. Aber dass meine Lichtquanten nun aus einer Theorie folgen, statt nur gefordert zu werden: Das nehme ich gern.'};
+ T.debroglie.react.E3={a:()=>'Voilà! Ringe, wie beim Röntgenlicht an einem Kristall – nur mit Elektronen. Und je höher die Spannung, desto größer der Impuls und desto enger die Ringe: λ = h/p. Das ist meine Welle, sichtbar gemacht.'};
+ T.schroedinger.react.E3={a:()=>'Da sehen Sie es: Beugung ist eine Eigenschaft von Wellen. Wer da noch von kleinen Kugeln redet, hat nicht hingeschaut.'};
+ T.born.react.E3={a:()=>'Schöne Ringe. Aber haben Sie den Strahl auch ganz schwach gestellt? Dann trifft jedes Elektron einzeln an einem Punkt auf – erst viele bilden die Ringe. Die Welle sagt, wo es wahrscheinlich ankommt.'};
  T.heisenberg.react.E2={a:()=>'Enger Spalt, breiter Fächer – da sehen Sie meine Relation ohne jedes Mikroskop. Wer den Ort festlegt, verliert die Richtung.'};
  T.schroedinger.react.E2={a:()=>'Das ist reine Wellenbeugung, wie beim Licht. Dafür braucht man keine Göttinger Philosophie.'};
  T.ehrenfest.react.P1={flag:'spinTip',a:()=>'Paulis Prinzip, sehr schön. Wissen Sie, was dazugehört? Zwei meiner Studenten in Leiden, Uhlenbeck und Goudsmit, haben 1925 vorgeschlagen, dass sich das Elektron wie ein winziger Kreisel verhält – der Spin. Pauli hat die Idee zuerst verspottet. Fragen Sie ihn heute danach!'};
@@ -802,7 +975,7 @@ const inPhoto=c=>(S.cnt[c]||0)>=3;
  T.laborant={
   greet:()=>'Vorsicht mit den Apparaten! Aber sehen Sie sich ruhig um – so etwas bekommt die Presse selten zu Gesicht.',
   topics:[
-   {id:'la1',q:'Was kann ich hier ausprobieren?',a:()=>'Zwei Versuche mit Elektronenstrahlen: links der Doppelspalt, rechts ein einzelner Spalt mit verstellbarer Breite. Treten Sie an den Tisch heran. Ich frage Sie vorher, was Sie erwarten – das machen wir mit den Studenten auch so.'},
+   {id:'la1',q:'Was kann ich hier ausprobieren?',a:()=>'Drei Versuche mit Elektronen: links der Doppelspalt mit Wegmessung, rechts ein einzelner Spalt mit verstellbarer Breite und vorn die Beugungsröhre, in der Elektronen an Graphit Ringe bilden. Treten Sie an den Tisch heran. Ich frage Sie vorher, was Sie erwarten – das machen wir mit den Studenten auch so.'},
    {id:'la2',if:()=>S.day>=2,q:'Was ist mit der Pumpe dort hinten?',a:()=>'Kaputt. Sie lief einwandfrei – bis Professor Pauli draußen den Gang entlangging. Die Kollegen nennen das den Pauli-Effekt: Wo dieser Theoretiker auftaucht, versagen die Apparate. Er findet das übrigens selbst sehr komisch.'}],
   react:{},def:'Das ist Theorie. Ich bin für das zuständig, was man anfassen kann.'};
 })();
@@ -822,7 +995,9 @@ function thow(t){
 }
 function hintText(){
   const m=missing();
-  if(!m.length)return S.day<3?'Für heute haben Sie alles Wichtige beisammen. Sehen Sie sich ruhig noch um – oder beenden Sie den Tag.':'Sie haben alles beisammen. Sehen Sie sich gern noch um, dann beenden Sie die Konferenz.';
+  if(!m.length){const lx=S.day===1?(!has('E1')?'An der Doppelspalt-Apparatur im Labor sehen Sie selbst, was Born mit Wahrscheinlichkeit meint.':!has('E3')?'In der Beugungsröhre im Labor können Sie de Broglies Wellenlänge selbst nachmessen.':'')
+      :S.day===2?(!has('E2')?'Am Einzelspalt im Labor können Sie Heisenbergs Relation selbst beobachten.':''):(!has('E1')?'Am Doppelspalt im Labor können Sie Einsteins Frage selbst prüfen: Weg und Streifen zugleich?':'');
+    return (S.day<3?'Für heute haben Sie alles Wichtige beisammen. ':'Sie haben alles beisammen. ')+(lx?lx+' ':'')+(S.day<3?'Sehen Sie sich ruhig noch um – oder beenden Sie den Tag.':'Sehen Sie sich gern noch um, dann beenden Sie die Konferenz.')}
   const [who,how]=thow(m[0]);
   return `Offen ist noch: „${m[0].t}“ Gehen Sie zu ${C[who].n} (${MAPS[whereIs(who)].n}). ${how}`;
 }
@@ -944,6 +1119,8 @@ function drawObj(o){const {x,y,w,h}=o,un=!S.read.includes(o.id==='tafel'?'tafel'
    case 'app1':case 'app2':cx.fillStyle='#2a2a2e';rr(x,y+12,36,26,4);cx.fill();cx.fillStyle='#b8893a';cx.fillRect(x+36,y+22,w-70,5);cx.fillStyle='#1c1814';cx.fillRect(x+w/2-3,y+6,6,38);
      cx.fillStyle='#d9dedc';if(o.k==='app1'){cx.fillRect(x+w/2-3,y+18,6,4);cx.fillRect(x+w/2-3,y+28,6,4)}else cx.fillRect(x+w/2-3,y+22,6,6);
      cx.fillStyle='#3d5a48';rr(x+w-30,y,14,50,3);cx.fill();cx.fillStyle='#9fe0b0';for(let i=0;i<5;i++)cx.fillRect(x+w-27,y+5+i*9,8,3+Math.sin(tNow*3+i)*1);break;
+   case 'app3':cx.fillStyle='#2a2a2e';rr(x,y+16,22,14,3);cx.fill();cx.fillStyle='rgba(200,225,235,.55)';cx.beginPath();cx.moveTo(x+20,y+19);cx.lineTo(x+70,y+12);cx.lineTo(x+70,y+34);cx.lineTo(x+20,y+27);cx.fill();
+     cx.beginPath();cx.arc(x+92,y+23,24,0,7);cx.fill();cx.strokeStyle='#8a8f8c';cx.lineWidth=1.5;cx.stroke();cx.strokeStyle='#9fe0b0';cx.lineWidth=1.6;for(const r of [7,12])cx.globalAlpha=.6+Math.sin(tNow*3+r)*.3,cx.beginPath(),cx.arc(x+108,y+23,r*.55,-1.2,1.2),cx.stroke();cx.globalAlpha=1;cx.fillStyle='#9fe0b0';cx.beginPath();cx.arc(x+113,y+23,2,0,7);cx.fill();break;
    case 'pump':cx.fillStyle='#55504a';rr(x,y,w,h,6);cx.fill();cx.fillStyle='#8a8580';cx.beginPath();cx.arc(x+w/2,y+h/2,14,0,7);cx.fill();cx.strokeStyle='#8c2f23';cx.lineWidth=3;cx.beginPath();cx.moveTo(x+w/2-8,y+h/2-8);cx.lineTo(x+w/2+8,y+h/2+8);cx.moveTo(x+w/2+8,y+h/2-8);cx.lineTo(x+w/2-8,y+h/2+8);cx.stroke();break;
   }
   if(un){const s=2+Math.sin(tNow*4)*1.5,px=x+w-2,py=o.k==='tafel'||o.k==='board'?y+h-2:y-4;cx.fillStyle='#ffd45a';cx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,r=i%2?s:s*3;cx.lineTo(px+Math.cos(a)*r,py+Math.sin(a)*r)}cx.fill()}
@@ -1018,9 +1195,9 @@ function loop(ts){const dt=Math.min(.05,(ts-lastT)/1000||0);lastT=ts;if(running&
 /* ---------- Leisten, Fenster ---------- */
 function hud(){const M=MAPS[S.loc];$('locName').textContent=M.n+' · '+M.sub;$('dayName').textContent=DAYS[S.day]+(S.phase?' · Nachmittag':' · Vormittag');
   $('nbBtn').textContent='📓 Notizbuch ('+S.notes.length+')';const m=missing().length;$('tkBtn').textContent='✉ Aufträge'+(m?' ('+m+' offen)':' ✓');
-  $('phBtn').textContent='📷 '+PHYS.filter(inPhoto).length+'/11';$('sndBtn').textContent=S.snd?'🔊':'🔇';$('dayBtn').textContent=S.day<3?'Tag beenden ▸':'Konferenz beenden ▸'}
+  $('phBtn').textContent='📷 '+PHYS.filter(inPhoto).length+'/11';$('sndBtn').textContent=S.snd?'🔊':'🔇';$('dayBtn').textContent=S.day<3?'Tag beenden ▸':'Konferenz beenden ▸';$('lkBtn').style.display=S.teach?'':'none'}
 function open(h){$('panel').innerHTML=h;$('ov').classList.add('on');$('panel').scrollTop=0;keys={}}
-function close(){$('ov').classList.remove('on');hud();save()}
+function close(){$('ov').classList.remove('on');if(S.phase_==='game'){hud();save()}else if(S.phase_!=='start')save()}
 function give(n){if(n&&!has(n)){S.notes.push(n);Snd.chime();return `<div class="gain">📓 Neue Notiz: <b>${NOTES[n].t}</b></div>`}return ''}
 function avail(c){return T[c].topics.filter(t=>!t.if||t.if())}
 function talk(c,body,qtext){
@@ -1048,12 +1225,13 @@ function pickRumor(){
   Object.keys(S.rumors).filter(k=>S.rumors[k]==='open').forEach(k=>{const b=document.createElement('button');b.className='note pick rum';b.innerHTML=RUM[k].t;b.onclick=()=>rumorQ(k);$('pk').appendChild(b)});
   $('bk').onclick=()=>talk('pauli');
 }
-function rumorQ(k,msg){const R=RUM[k];
+function rumorQ(k,msg,ord){const R=RUM[k];ord=ord||shuf(R.o.map((_,i)=>i));
   if(!has(R.need)){talk('pauli','Bevor ich Ihnen das zerpflücke, sollten Sie selbst wissen, wovon die Rede ist. Ihnen fehlt die Notiz „'+NOTES[R.need].t+'“. Recherchieren Sie erst – dann kommen Sie wieder.','Stimmt dieses Gerücht?');return}
   open(`<div class="talk"><div class="por">${portrait('pauli')}<b>Wolfgang Pauli</b><i>das „Gewissen der Physik“</i></div><div><div class="bubble"><p class="q">${R.t}</p>${msg||'So ein Unsinn. Aber ich sage es Ihnen nicht vor. Sie haben recherchiert – also: <b>Was ist daran falsch?</b>'}</div><div class="opts" id="opts"></div></div></div>`);
-  R.o.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{
-    if(i===R.c){S.rumors[k]='done';bump('pauli');Snd.chime();talk('pauli',R.ok+`<div class="gain">🗞 Gerücht widerlegt (${refuted()} von 5). Die Richtigstellung erscheint in Ihrem Artikel.</div>`,'Das Gerücht ist falsch, denn …')}
-    else rumorQ(k,['Falsch. Lesen Sie Ihre eigenen Notizen, bevor Sie mir die Zeit stehlen. Noch einmal: <b>Was ist daran falsch?</b>','Auch das ist Unfug. Denken Sie nach, dann antworten Sie. <b>Was ist daran falsch?</b>'][Math.random()<.5?0:1])};$('opts').appendChild(b)});
+  ord.forEach(i=>{const o=R.o[i],b=document.createElement('button');b.textContent=o.t;b.onclick=()=>{
+    if(o.ok){S.rumors[k]='done';bump('pauli');Snd.chime();talk('pauli',R.ok+`<div class="gain">🗞 Gerücht widerlegt (${refuted()} von 5). Die Richtigstellung erscheint in Ihrem Artikel.</div>`,'Das Gerücht ist falsch, denn …')}
+    else rumorQ(k,`<p class="q">Sie: „${o.t}“</p>`+['Falsch. ','Auch das ist Unfug. ','Nicht einmal falsch. '][Math.floor(Math.random()*3)]+o.w+' Noch einmal: <b>Was ist an dem Gerücht falsch?</b>',ord.filter(j=>j!==i))};$('opts').appendChild(b)});
+  const e=document.createElement('button');e.className='bye';e.textContent='Zurück – ich recherchiere lieber noch';e.onclick=()=>talk('pauli');$('opts').appendChild(e);
 }
 /* Gegenstände */
 const OBJT={
@@ -1070,7 +1248,7 @@ const OBJT={
  pumpe:()=>'<p>Eine Vakuumpumpe. Sie steht still, am Gehäuse hängt ein Zettel: <i>„Defekt seit Dienstag. Ursache unbekannt.“</i></p><p>Darunter hat jemand mit Bleistift ergänzt: <i>„Ursache bekannt: Prof. Pauli ging vorbei.“</i></p>'
 };
 function readObj(o){
-  if(o.id==='exp1'){exp1();return}if(o.id==='exp2'){exp2();return}
+  if(o.id==='exp1'){exp1();return}if(o.id==='exp2'){exp2();return}if(o.id==='exp3'){exp3();return}
   if(o.k==='tafel')Snd.chalk();else Snd.page();
   const k=o.id==='tafel'?'tafel'+S.day:o.id;if(!S.read.includes(o.id))S.read.push(o.id);if(!S.read.includes(k))S.read.push(k);
   open(`<h3>${o.label}</h3><div class="paperlook">${OBJT[o.id]()}</div><p><button class="btn" id="cl">Zurücklegen</button></p>`);$('cl').onclick=close;
@@ -1081,14 +1259,47 @@ function scene(title,lines,done){let i=0;const step=()=>{if(i>=lines.length){don
       :`<h3>${title}</h3><div class="talk"><div class="por">${portrait(c)}<b>${C[c].n}</b></div><div><div class="bubble">${t}</div><p><button class="btn" id="nx">Weiter ▸</button></p></div></div>`);
     Snd.click();$('nx').onclick=step};step()}
 function listen(e){scene('Sie hören zu …',e.lines,()=>{if(!S.heard.includes(e.id)){S.heard.push(e.id);e.who.forEach(bump)}close()})}
+/* Glossar im Notizbuch */
+const GLOSS=[
+ ['Amplitudenquadrat |ψ|²','Betragsquadrat der Wellenfunktion. Es gibt die Antreffwahrscheinlichkeitsdichte an: Wo |ψ|² groß ist, wird das Quantenobjekt häufig nachgewiesen (Born 1926).'],
+ ['Antreffwahrscheinlichkeit','Wahrscheinlichkeit, ein Quantenobjekt bei einer Messung in einem bestimmten Bereich zu finden. Sie folgt aus |ψ|². Vorhersagbar ist sie exakt, der einzelne Messwert nicht.'],
+ ['Ausschließungsprinzip','Paulis Regel (1925): Keine zwei Elektronen eines Atoms stimmen in allen vier Quantenzahlen überein. Daraus folgen der Schalenbau der Atome und das Periodensystem.'],
+ ['Beschleunigungsspannung U','Spannung, die Elektronen in einer Röhre beschleunigt. Ein Elektron gewinnt die Energie e·U; sein Impuls ist dann p = √(2·m·e·U).'],
+ ['Beugung','Ablenkung einer Welle an einem Hindernis oder Spalt, sodass sie sich auch in den „Schattenraum“ ausbreitet. Je enger der Spalt im Vergleich zur Wellenlänge, desto stärker die Beugung.'],
+ ['de-Broglie-Wellenlänge','Wellenlänge, die zu einem Teilchen mit Impuls p gehört: λ = h/p. Für Elektronen, die mit einigen Kilovolt beschleunigt wurden, liegt sie bei etwa 10 bis 30 Pikometern (1 pm = 10⁻¹² m).'],
+ ['Doppelspalt','Versuch mit zwei eng benachbarten Spalten. Wellen, die durch beide Spalte gehen, überlagern sich und bilden ein Interferenzmuster aus hellen und dunklen Streifen.'],
+ ['Gedankenexperiment','Versuch, der nur in Gedanken durchgespielt wird, um eine Theorie zu prüfen – etwa Einsteins bewegliche Blende oder Schrödingers Katze.'],
+ ['Halbwertszeit','Zeit, nach der von vielen radioaktiven Kernen etwa die Hälfte zerfallen ist. Sie ist für jede Kernsorte fest, sagt aber nichts über den Zerfall eines einzelnen Kerns.'],
+ ['Impuls p','Produkt aus Masse und Geschwindigkeit, p = m·v (Einheit kg·m/s). Auch Photonen haben einen Impuls, obwohl sie keine Masse haben: p = h/λ.'],
+ ['Interferenz','Überlagerung von Wellen. Wo Berg auf Berg trifft, verstärken sie sich, wo Berg auf Tal trifft, löschen sie sich aus. Interferenzstreifen sind ein Kennzeichen von Wellen.'],
+ ['Komplementarität','Bohrs Begriff: Wellen- und Teilchenbild schließen sich im selben Versuch aus, ergänzen sich aber zur vollständigen Beschreibung. Der Versuchsaufbau entscheidet, welches Bild sich zeigt.'],
+ ['Lichtquant / Photon','Kleinste Energieportion des Lichts: E = h·f (Einstein 1905). Beim Photoeffekt gibt ein Photon seine ganze Energie an ein einzelnes Elektron ab.'],
+ ['Matrizenmechanik','Heisenbergs Form der Quantenmechanik (1925, ausgebaut mit Born und Jordan). Sie rechnet nur mit beobachtbaren Größen wie Frequenzen und Helligkeiten von Spektrallinien.'],
+ ['Nichtdeterminiertheit','Das Ergebnis einer einzelnen Messung ist nicht vorherbestimmt, auch bei vollständig bekanntem Zustand. Vorhersagbar ist nur die Verteilung vieler Messungen.'],
+ ['Nichtkausalität','Gleiche Ausgangsbedingungen führen nicht immer zum gleichen Ergebnis. Für ein Einzelereignis, etwa den Zerfall eines Kerns, gibt es keine angebbare Ursache.'],
+ ['Nichtlokalität','Verschränkte Quantenobjekte bilden ein Ganzes: Messergebnisse an weit entfernten Teilchen hängen sofort zusammen, ohne dass ein Signal übertragen wird.'],
+ ['Nichtobjektivierbarkeit','Eigenschaften wie Ort oder Weg kommen einem Quantenobjekt nicht unabhängig von der Messung zu. Erst die Messung legt einen Wert fest.'],
+ ['Plancksches Wirkungsquantum h','Naturkonstante der Quantenphysik: h = 6,626 · 10⁻³⁴ Js. Sie taucht in E = h·f, λ = h/p und Δx·Δp ≥ h/(4π) auf.'],
+ ['Quantenobjekt','Objekt, das sich weder rein wie ein klassisches Teilchen noch rein wie eine klassische Welle verhält, z. B. Elektron oder Photon. Es wird stets als Ganzes nachgewiesen, seine Ausbreitung folgt einer Welle.'],
+ ['Quantenzahl','Zahl, die einen erlaubten Zustand eines Elektrons im Atom kennzeichnet, etwa die Hauptquantenzahl n für die Schale.'],
+ ['Spektrallinie','Licht einer ganz bestimmten Frequenz, das Atome aussenden oder verschlucken. Jedes Element hat sein eigenes Linienspektrum.'],
+ ['Spin','Innerer Drehimpuls des Elektrons mit genau zwei Einstellmöglichkeiten. Vorgeschlagen 1925 von Uhlenbeck und Goudsmit; er ist die vierte Quantenzahl.'],
+ ['Unbestimmtheitsrelation','Heisenberg (1927): Ort und Impuls eines Quantenobjekts sind nie zugleich beliebig genau bestimmt, Δx · Δp ≥ h/(4π). Das ist eine Eigenschaft der Natur, kein Messfehler.'],
+ ['Verschränkung','Zustand zweier oder mehrerer Quantenobjekte, die nur gemeinsam beschrieben werden können. Den Namen prägte Schrödinger 1935.'],
+ ['Wellenfunktion ψ','Mathematische Beschreibung eines Quantenobjekts in der Wellenmechanik. Sie selbst ist nicht messbar; ihr Betragsquadrat |ψ|² gibt die Antreffwahrscheinlichkeitsdichte an.'],
+ ['Wellenmechanik','Schrödingers Form der Quantenmechanik (1926). Die Schrödinger-Gleichung beschreibt, wie sich ψ ausbreitet. Sie ist mathematisch gleichwertig zur Matrizenmechanik.']
+];
+function glossHTML(f){f=(f||'').toLowerCase();return '<dl class="gl">'+GLOSS.filter(g=>!f||(g[0]+' '+g[1]).toLowerCase().includes(f)).map(g=>`<dt>${g[0]}</dt><dd>${g[1]}</dd>`).join('')+'</dl>'}
 /* Notizbuch mit Reitern */
 function notebook(tab){tab=tab||'n';const ts=TASKS[S.day],done=ts.filter(tdone).length;
-  let h=`<h3>Notizbuch von ${esc(S.name)}</h3><div class="tabs"><button data-t="n" class="${tab==='n'?'on':''}">Notizen (${S.notes.length})</button><button data-t="g" class="${tab==='g'?'on':''}">Gerüchte (${Object.keys(S.rumors).length})</button><button data-t="r" class="${tab==='r'?'on':''}">Wer mit wem?</button></div>`;
+  let h=`<h3>Notizbuch von ${esc(S.name)}</h3><div class="tabs"><button data-t="n" class="${tab==='n'?'on':''}">Notizen (${S.notes.length})</button><button data-t="g" class="${tab==='g'?'on':''}">Gerüchte (${Object.keys(S.rumors).length})</button><button data-t="r" class="${tab==='r'?'on':''}">Wer mit wem?</button><button data-t="b" class="${tab==='b'?'on':''}">Begriffe</button></div>`;
   if(tab==='n'){if(!S.notes.length)h+='<p>Noch leer. Sprechen Sie mit den Physikern.</p>';S.notes.forEach(n=>h+=`<div class="note"><b>${NOTES[n].t}</b><small>${NOTES[n].src}</small>${NOTES[n].x}</div>`)}
   else if(tab==='g'){if(!Object.keys(S.rumors).length)h+='<p>Noch keine Gerüchte. Ihr Konkurrent Federle prahlt gern mit seinen Schlagzeilen.</p>';
     for(const k in S.rumors)h+=`<div class="note rum"><b>${S.rumors[k]==='done'?'✔ Widerlegt':'❓ Ungeprüft'}</b><small>Kurt Federle, „Abend-Telegraph“</small>${RUM[k].t}${S.rumors[k]==='done'?'<br><b>Richtig ist:</b> '+RUM[k].fix:''}</div>`}
+  else if(tab==='b')h+='<div class="glf"><input type="text" id="gf" placeholder="Begriff suchen …"></div><div id="gll">'+glossHTML()+'</div>';
   else h+=relHTML();
   open(h+'<p><button class="btn" id="cl">Schließen</button></p>');$('cl').onclick=close;
+  if(tab==='b')$('gf').oninput=()=>{$('gll').innerHTML=glossHTML($('gf').value)};
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>notebook(b.dataset.t));
 }
 function relHTML(){const act=REL.filter(r=>r[4]());const R=150,cxm=210,cym=185,pos={};PHYS.forEach((c,i)=>{const a=-Math.PI/2+i*2*Math.PI/PHYS.length;pos[c]=[cxm+Math.cos(a)*R*1.25,cym+Math.sin(a)*R]});
@@ -1108,7 +1319,7 @@ function photo(){const n=PHYS.filter(inPhoto).length;open(`<h3>Das Gruppenfoto �
 const sinc=u=>u===0?1:Math.sin(Math.PI*u)/(Math.PI*u);
 function predict(title,q,opts,c,flag,then){
   open(`<h3>${title}</h3><div class="talk"><div class="por">${portrait('laborant')}<b>Der Laborant</b></div><div><div class="bubble">${q}</div><div class="opts" id="opts"></div></div></div>`);
-  opts.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{addFlag(flag+'done');if(i===c)addFlag(flag+'ok');then(i===c)};$('opts').appendChild(b)});
+  shuf(opts.map((_,i)=>i)).forEach(i=>{const b=document.createElement('button');b.textContent=opts[i];b.onclick=()=>{addFlag(flag+'done');if(i===c)addFlag(flag+'ok');then(i===c)};$('opts').appendChild(b)});
   const e=document.createElement('button');e.className='bye';e.textContent='Lieber später';e.onclick=close;$('opts').appendChild(e);
 }
 function exp1(pred){
@@ -1151,14 +1362,118 @@ function exp2(pred){
   $('xb').oninput=drawX;$('cl').onclick=close;drawX();
 }
 
+/* Elektronenbeugungsröhre: Ringe an Graphit, Wellenlänge messen und mit λ = h/p vergleichen */
+function exp3(pred){
+  if(!fl('pred3done')){predict('Elektronenbeugungsröhre','In dieser Glasröhre werden Elektronen mit einer Spannung U beschleunigt und durchqueren eine hauchdünne Graphitfolie. Dahinter leuchtet ein Schirm mit hellen Ringen. Gleich drehe ich die Spannung hoch. <b>Was geschieht mit den Ringen?</b>',['Die Ringe werden größer – die schnelleren Elektronen fliegen mit mehr Wucht auseinander.','Die Ringe werden kleiner.','Die Ringe bleiben, wie sie sind – sie hängen nur vom Graphit ab.'],1,'pred3',exp3);return}
+  if(!S.read.includes('exp3'))S.read.push('exp3');
+  open(`<h3>Elektronenbeugungsröhre</h3>${pred!=null?`<div class="fb ${pred?'good':'wrong'}">${pred?'Ihr Tipp war richtig – prüfen Sie es am Regler nach.':'Prüfen Sie Ihren Tipp am Regler nach.'}</div>`:''}
+   <canvas id="xc" width="640" height="300" class="xcv"></canvas>
+   <p>Beschleunigungsspannung U: <input type="range" id="xu" min="20" max="80" value="40" style="width:50%;vertical-align:middle"> <b id="xv"></b></p>
+   <p class="xb"><label class="mc" style="display:inline-block;margin:0"><input type="checkbox" id="xw"> Strahl ganz schwach (einzelne Elektronen)</label> <button class="btn light" id="x200" disabled>200 Elektronen</button></p>
+   <p class="small">Messen Sie den <b>inneren Ring</b>: Lesen Sie ab, wo er die Skala links und rechts schneidet. Der Abstand ist sein Durchmesser D. Für kleine Winkel gilt λ ≈ d · D / (2L) mit L = 13,5 cm (Folie–Schirm) und d = 0,213 nm (Abstand der Netzebenen im Graphit).</p>
+   <p>Innerer Ring: D = <input type="text" id="xd" inputmode="decimal" style="width:5em"> mm <button class="btn light" id="xm">Auswerten</button></p>
+   <div id="xr"></div><div id="xn"></div><p><button class="btn" id="cl">Apparatur verlassen</button></p>`);
+  const c=$('xc').getContext('2d'),K=3.6,CX=170,CY=150,h=6.626e-34,me=9.109e-31,qe=1.602e-19,L=.135;let lo=false,hi=false,hits=[];
+  const U=()=>+$('xu').value*100, lam=u=>h/Math.sqrt(2*me*qe*u); // Ringradius in mm: r = L·λ/d
+  const gauss=()=>Math.sqrt(-2*Math.log(Math.random()||1e-9))*Math.cos(2*Math.PI*Math.random());
+  const drawX=()=>{const u=U(),r1=L*lam(u)/2.13e-10*1000,r2=L*lam(u)/1.23e-10*1000;
+    c.fillStyle='#10140f';c.fillRect(0,0,640,300);c.fillStyle='#16201a';c.beginPath();c.arc(CX,CY,140,0,7);c.fill();c.strokeStyle='#55504a';c.lineWidth=3;c.stroke();
+    if(!$('xw').checked){for(let p=0;p<138;p++){const m=p/K,I=Math.min(1,.9*Math.exp(-m*m/2)+.85*Math.exp(-Math.pow(m-r1,2)/(2*.25))+.6*Math.exp(-Math.pow(m-r2,2)/(2*.25)));if(I<.02)continue;c.strokeStyle=`rgba(159,224,176,${I})`;c.lineWidth=1.3;c.beginPath();c.arc(CX,CY,p,0,7);c.stroke()}}
+    else{c.fillStyle='#9fe0b0';hits.forEach(([m,a])=>{if(m*K<138)c.fillRect(CX+Math.cos(a)*m*K-1,CY+Math.sin(a)*m*K-1,2.2,2.2)})}
+    // Skala in mm
+    c.strokeStyle='rgba(243,234,216,.8)';c.fillStyle='#f3ead8';c.lineWidth=1;c.font='11px Georgia';c.textAlign='center';c.beginPath();c.moveTo(CX-36*K,CY);c.lineTo(CX+36*K,CY);c.stroke();
+    for(let m=-36;m<=36;m++){const x=CX+m*K,t=m%10===0?9:m%5===0?6:3;c.beginPath();c.moveTo(x,CY);c.lineTo(x,CY-t);c.stroke();if(m%10===0)c.fillText(String(m),x,CY+13)}
+    c.textAlign='left';c.fillText('Skala in mm',CX+60,CY+28);
+    // Röhre schematisch
+    c.strokeStyle='#8a8f8c';c.lineWidth=1.5;c.beginPath();c.moveTo(360,140);c.lineTo(470,140);c.lineTo(560,90);c.moveTo(360,160);c.lineTo(470,160);c.lineTo(560,210);c.stroke();c.beginPath();c.arc(520,150,72,-.62,.62);c.stroke();
+    c.fillStyle='#d9b45a';c.fillRect(368,143,10,14);c.fillStyle='#8a8f8c';c.fillRect(420,138,4,8);c.fillRect(420,154,4,8);c.fillStyle='#c9b27a';c.fillRect(470,141,3,18);
+    c.strokeStyle='rgba(159,224,176,.7)';c.beginPath();c.moveTo(378,150);c.lineTo(471,150);c.lineTo(588,150);c.moveTo(471,150);c.lineTo(588,150-r1*2.2);c.moveTo(471,150);c.lineTo(588,150+r1*2.2);c.stroke();
+    c.fillStyle='#f3ead8';c.font='12px Georgia';c.fillText('Kathode',350,128);c.fillText('Anode',402,180);c.fillText('Graphit',452,128);c.fillText('Schirm',575,242);c.fillText('U = '+(u/1000).toFixed(1).replace('.',',')+' kV',380,270);
+    $('xv').textContent=(u/1000).toFixed(1).replace('.',',')+' kV';
+    if(u<=2500)lo=true;if(u>=7000)hi=true;
+    if(lo&&hi&&fl('m3ok')&&!has('E3'))$('xn').innerHTML=give('E3')+'<div class="fb good">Höhere Spannung, größerer Impuls, kürzere Welle, engere Ringe – und die gemessene Wellenlänge passt zu λ = h/p. De Broglie wird sich freuen.</div>';
+    else if(!has('E3'))$('xn').innerHTML=`<p class="small">Für Ihre Notiz: Stellen Sie die Spannung einmal ganz niedrig ${lo?'✔':'○'} und einmal ganz hoch ${hi?'✔':'○'} und werten Sie eine Messung aus ${fl('m3ok')?'✔':'○'}.</p>`};
+  const add=n=>{const u=U(),r1=L*lam(u)/2.13e-10*1000,r2=L*lam(u)/1.23e-10*1000;for(let i=0;i<n;i++){const z=Math.random(),m=z<.3?Math.abs(gauss())*.9:z<.72?r1+gauss()*.4:r2+gauss()*.4;hits.push([Math.abs(m),Math.random()*2*Math.PI]);Snd.blip()}drawX()};
+  $('xu').oninput=()=>{hits=[];$('xr').innerHTML='';drawX()};$('xw').onchange=()=>{hits=[];$('x200').disabled=!$('xw').checked;drawX()};$('x200').onclick=()=>add(200);
+  $('xm').onclick=()=>{const D=parseFloat($('xd').value.replace(',','.')),u=U();if(!isFinite(D)||D<=0){$('xr').innerHTML='<div class="fb wrong">Tragen Sie den abgelesenen Durchmesser in Millimetern ein.</div>';return}
+    const lm=2.13e-10*D/1000/(2*L),lt=lam(u),dev=Math.abs(lm-lt)/lt,f=x=>(x*1e12).toFixed(1).replace('.',',');
+    const t=`Bei U = ${(u/1000).toFixed(1).replace('.',',')} kV: Aus Ihrer Messung folgt λ = d·D/(2L) ≈ <b>${f(lm)} pm</b>. De Broglie sagt voraus: λ = h/p = h/√(2·m·e·U) ≈ <b>${f(lt)} pm</b>. Abweichung: ${Math.round(dev*100)} %.`;
+    if(dev<=.08){addFlag('m3ok');$('xr').innerHTML=`<div class="fb good">${t} Messung und Theorie stimmen überein – Elektronen haben wirklich eine Wellenlänge.</div>`}
+    else $('xr').innerHTML=`<div class="fb wrong">${t} Das passt noch nicht. Lesen Sie noch einmal ab: Wo schneidet der <b>innere</b> helle Ring die Skala links und rechts? D ist der Abstand dieser beiden Stellen.</div>`;
+    drawX()};
+  $('cl').onclick=close;drawX();
+}
+/* Madame Curies Zerfallsmodell (Münzen als Modell für Atome) */
+function decayDemo(){let at=new Array(100).fill(1),bet=-1,n=0;
+  open(`<h3>Madame Curies Zerfallsmodell</h3><div class="talk"><div class="por">${portrait('curie')}<b>Marie Curie</b></div><div><div class="bubble">Hundert Münzen, jede steht für ein Atom. Nach jeder Halbwertszeit wird geworfen: Bei „Zahl“ ist das Atom zerfallen. <b>Tippen Sie vorher ein Atom an, von dem Sie glauben, dass es am längsten überlebt.</b> Bei den Münzen ist der Zufall nur Unwissen über den Wurf – beim Atom ist er, wenn Born recht hat, echt.</div></div></div>
+   <div class="atoms" id="ag"></div><p class="xb"><button class="btn" id="aw">Eine Halbwertszeit warten</button> <button class="btn light" id="ar">Von vorn</button></p><div id="as"></div><p><button class="btn light" id="cl">Zurück zu Madame Curie</button></p>`);
+  const draw=()=>{$('ag').innerHTML='';at.forEach((a,i)=>{const b=document.createElement('button');b.className=(a?'':'gone')+(i===bet?' bet':'');b.title=a?'Atom':'zerfallen';b.onclick=()=>{if(n===0){bet=i;draw()}};$('ag').appendChild(b)});
+    const left=at.filter(Boolean).length;$('as').innerHTML=`<p>Nach ${n} Halbwertszeit${n===1?'':'en'}: noch <b>${left}</b> von 100 Atomen. Erwartet: etwa ${Math.round(100/Math.pow(2,n))}.`+(bet>=0&&n>0?(at[bet]?' Ihr Atom lebt noch.':' Ihr Atom ist zerfallen.'):'')+'</p>'+(n>=2?'<div class="fb good">Welches Atom als nächstes zerfällt, kann niemand sagen – aber nach jeder Halbwertszeit ist ungefähr die Hälfte übrig. Gleiche Atome, verschiedene Schicksale: Für den einzelnen Zerfall gibt es keine Ursache.</div>':'')};
+  $('aw').onclick=()=>{at=at.map(a=>a&&Math.random()<.5?1:0);n++;Snd.blip();draw()};$('ar').onclick=()=>{at=new Array(100).fill(1);bet=-1;n=0;draw()};$('cl').onclick=()=>talk('curie');draw()}
+
 /* ---------- Tagesablauf ---------- */
 function endDay(){const m=missing();
   if(m.length){open(`<h3>Noch nicht fertig</h3><div class="telegram" style="transform:none;margin:0 0 1em">MATERIAL REICHT NOCH NICHT STOP ES FEHLEN ${m.length} AUFTRÄGE STOP BLEIBEN SIE DRAN STOP</div>${m.map(t=>`<div class="task">○ ${t.t}</div>`).join('')}<p><b>Ehrenfest flüstert Ihnen zu:</b> ${hintText()}</p><p><button class="btn" id="cl">Weiter recherchieren</button></p>`);$('cl').onclick=close;return}
   open(`<h3>${S.day<3?'Den Tag beenden?':'Die Konferenz beenden?'}</h3><p>Sie haben alle Aufträge erfüllt. ${S.day<3?'Was Sie heute nicht entdeckt haben, können Sie zum Teil morgen nachholen – die Gespräche und Aushänge von heute sind dann aber vorbei.':'Danach geht es zum Epilog und zum Redaktionsschluss. Wollen Sie vorher noch das Gruppenfoto vervollständigen oder im Labor experimentieren?'}</p><p><button class="btn" id="nx">Zum Abendessen ▸</button> <button class="btn light" id="cl">Noch bleiben</button></p>`);
-  $('cl').onclick=close;$('nx').onclick=()=>scene('Abend im Hotel Métropole',EVE[S.day],()=>{
-    if(S.day<3){S.day++;S.phase=0;S.acts=0;PL.x=480;PL.y=S.day===3?490:420;S.px=PL.x;S.py=PL.y;enterRoom(S.day===3?'hotel':'wandel');close();tasks()}
-    else{close();S.phase_='epi';save();epilog()}});
+  $('cl').onclick=close;$('nx').onclick=evening;
 }
+function evening(){scene('Abend im Hotel Métropole',EVE[S.day],()=>telegram(S.day,nextDay))}
+function nextDay(){
+  if(S.day<3){S.day++;S.phase=0;S.acts=0;PL.x=480;PL.y=S.day===3?490:420;S.px=PL.x;S.py=PL.y;enterRoom(S.day===3?'hotel':'wandel');close();tasks()}
+  else{close();S.phase_='epi';save();epilog()}}
+
+/* ---------- Lehrkraft-Modus (Name beginnt mit „Lehrkraft“) ---------- */
+function teachDay(d){TASKS[d].forEach(t=>{if(t.n&&!has(t.n))S.notes.push(t.n);if(t.f)addFlag(t.f);
+  if(t.r)for(const k of Object.keys(RUM).filter(k=>RUM[k].day<=d)){if(refuted()>=t.r)break;S.rumors[k]='done'}})}
+function teachTele(d){if(!S.tele[d])S.tele[d]={pts:TELE[d].s.length,max:TELE[d].s.length,own:'(Testlauf der Lehrkraft: Hier steht der eigene Satz aus dem Abendtelegramm.)'}}
+function teachAll(){[1,2,3].forEach(d=>{teachDay(d);teachTele(d)})}
+function teachRoom(r){const g=doorGeo(MAPS[r].doors[0]);PL.x=g.spawn[0];PL.y=g.spawn[1];S.px=PL.x;S.py=PL.y;enterRoom(r)}
+function teacher(){const P=placeNow();
+  open(`<h3>🎓 Lehrkraft-Modus</h3><p class="small">Nur zum Testen – aktiv, weil der Name mit „Lehrkraft“ beginnt. Ein Sprung erledigt die Pflichtaufträge der vorherigen Tage und füllt deren Abendtelegramme aus. Im Quiz und im Telegramm setzt „🎓 Lösung einsetzen“ die richtigen Antworten ein.</p>
+   <p><b>Springen zu</b></p><div class="tk">${[1,2,3].map(d=>[0,1].map(ph=>`<button class="btn light" data-j="${d},${ph}">Tag ${d} · ${ph?'Nachmittag':'Vormittag'}</button>`).join('')).join('')}</div>
+   <p><b>Heute</b></p><div class="tk"><button class="btn light" id="tkDone">Aufträge von heute erledigen</button><button class="btn light" id="tkNotes">Alle Notizen geben</button><button class="btn light" id="tkFoto">Alle aufs Gruppenfoto</button><button class="btn light" id="tkEve">Abend und Telegramm jetzt</button></div>
+   <p><b>Raum wechseln</b></p><div class="tk">${Object.keys(MAPS).map(r=>`<button class="btn light" data-r="${r}">${MAPS[r].n}</button>`).join('')}</div>
+   <p><b>Weiter zu</b></p><div class="tk"><button class="btn light" id="tkEpi">Epilog</button><button class="btn light" id="tkQuiz">Redaktionsschluss</button><button class="btn light" id="tkArt">Fertiger Artikel (Beispiel)</button></div>
+   <p><b>Wer ist wo?</b> (${DAYS[S.day].split(' ·')[0]}, ${S.phase?'Nachmittag':'Vormittag'})<br><span class="small">${Object.keys(P).map(r=>`<b>${MAPS[r].n}:</b> ${P[r].map(sn).join(', ')}`).join(' · ')}</span></p>
+   <div id="tkm"></div><p><button class="btn" id="cl">Schließen</button></p>`);
+  const ok=t=>{$('tkm').innerHTML=fbGood(t);hud();save()};
+  document.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{const [d,ph]=b.dataset.j.split(',').map(Number);for(let k=1;k<d;k++){teachDay(k);teachTele(k)}
+    S.day=d;S.phase=ph;S.acts=ph?8:0;close();teachRoom(d===3?'hotel':ph?'wandel':'saal');hud();save()});
+  document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{close();teachRoom(b.dataset.r)});
+  $('tkDone').onclick=()=>{teachDay(S.day);ok('Alle Aufträge von heute sind erledigt.')};
+  $('tkNotes').onclick=()=>{Object.keys(NOTES).forEach(n=>{if(NOTES[n].src!=='Epilog'&&!has(n))S.notes.push(n)});ok('Alle Notizen außer denen aus dem Epilog sind im Notizbuch.')};
+  $('tkFoto').onclick=()=>{PHYS.forEach(c=>S.cnt[c]=Math.max(3,S.cnt[c]||0));ok('Alle elf stehen auf dem Gruppenfoto.')};
+  $('tkEve').onclick=()=>{close();evening()};
+  $('tkEpi').onclick=()=>{teachAll();close();S.phase_='epi';save();epilog()};
+  $('tkQuiz').onclick=()=>{teachAll();close();S.quiz=null;S.phase_='quiz';save();quiz()};
+  $('tkArt').onclick=()=>{teachAll();PHYS.forEach(c=>S.cnt[c]=Math.max(3,S.cnt[c]||0));close();
+    S.quiz={ver:2,step:NSTEP,pts:19,max:19,head:0,ownHead:'',labx:'exp1',lab:'(Testlauf der Lehrkraft) Hier steht der Laborbericht des Schülers: Aufbau, Beobachtung und Deutung eines Versuchs in drei bis fünf Sätzen.',fazit:'(Testlauf der Lehrkraft) Hier steht das persönliche Fazit des Schülers.'};
+    S.phase_='art';save();article()};
+  $('cl').onclick=close}
+
+/* ---------- Spielstand als Datei ---------- */
+function stageText(d){return d.phase_==='game'?DAYS[d.day].split(' ·')[0]+(d.phase?', Nachmittag':', Vormittag'):d.phase_==='epi'?'Epilog':d.phase_==='quiz'?'Redaktionsschluss':'fertiger Artikel'}
+function fileName(d){const n=(d.name||'Spieler').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/Ä/g,'Ae').replace(/Ö/g,'Oe').replace(/Ü/g,'Ue').replace(/ß/g,'ss').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'');
+  return 'Bruessel1927_'+n+'_'+(d.phase_==='game'?'Tag'+d.day:d.phase_==='epi'?'Epilog':d.phase_==='quiz'?'Quiz':'Artikel')+'.json'}
+function download(d){const blob=new Blob([JSON.stringify({app:'solvay1927',saved:new Date().toISOString(),state:d})],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName(d);document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);return a.download}
+function saveFile(){save();const f=download(S);
+  open(`<h3>Spielstand gesichert</h3><p>Ihr Spielstand (${esc(stageText(S))}) wurde als Datei <b>${esc(f)}</b> heruntergeladen.</p>
+   <p class="small">Am Laptop liegt die Datei meist im Ordner „Downloads“, am iPad in der App „Dateien“ unter „Downloads“. Um auf einem anderen Gerät weiterzuspielen, öffnen Sie dort das Spiel und wählen im Startbildschirm <b>📂 Spielstand aus Datei laden</b>. Auf diesem Gerät bleibt der Spielstand zusätzlich im Browser gespeichert.</p>
+   <p><button class="btn" id="cl">Weiter</button></p>`);$('cl').onclick=close}
+// Vor dem Ersetzen eines vorhandenen Spielstands nachfragen
+function guardOverwrite(what,then,same){const old=load();if(!old||same&&same(old)){then();return}
+  open(`<h3>Vorhandenen Spielstand ersetzen?</h3><p>Auf diesem Gerät ist der Spielstand von <b>${esc(old.name)}</b> gespeichert (${esc(stageText(old))}). Wenn Sie ${what} beginnen, wird er überschrieben.</p>
+   <p>Sichern Sie ihn vorher als Datei, dann geht nichts verloren.</p><div id="gx"></div>
+   <p><button class="btn light" id="gs">💾 Alten Spielstand als Datei sichern</button> <button class="btn" id="gy">Ersetzen und fortfahren</button> <button class="btn light" id="cl">Abbrechen</button></p>`);
+  $('gs').onclick=()=>{const f=download(old);$('gx').innerHTML=`<div class="fb good">Gesichert als „${esc(f)}“.</div>`};
+  $('gy').onclick=()=>{$('ov').classList.remove('on');then()};$('cl').onclick=close}
+function loadFile(){const f=$('fileIn').files[0];if(!f)return;const r=new FileReader();
+  const bad=m=>{open(`<h3>Datei lässt sich nicht laden</h3><p>${m}</p><p><button class="btn" id="cl">Schließen</button></p>`);$('cl').onclick=close};
+  r.onload=()=>{let d=null;try{const j=JSON.parse(r.result);if(j&&j.app==='solvay1927')d=fixState(j.state)}catch(e){}
+    if(!d){bad('Das ist keine Spielstand-Datei von „Brüssel 1927“. Wählen Sie die Datei, die beim Sichern mit 💾 heruntergeladen wurde (Name beginnt mit „Bruessel1927_“).');return}
+    guardOverwrite('den Spielstand aus der Datei',()=>{S=d;save();if(S.snd)Snd.init();resume()},o=>o.name===d.name&&JSON.stringify(o)===JSON.stringify(d))};
+  r.onerror=()=>bad('Die Datei konnte nicht gelesen werden.');r.readAsText(f)}
 
 /* ---------- Start ---------- */
 const HAIRS=['#5a3d28','#d2ab5e','#1f1a17','#a8482a','#8a8580'],COATS=['#b59a6a','#4b5563','#4d6b3c','#27405e','#7a2f2a'],STYLES=[['cap','kurz'],['long','lang'],['bun','Dutt'],['wild','wild']];
@@ -1173,12 +1488,17 @@ function startGame(){S.phase_='game';show('game');PL.x=S.px;PL.y=S.py;enterRoom(
 function resume(){if(S.phase_==='game')startGame();else if(S.phase_==='epi')epilog();else if(S.phase_==='quiz')quiz();else if(S.phase_==='art')article()}
 function boot(){
   cv=$('cv');cx=cv.getContext('2d');$('cast').innerHTML=PHYS.map(portrait).join('');chooser();
-  $('goBtn').onclick=()=>{const n=$('nameIn').value.trim();if(n.length<2){$('nameIn').focus();$('nameIn').style.borderColor='#e33';return}const lk=S.look;S=fresh();S.look=lk;S.name=n;startGame()};
-  const old=load();if(old){$('contBtn').style.display='';$('contBtn').textContent='Spielstand von '+old.name+' fortsetzen';$('contBtn').onclick=()=>{S=old;if(S.snd){Snd.init()}resume()}}
+  $('goBtn').onclick=()=>{const n=$('nameIn').value.trim();if(n.length<2){$('nameIn').focus();$('nameIn').style.borderColor='#e33';return}
+    guardOverwrite('ein neues Spiel',()=>{const lk=S.look;S=fresh();S.look=lk;S.name=n;S.teach=/^lehrkraft\b/i.test(n);startGame()})};
+  const old=load();if(old){$('contBtn').style.display='';$('contBtn').textContent='Spielstand von '+old.name+' fortsetzen';$('contBtn').onclick=()=>{S=load()||old;if(S.snd){Snd.init()}resume()}}
+  $('fileBtn').onclick=()=>{$('fileIn').value='';$('fileIn').click()};$('fileIn').onchange=loadFile;
   $('nbBtn').onclick=()=>notebook();$('tkBtn').onclick=tasks;$('phBtn').onclick=photo;$('dayBtn').onclick=endDay;$('prompt').onclick=()=>{if(nearest)nearest.f()};
+  $('svBtn').onclick=()=>saveFile();$('lkBtn').onclick=teacher;
   $('sndBtn').onclick=()=>{S.snd=!S.snd;if(S.snd){Snd.init();if(Snd.ctx&&Snd.ctx.state==='suspended')Snd.ctx.resume();Snd.chime()}Snd.murmur(npcs.length);hud();save()};
   cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();clickAt((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height)});
-  addEventListener('keydown',e=>{if($('ov').classList.contains('on')||!running)return;if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;keys[e.key.length===1?e.key.toLowerCase():e.key]=true;
+  addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&$('ov').classList.contains('on')){const b=$('panel').querySelector('[data-esc]')||$('panel').querySelector('#cl, #bk, .bye');if(b){e.preventDefault();b.click()}return}
+    if($('ov').classList.contains('on')||!running)return;if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;keys[e.key.length===1?e.key.toLowerCase():e.key]=true;
     if(e.key===' '||e.key==='Enter'||e.key.toLowerCase()==='e'){if(nearest){e.preventDefault();nearest.f()}}if(e.key.startsWith('Arrow'))e.preventDefault()});
   addEventListener('keyup',e=>{keys[e.key.length===1?e.key.toLowerCase():e.key]=false});
   requestAnimationFrame(loop);
