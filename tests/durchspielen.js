@@ -50,6 +50,7 @@ const res=await p.evaluate(()=>{const L=[];const hint=()=>{try{hintText();L.push
  hint();
  __ask('lorentz','l1');__ask('lorentz','l2');__ask('debroglie','d1');__listen('m1');__fed();__fed();
  __ask('schroedinger','s1');hint();__show('born','N3');__rum('G2');__rum('G3');hint();
+ {const t=__ask('pauli','p2a');if(has('P1'))throw new Error('P1 schon an Tag 1');if(avail('pauli').some(t=>t.id==='p2'))throw new Error('p2 an Tag 1 sichtbar');L.push('Pauli Tag 1: '+t.slice(0,90))}
  L.push('Tag1 Phase '+S.phase+' acts '+S.acts);__endDay();
  L.push('Tag '+S.day+' Ort '+S.loc);hint();
  __ask('heisenberg','h1');__ask('heisenberg','h2');__show('dirac','N5');__ask('pauli','p2');__show('einstein','N4');

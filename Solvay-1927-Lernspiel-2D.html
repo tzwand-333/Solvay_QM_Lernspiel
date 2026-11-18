@@ -137,11 +137,17 @@ label.mc{display:block;padding:.45em .6em;margin:.3em 0;background:#fffaf0;borde
 .rel{font-size:.9rem;padding:.25em .5em;margin:.2em 0;border-left:4px solid var(--green);background:#fffaf0}
 .rel.m{border-left-color:var(--red)}
 .relsvg{width:100%;max-width:520px;display:block;margin:0 auto}
-.photo{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;background:#d8cdb4;padding:.6em;border:6px solid #f7f1e3;outline:1px solid #8a7753;filter:sepia(.55)}
-.photo figure{margin:0;width:82px;text-align:center;font-size:.72rem}
+/* Gruppenfoto: drei Reihen, eng zusammengerückt, vordere Reihe größer (näher an der Kamera) */
+.photo{max-width:500px;margin:0 auto;background:linear-gradient(#b9ae94,#d8cdb4 45%,#cfc2a3 70%,#9c8e70);padding:.8em .4em 0;border:6px solid #f7f1e3;outline:1px solid #8a7753;filter:sepia(.55);overflow:hidden}
+.prow{display:flex;justify-content:center}
+.prow figure{margin:0 -13px;flex:none}
 .photo svg{width:100%;height:auto;display:block}
-.photo .sil svg{filter:brightness(0) opacity(.28)}
-.photo.print{margin:.4em auto;max-width:760px}.photo.print figure{width:62px}
+.prow.r0 figure{width:98px}.prow.r1 figure{width:108px}.prow.r2 figure{width:122px}
+.prow.r1{margin-top:-57px}.prow.r2{margin-top:-65px}
+.photo .sil svg{filter:brightness(0) invert(.55) opacity(.75)}
+.pnames{text-align:center;font-size:.78rem;margin:.3em auto 0;max-width:620px;color:#4a3f30}
+.photo.print{margin:.4em auto 0;max-width:400px}.photo.print .r0 figure{width:58px}.photo.print .r1 figure{width:64px}.photo.print .r2 figure{width:72px}
+.photo.print .prow figure{margin:0 -7px}.photo.print .r1{margin-top:-34px}.photo.print .r2{margin-top:-39px}
 .cap{text-align:center;font-style:italic;font-size:.8rem;margin:.2em 0 .8em}
 .paperlook{background:#fffaf0;border:1px solid #bfae8c;padding:.6em 1em;box-shadow:inset 0 0 30px rgba(160,130,80,.18)}
 .narr{font-style:italic;font-size:1.05rem}
@@ -362,7 +368,7 @@ const MAPS={
  hotel:{n:'Frühstückssaal',sub:'Hotel Métropole',floor:'carpet',wall:'#7a3a32',cc:'#8e4038',
   doors:[{to:'park',side:'left',p:300,label:'Leopoldpark'},{to:'salon',side:'right',p:300,label:'Salon'}],
   furn:[{k:'round',x:180,y:180,w:84,h:84},{k:'round',x:440,y:180,w:84,h:84},{k:'round',x:700,y:180,w:84,h:84},{k:'round',x:310,y:390,w:84,h:84},{k:'round',x:570,y:390,w:84,h:84},{k:'counter',x:60,y:100,w:220,h:30},{k:'chair',x:158,y:213,w:18,h:18,nb:1},{k:'chair',x:268,y:213,w:18,h:18,nb:1},{k:'chair',x:418,y:213,w:18,h:18,nb:1},{k:'chair',x:528,y:213,w:18,h:18,nb:1},{k:'chair',x:678,y:213,w:18,h:18,nb:1},{k:'chair',x:788,y:213,w:18,h:18,nb:1},{k:'chair',x:288,y:423,w:18,h:18,nb:1},{k:'chair',x:398,y:423,w:18,h:18,nb:1},{k:'chair',x:548,y:423,w:18,h:18,nb:1},{k:'chair',x:658,y:423,w:18,h:18,nb:1},{k:'win',x:330,y:12,w:70,h:64,nb:1,c:'#c9a04a'},{k:'win',x:560,y:12,w:70,h:64,nb:1,c:'#c9a04a'},{k:'win',x:790,y:12,w:70,h:64,nb:1,c:'#c9a04a'},{k:'pic',x:446,y:20,w:68,h:50,c:'#4f6b5a',nb:1},{k:'pic',x:676,y:20,w:68,h:50,c:'#6b5a7a',nb:1},{k:'sconce',x:300,y:34,nb:1},{k:'sconce',x:890,y:34,nb:1},{k:'plant',x:886,y:490,w:34,h:34},{k:'plant',x:40,y:490,w:34,h:34}],
-  objs:[{id:'serviette',k:'paper',x:468,y:212,w:28,h:20,label:'Bekritzelte Serviette',stand:[482,300],if:()=>S.day===3},{id:'manuskript',k:'paper',x:728,y:210,w:28,h:22,label:'Manuskript auf dem Tisch',stand:[742,300],if:()=>S.day===3}],
+  objs:[{id:'serviette',k:'paper',v:'napkin',c:'#5f86a8',rot:.1,x:464,y:208,w:36,h:26,label:'Bekritzelte Serviette',stand:[482,300],if:()=>S.day===3},{id:'manuskript',k:'paper',v:'stack',x:724,y:206,w:32,h:28,label:'Manuskript auf dem Tisch',stand:[742,300],if:()=>S.day===3}],
   spots:[[375,320],[450,320],[640,320],[150,340],[830,420],[480,490]]},
  salon:{n:'Salon',sub:'Rauchzimmer des Hotels',floor:'carpet',wall:'#3c4f42',cc:'#3f5a48',
   doors:[{to:'hotel',side:'left',p:300,label:'Frühstückssaal'}],
@@ -384,12 +390,12 @@ const PLACE={
 const DAYS={1:'Erster Tag · Wellen überall',2:'Zweiter Tag · Der Zufall zieht ein',3:'Dritter Tag · Einstein gegen Bohr'};
 const TASKS={
  1:[{n:'N2',t:'Was hat es mit de Broglies Materiewellen auf sich?'},{n:'N3',t:'Was ist Schrödingers Wellenmechanik?'},{n:'N4',t:'Botengang: Bringen Sie Born Schrödingers Sicht auf die Wellenfunktion.'}],
- 2:[{n:'N6',t:'Was hat Heisenberg auf Helgoland gefunden?'},{n:'N5',t:'Was besagt die Unbestimmtheitsrelation?'},{n:'D1',t:'Botengang: Zeigen Sie Dirac Heisenbergs Relation.'},{n:'P1',t:'Was ist Paulis eigener Beitrag?'},{n:'N8',t:'Botengang: Was sagt Einstein zu Borns Deutung?'}],
+ 2:[{n:'N6',t:'Was hat Heisenberg auf Helgoland gefunden?'},{n:'P1',t:'Keine Bahnen mehr – wie ordnen sich dann die Elektronen? Was ist Paulis eigener Beitrag?'},{n:'N5',t:'Was besagt die Unbestimmtheitsrelation?'},{n:'D1',t:'Botengang: Zeigen Sie Dirac Heisenbergs Relation.'},{n:'N8',t:'Botengang: Was sagt Einstein zu Borns Deutung?'}],
  3:[{n:'N7',t:'Was meint Bohr mit Komplementarität?'},{n:'N9',t:'Wie will Einstein Heisenbergs Relation widerlegen?'},{n:'N10',t:'Botengang: Bringen Sie Bohr Einsteins Gedankenexperiment.'},{f:'eFinal',t:'Botengang: Tragen Sie Bohrs Antwort zu Einstein zurück.'},{n:'N14',t:'Kennt Madame Curie den Zufall aus ihrem Labor?'},{r:3,t:'Lassen Sie Pauli drei Gerüchte Ihres Konkurrenten prüfen.'}]
 };
 const HOW={
  N2:['debroglie','Fragen Sie ihn nach seinen Materiewellen.'],N3:['schroedinger','Fragen Sie ihn nach seiner Wellenmechanik.'],N4:['born','Legen Sie ihm Ihre Notiz „Die Wellenfunktion ψ“ vor.'],
- N6:['heisenberg','Fragen Sie ihn nach seiner Matrizenmechanik.'],N5:['heisenberg','Fragen Sie ihn nach der Unbestimmtheitsrelation.'],D1:['dirac','Legen Sie ihm die Notiz „Unbestimmtheitsrelation“ vor.'],P1:['pauli','Fragen Sie ihn nach seinem eigenen Beitrag.'],N8:['einstein','Legen Sie ihm Borns „Wahrscheinlichkeitsdeutung“ vor.'],
+ N6:['heisenberg','Fragen Sie ihn nach seiner Matrizenmechanik.'],N5:['heisenberg','Fragen Sie ihn nach der Unbestimmtheitsrelation.'],D1:['dirac','Legen Sie ihm die Notiz „Unbestimmtheitsrelation“ vor.'],P1:['pauli','Fragen Sie ihn nach seinem eigenen Beitrag – nachdem Heisenberg Ihnen seine Matrizenmechanik erklärt hat.'],N8:['einstein','Legen Sie ihm Borns „Wahrscheinlichkeitsdeutung“ vor.'],
  N7:['bohr','Fragen Sie ihn nach der Komplementarität.'],N9:['einstein','Fragen Sie ihn, wie er Heisenbergs Relation widerlegen will.'],N10:['bohr','Legen Sie ihm „Einsteins Gedankenexperiment“ vor.'],eFinal:['einstein','Legen Sie ihm „Bohrs Antwort“ vor.'],N14:['curie','Legen Sie ihr Borns „Wahrscheinlichkeitsdeutung“ vor.']
 };
 /* Gerüchte des Konkurrenten – Pauli prüft sie */
@@ -514,7 +520,7 @@ const T={
   greet:()=>has('N3')&&!has('N6')?'Sie waren bei Schrödinger? Dann haben Sie die bequeme Fassung gehört. Ich biete Ihnen die ehrliche.':S.day===3?'Guten Morgen. Bohr hat die halbe Nacht an einer Antwort für Einstein gefeilt – das sollten Sie sich nicht entgehen lassen.':'Guten Tag. Sie wollen wissen, was im Atom vorgeht? Die erste Lektion lautet: Vergessen Sie, was Sie sich vorstellen.',
   topics:[
    {id:'h0',if:()=>S.day===1,q:'Was halten Sie von Schrödingers Wellen?',a:()=>has('N3')?'Rechnerisch bequem, zugegeben. Aber seine Deutung – ein Elektron als verschmierte Wolke – halte ich für falsch. Wolken hinterlassen keine punktförmigen Treffer. Morgen erkläre ich Ihnen, wie wir es in Göttingen sehen.':'Hören Sie ihn erst selbst an, er ist im Park. Morgen sage ich Ihnen dann, warum ich seine Anschaulichkeit für trügerisch halte.'},
-   {id:'h1',q:'Was ist Ihre Matrizenmechanik?',need:2,give:'N6',a:()=>'Im Sommer 1925 saß ich mit Heuschnupfen auf Helgoland und beschloss, radikal zu sein: Niemand hat je die Bahn eines Elektrons im Atom gesehen. Wir sehen nur Spektrallinien – Frequenzen und Helligkeiten. Also baute ich eine Mechanik, die ausschließlich solche beobachtbaren Größen enthält. Die Bahn kommt darin nicht mehr vor. '+(has('N3')?'Schrödinger nennt das unanschaulich. Ich nenne es ehrlich.':'')},
+   {id:'h1',q:'Was ist Ihre Matrizenmechanik?',need:2,give:'N6',a:()=>'Im Sommer 1925 saß ich mit Heuschnupfen auf Helgoland und beschloss, radikal zu sein: Niemand hat je die Bahn eines Elektrons im Atom gesehen. Wir sehen nur Spektrallinien – Frequenzen und Helligkeiten. Also baute ich eine Mechanik, die ausschließlich solche beobachtbaren Größen enthält. Die Bahn kommt darin nicht mehr vor. '+(has('N3')?'Schrödinger nennt das unanschaulich. Ich nenne es ehrlich. ':'')+(has('P1')?'':'Und wenn Sie wissen wollen, wie man ohne Bahnen trotzdem Ordnung in die Elektronenhülle bringt: Fragen Sie Pauli nach seinem Prinzip.')},
    {id:'h2',if:()=>has('N6'),q:'Was besagt Ihre Unbestimmtheitsrelation?',need:2,give:'N5',a:()=>'Stellen Sie sich vor, Sie wollen den Ort eines Elektrons unter einem Mikroskop bestimmen. Für ein scharfes Bild brauchen Sie kurzwelliges Licht – dessen Photonen aber tragen viel Impuls und stoßen das Elektron unkontrollierbar an. Je genauer der Ort, desto unbestimmter der Impuls. In Formeln: Δx · Δp ≥ h/(4π). Das Produkt der beiden Unbestimmtheiten kann eine feste Grenze nie unterschreiten.'},
    {id:'h3',if:()=>has('N5'),q:'Ist das nicht bloß ein Problem ungeschickter Messung?',a:()=>(met('bohr')?'Bohr hat mich da selbst korrigiert, und er hat recht: ':'Nein, und Bohr hat mich da selbst korrigiert: ')+'Es liegt nicht an der Störung allein. Ein Quantenobjekt besitzt Ort und Impuls gar nicht gleichzeitig als scharfe Eigenschaften. Die Wellennatur erzwingt das – ein enger Spalt legt den Ort fest und fächert dafür die Richtungen auf. Deshalb hat der Begriff „Bahn“ im Atom keinen Sinn.'+lab('E2','Im Labor steht eine Einzelspalt-Apparatur mit verstellbarem Spalt. Machen Sie den Spalt eng – und sehen Sie, was mit dem Strahl geschieht.','Am Einzelspalt im Labor haben Sie es gesehen: enger Spalt, breiter Fächer.')}
   ],
@@ -910,7 +916,9 @@ const inPhoto=c=>(S.cnt[c]||0)>=3;
 /* ---------- Dialog-Ergänzungen: Pauli, Dirac, Bezüge, Nebenfiguren ---------- */
 (function(){
  const P=T.pauli,D=T.dirac;
- Object.assign(P.topics.find(t=>t.id==='p2'),{give:'P1',a:()=>'Das Ausschließungsprinzip, 1925. Bohr hatte erraten, dass sich die Elektronen im Atom in Schalen ordnen – aber nicht, warum sie nicht alle in die innerste Schale fallen. Meine Antwort: Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Ist ein Zustand besetzt, muss das nächste Elektron höher. Daraus folgt das ganze Periodensystem – und die Chemie gleich mit. '+(met('bohr')?'Fragen Sie Bohr, er war erleichtert.':'')});
+ // Ausschließungsprinzip erst nach Heisenbergs „keine Bahnen“ (Tag 2): Was ordnet die Elektronen, wenn es keine Bahnen gibt?
+ Object.assign(P.topics.find(t=>t.id==='p2'),{if:()=>has('N6'),give:'P1',a:()=>'Heisenberg hat Ihnen erklärt, dass es im Atom keine Bahnen gibt. Gut – aber Zustände gibt es, und jeden kann man durch Quantenzahlen kennzeichnen, ganz ohne Bahn. Mein Beitrag von 1925 betrifft diese Zustände: das Ausschließungsprinzip. Keine zwei Elektronen eines Atoms stimmen in allen Quantenzahlen überein. Ist ein Zustand besetzt, muss das nächste Elektron in einen höheren. Bohr hatte erraten, dass sich die Elektronen in Schalen ordnen – aber nicht, warum sie nicht alle in die innerste fallen. Das ist die Antwort, und aus ihr folgt das ganze Periodensystem, die Chemie gleich mit. '+(met('bohr')?'Fragen Sie Bohr, er war erleichtert.':'')});
+ P.topics.splice(P.topics.findIndex(t=>t.id==='p2'),0,{id:'p2a',if:()=>!has('N6'),q:'Was ist Ihr eigener Beitrag?',a:()=>'Heute reden alle von Wellen. Mein Beitrag betrifft etwas anderes: wie die Elektronen in einem Atom geordnet sind. Das verstehen Sie erst, wenn Sie wissen, was aus den Elektronenbahnen geworden ist. Fragen Sie Heisenberg nach seiner Matrizenmechanik – dann kommen Sie wieder.'});
  P.topics.push(
   {id:'p4',if:()=>has('N6')&&!has('P2'),q:'Taugt Heisenbergs Mechanik denn für ein wirkliches Atom?',give:'P2',a:()=>'Das habe ich selbst nachgeprüft. Heisenbergs Schema sah zunächst aus wie eine Rechenvorschrift für Spezialfälle. Ich habe damit Anfang 1926 das Wasserstoffatom durchgerechnet – eine elende Algebra, aber am Ende standen die richtigen Spektrallinien da. Seitdem nimmt man die Matrizen ernst. Heisenberg hat mir einen begeisterten Brief geschrieben.'},
   {id:'p5',if:()=>fl('spinTip')&&!has('P3'),q:'Stimmt es, dass Sie den Spin zuerst bekämpft haben?',give:'P3',a:()=>'Ehrenfest plaudert also. Ja – ein Elektron, das sich wie ein Kreisel dreht, hielt ich für Unfug, und als Bild halte ich es noch dafür. Aber die Sache selbst stimmt: Das Elektron hat eine innere Größe mit genau zwei Einstellungen. Ich hatte sie 1925 als „Zweideutigkeit“ gebraucht, damit mein Ausschließungsprinzip aufgeht. Dieses Jahr habe ich sie sauber in die Quantenmechanik eingebaut. Anschaulich ist daran nichts, und das ist gut so.'});
@@ -1114,7 +1122,15 @@ function drawObj(o){const {x,y,w,h}=o,un=!S.read.includes(o.id==='tafel'?'tafel'
      cx.fillText(S.day===1?'λ = h / p':S.day===2?'Δx · Δp ≥ h / 4π':'»… und verwirrte ihre Sprache«',x+16,y+26);cx.font='italic 13px Georgia';cx.fillText(S.day===1?'ψ ?':S.day===2?'|ψ|²':'– P. E.',x+w-70,y+52);
      for(let i=0;i<3;i++){cx.beginPath();cx.moveTo(x+20,y+40+i*7);cx.bezierCurveTo(x+60,y+34+i*7,x+100,y+46+i*7,x+150,y+40+i*7);cx.stroke()}break;
    case 'board':cx.fillStyle='#4a3420';rr(x-4,y-4,w+8,h+8,3);cx.fill();cx.fillStyle='#a8885a';cx.fillRect(x,y,w,h);cx.fillStyle='#f3ead8';cx.fillRect(x+8,y+8,44,40);cx.fillRect(x+60,y+10,30,22);cx.fillRect(x+96,y+8,26,44);cx.fillStyle='#8c2f23';for(const p of [[30,10],[75,12],[109,10]]){cx.beginPath();cx.arc(x+p[0],y+p[1],2.5,0,7);cx.fill()}break;
-   case 'paper':cx.fillStyle='#f6f1e4';cx.save();cx.translate(x+w/2,y+h/2);cx.rotate(-.12);cx.fillRect(-w/2,-h/2,w,h);cx.strokeStyle='#777';cx.lineWidth=.8;for(let i=1;i<4;i++){cx.beginPath();cx.moveTo(-w/2+3,-h/2+i*h/4);cx.lineTo(w/2-3,-h/2+i*h/4);cx.stroke()}cx.restore();break;
+   case 'paper':{cx.save();cx.translate(x+w/2,y+h/2);cx.rotate(o.rot!=null?o.rot:-.12);
+     // Blatt mit Schatten und dunklem Rand, damit es auch auf hellen Tischtüchern auffällt
+     const sheet=(dx,dy,fill)=>{cx.fillStyle='rgba(0,0,0,.38)';cx.fillRect(-w/2+dx+2,-h/2+dy+3,w,h);cx.fillStyle=fill;cx.fillRect(-w/2+dx,-h/2+dy,w,h);cx.strokeStyle='#3a2e22';cx.lineWidth=1.3;cx.strokeRect(-w/2+dx,-h/2+dy,w,h)};
+     if(o.v==='stack'){sheet(5,4,'#e2d6ba');sheet(2.5,2,'#ebe1c9')}
+     sheet(0,0,o.c||'#f6f1e4');
+     if(o.v==='napkin'){cx.strokeStyle='rgba(255,255,255,.95)';cx.lineWidth=1.4;cx.beginPath();cx.moveTo(-w/2+5,-h/2+4);cx.lineTo(-w/2+5,h/2-4);cx.moveTo(-w/2+11,-h/2+4);cx.lineTo(-w/2+11,-2);cx.moveTo(-w/2+11,3);cx.lineTo(-w/2+11,h/2-4);
+       for(let i=0;i<4;i++){cx.moveTo(w/2-12+i*2.5,-h/2+4+i*1.5);cx.lineTo(w/2-10+i*2.5,-h/2+7+i*1.5)}cx.moveTo(-w/2+13,0);cx.lineTo(w/2-4,-5);cx.moveTo(-w/2+13,0);cx.lineTo(w/2-4,5);cx.stroke()}
+     else{cx.strokeStyle='#33334d';cx.lineWidth=1;for(let i=1;i<4;i++){cx.beginPath();cx.moveTo(-w/2+4,-h/2+i*h/4);cx.lineTo(w/2-4-(i===3?w/3:0),-h/2+i*h/4);cx.stroke()}}
+     cx.restore();break}
    case 'book':cx.fillStyle='#1c1814';rr(x,y,w,h,2);cx.fill();cx.fillStyle='#f6f1e4';cx.fillRect(x+2,y+2,w-4,h-5);break;
    case 'app1':case 'app2':cx.fillStyle='#2a2a2e';rr(x,y+12,36,26,4);cx.fill();cx.fillStyle='#b8893a';cx.fillRect(x+36,y+22,w-70,5);cx.fillStyle='#1c1814';cx.fillRect(x+w/2-3,y+6,6,38);
      cx.fillStyle='#d9dedc';if(o.k==='app1'){cx.fillRect(x+w/2-3,y+18,6,4);cx.fillRect(x+w/2-3,y+28,6,4)}else cx.fillRect(x+w/2-3,y+22,6,6);
@@ -1312,7 +1328,11 @@ function tasks(){let h=`<h3>Aufträge · ${DAYS[S.day]}</h3><div class="telegram
   TASKS[S.day].forEach(t=>h+=`<div class="task ${tdone(t)?'done':''}">${tdone(t)?'✔':'○'} ${t.t}${t.r?` (${Math.min(refuted(),t.r)}/${t.r})`:''}</div>`);
   h+=`<p class="small">Außerdem lohnt sich: Gegenstände ansehen, Gesprächen zuhören (Sprechblase), im Labor experimentieren und mit allen fürs Gruppenfoto reden.</p><p><button class="btn light" id="tp">Tipp von Ehrenfest</button> <button class="btn" id="cl">Schließen</button></p><div id="tpx"></div>`;
   open(h);$('cl').onclick=close;$('tp').onclick=()=>{$('tpx').innerHTML='<div class="fb good">'+hintText()+'</div>'}}
-function photoHTML(print){return `<div class="photo ${print?'print':''}">${PHYS.map(c=>`<figure class="${inPhoto(c)?'':'sil'}">${portrait(c)}<figcaption>${inPhoto(c)?sn(c):'?'}</figcaption></figure>`).join('')}</div>`}
+// Aufstellung grob wie auf dem Foto von 1927: Jüngere hinten, Lorentz mit Curie und Einstein vorn
+const PROWS=[['ehrenfest','schroedinger','pauli','heisenberg'],['dirac','debroglie','born','bohr'],['curie','lorentz','einstein']];
+function photoHTML(print){const rn=['Hinten','Mitte','Vorn'];
+  return `<div class="photo ${print?'print':''}">${PROWS.map((r,i)=>`<div class="prow r${i}">${r.map(c=>`<figure class="${inPhoto(c)?'':'sil'}" title="${inPhoto(c)?C[c].n:'noch nicht auf dem Bild'}">${portrait(c)}</figure>`).join('')}</div>`).join('')}</div>
+  <p class="pnames">${PROWS.map((r,i)=>`<b>${rn[i]}</b> v. l.: ${r.map(c=>inPhoto(c)?sn(c):'?').join(', ')}`).join(' · ')}</p>`}
 function photo(){const n=PHYS.filter(inPhoto).length;open(`<h3>Das Gruppenfoto · ${n} von 11</h3><p>${n===11?'Alle sind beisammen! „Bitte recht freundlich!“ – Die Platte ist belichtet. Das Bild erscheint über Ihrem Artikel.':'Aufs Bild kommt, wer sich ausführlich mit Ihnen unterhalten hat: mindestens drei Gespräche, vorgelegte Notizen oder mitgehörte Unterhaltungen.'}</p>${photoHTML()}<p><button class="btn" id="cl">Schließen</button></p>`);if(n===11&&!fl('foto')){addFlag('foto');Snd.chime()}$('cl').onclick=close}
 
 /* ---------- Mini-Experimente ---------- */

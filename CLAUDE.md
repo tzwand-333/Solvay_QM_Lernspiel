@@ -22,12 +22,12 @@ Spielelemente:
 - **Feste Dialoge mit Verzweigungen**, keine KI. Antworten hängen vom Tag, von gesammelten Notizen und von bisherigen Gesprächen ab.
 - **Notizen** (`NOTES`) sammeln und anderen Physikern **vorlegen** (`react`). So entstehen die Debatten. Etliche Schlüsselnotizen gibt es nur über das Vorlegen.
 - **Aufträge** (`TASKS`) pro Tag, Pflichtnotizen und Botengänge. Tipps von Ehrenfest (`hintText`).
-- **Lesbare Gegenstände** (`OBJT`), teils erst ab Tag 2 oder 3 (`if:` in `MAPS[..].objs`).
+- **Lesbare Gegenstände** (`OBJT`), teils erst ab Tag 2 oder 3 (`if:` in `MAPS[..].objs`). Zettel (`k:'paper'`) haben Schatten und dunklen Rand; Varianten `v:'napkin'` (farbig, `c`) und `v:'stack'` (Blätterstapel), damit sie auf den weißen Tischtüchern im Frühstückssaal auffallen.
 - **Mithören** (`EAVES`): Gespräche zweier Physiker, die man belauschen kann.
 - **Abendszenen** (`EVE`) am Ende jedes Tages, danach das **Abendtelegramm** (`TELE`, `telegram`): vier Lücken zum Auswählen (gemischt, falsche Wahl wird erklärt) und ein eigener Satz. Die vervollständigten Sätze (`teleProse`) und die eigenen Sätze bilden den Kern des Artikels.
 - **Mini-Experimente** im Labor (`exp1` Doppelspalt mit Wegmessung, `exp2` Einzelspalt mit Regler, `exp3` Elektronenbeugungsröhre mit Spannungsregler, Ringmessung und Vergleich mit λ = h/p, auch mit einzelnen Elektronen), jeweils mit Vorhersage-Tipp vorab. Dazu **Curies Zerfallsmodell** (`decayDemo`, Thema `c3` bei Curie). Physiker verweisen in ihren Antworten auf passende Experimente (`lab(note, vorher, nachher)`), Ehrenfests Tipp nennt offene Experimente.
 - **Konkurrent Federle** verbreitet Falschmeldungen (`RUM`). Pauli („Gewissen der Physik“) lässt sie prüfen, der Spieler muss selbst den Fehler benennen. Drei Widerlegungen sind am Tag 3 Pflicht.
-- **Gruppenfoto**: Wer drei „Aktionen“ erhalten hat (Fragen, Notizen vorlegen, mithören), erscheint auf dem Foto (`inPhoto`, `bump`). Das Bild steht über dem Artikel.
+- **Gruppenfoto**: Wer drei „Aktionen“ erhalten hat (Fragen, Notizen vorlegen, mithören), erscheint auf dem Foto (`inPhoto`, `bump`). Das Bild steht über dem Artikel. Aufstellung in drei eng überlappenden Reihen wie 1927 (`PROWS`: hinten die Jüngeren, vorn Curie, Lorentz, Einstein; vordere Reihe größer), Namen als Bildunterschrift nach Reihen; Fehlende erscheinen als graue Silhouette.
 - **Beziehungstafel** im Notizbuch (`REL`, `relHTML`), füllt sich mit den Entdeckungen.
 - **Glossar** im Notizbuch, Reiter „Begriffe“ (`GLOSS`, `glossHTML`), mit Suchfeld.
 - **Geräusche** (`Snd`) werden per Web Audio erzeugt, standardmäßig aus.
@@ -44,6 +44,7 @@ Spielelemente:
 - Keine Fotos oder fremden Bilder. Figuren selbst gezeichnet.
 - Keine begrenzte Spielzeit, keine Sammelziele im Sinne von Erfolgsabzeichen (bewusst weggelassen). Das Gruppenfoto ist die einzige Fortschrittsanzeige außer Aufträgen.
 - Paulis Neutrino-Hypothese kommt **nicht** vor. Beiträge von Pauli und Dirac müssen immer an andere Teilnehmer oder an Erkenntnisse der Konferenz geknüpft sein.
+- Roter Faden: Tag 1 Wellen (de Broglie, Schrödinger, Born), Tag 2 Atom ohne Bahnen und Zufall (Heisenberg, Pauli, Dirac, Einstein), Tag 3 Einstein gegen Bohr. Paulis Ausschließungsprinzip (`P1`) gibt es deshalb erst, wenn Heisenbergs „Keine Bahnen“ (`N6`) notiert ist: Zustände mit Quantenzahlen statt Bahnen. An Tag 1 verweist Pauli auf Heisenberg (Thema `p2a`).
 - Auf Handys muss das Spiel nicht laufen. Tablets und Laptops sind das Ziel.
 
 ## Aufbau der Datei
